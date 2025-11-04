@@ -29,9 +29,45 @@ export interface UserPersona {
   created_at: Date;
 }
 
+export interface Workspace {
+  id: string;
+  name: string;
+  slug: string;
+  owner_id: string;
+  plan_type: 'free' | 'pro' | 'business';
+  settings: Record<string, any>;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface WorkspaceMember {
+  id: string;
+  workspace_id: string;
+  user_id: string;
+  role: 'admin' | 'editor' | 'viewer';
+  invited_by?: string;
+  invited_at: Date;
+  joined_at?: Date;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface Expert {
+  id: string;
+  name: string;
+  title?: string;
+  affiliation?: string;
+  bio?: string;
+  photo_url?: string;
+  credentials: Record<string, any>;
+  created_at: Date;
+  updated_at: Date;
+}
+
 export interface Subscription {
   id: string;
   user_id: string;
+  workspace_id?: string;
   stripe_customer_id?: string;
   stripe_subscription_id?: string;
   stripe_price_id?: string;
@@ -55,9 +91,13 @@ export interface AnalyticsEvent {
 export interface Template {
   id: string;
   persona_id: string;
+  workspace_id?: string;
   name: string;
   description: string;
   questions: Question[];
+  is_global: boolean;
+  validated_by_expert_id?: string;
+  validation_date?: Date;
   created_at: Date;
   updated_at: Date;
 }
@@ -74,6 +114,7 @@ export interface Question {
 export interface Questionnaire {
   id: string;
   template_id: string;
+  workspace_id?: string;
   title: string;
   description: string;
   status: 'draft' | 'active' | 'closed';

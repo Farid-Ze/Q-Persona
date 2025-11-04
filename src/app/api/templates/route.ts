@@ -39,9 +39,13 @@ export async function POST(request: NextRequest) {
       data: {
         id: 'temp-id',
         persona_id: body.persona_id,
+        workspace_id: body.workspace_id,
         name: body.name,
         description: body.description,
         questions: body.questions || [],
+        is_global: false,
+        validated_by_expert_id: body.validated_by_expert_id,
+        validation_date: body.validation_date,
         created_at: new Date(),
         updated_at: new Date()
       }
