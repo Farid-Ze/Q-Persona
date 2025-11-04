@@ -10,11 +10,11 @@ import Link from 'next/link'
 
 export default async function APIKeysPage() {
   const { user } = await getUser()
-  
+
   if (!user) {
     redirect('/auth/login')
   }
-  
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
@@ -45,7 +45,7 @@ export default async function APIKeysPage() {
           </div>
         </div>
       </nav>
-      
+
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900">API Keys</h2>
@@ -53,7 +53,7 @@ export default async function APIKeysPage() {
             Manage API keys to access Q-Persona programmatically
           </p>
         </div>
-        
+
         <div className="space-y-6">
           {/* Existing API Keys */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -70,11 +70,11 @@ export default async function APIKeysPage() {
             </div>
             <APIKeysList userId={user.id} />
           </div>
-          
+
           {/* API Documentation */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">API Documentation</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <h4 className="text-sm font-semibold text-gray-900 mb-2">Base URL</h4>
@@ -82,7 +82,7 @@ export default async function APIKeysPage() {
                   https://your-domain.com/api/v1
                 </code>
               </div>
-              
+
               <div>
                 <h4 className="text-sm font-semibold text-gray-900 mb-2">Authentication</h4>
                 <p className="text-sm text-gray-600 mb-2">
@@ -92,7 +92,7 @@ export default async function APIKeysPage() {
                   Authorization: Bearer YOUR_API_KEY
                 </code>
               </div>
-              
+
               <div>
                 <h4 className="text-sm font-semibold text-gray-900 mb-2">Available Endpoints</h4>
                 <div className="space-y-2">
@@ -105,7 +105,7 @@ export default async function APIKeysPage() {
                     </div>
                     <p className="text-xs text-gray-600">List all questionnaires</p>
                   </div>
-                  
+
                   <div className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-50 rounded">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
@@ -115,7 +115,7 @@ export default async function APIKeysPage() {
                     </div>
                     <p className="text-xs text-gray-600">Create a new questionnaire</p>
                   </div>
-                  
+
                   <div className="border-l-4 border-green-500 pl-4 py-2 bg-gray-50 rounded">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
@@ -125,7 +125,7 @@ export default async function APIKeysPage() {
                     </div>
                     <p className="text-xs text-gray-600">Get all responses for a questionnaire</p>
                   </div>
-                  
+
                   <div className="border-l-4 border-green-500 pl-4 py-2 bg-gray-50 rounded">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
@@ -139,7 +139,7 @@ export default async function APIKeysPage() {
               </div>
             </div>
           </div>
-          
+
           {/* Security Best Practices */}
           <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-6">
             <h4 className="text-sm font-semibold text-yellow-900 mb-3">
@@ -181,7 +181,7 @@ export default async function APIKeysPage() {
 async function APIKeysList({ userId }: { userId: string }) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  
+
   if (!supabaseUrl || !serviceKey) {
     return (
       <div className="text-sm text-gray-500">
@@ -189,97 +189,84 @@ async function APIKeysList({ userId }: { userId: string }) {
       </div>
     )
   }
-  
-  try {
-    const response = await fetch(
-      `${supabaseUrl}/rest/v1/workspace_api_keys?user_id=eq.${userId}&order=created_at.desc`,
-      {
-        headers: {
-          'apikey': serviceKey,
-          'Authorization': `Bearer ${serviceKey}`,
-        },
-        cache: 'no-store',
-      }
-    )
-    
-    if (!response.ok) {
-      return (
-        <div className="text-sm text-red-600">
-          Failed to load API keys: {response.statusText}
-        </div>
-      )
+
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/workspace_api_keys?user_id=eq.${userId}&order=created_at.desc`,
+    {
+      headers: {
+        'apikey': serviceKey,
+        'Authorization': `Bearer ${serviceKey}`,
+      },
+      cache: 'no-store',
     }
-    
-    const apiKeys = await response.json()
-    
-    if (apiKeys.length === 0) {
-      return (
-        <div className="text-center py-8">
-          <p className="text-sm text-gray-500 mb-4">
-            No API keys created yet
-          </p>
-          <p className="text-xs text-gray-400">
-            Create your first API key to start using the Q-Persona API
-          </p>
-        </div>
-      )
-    }
-    
+  )
+
+  if (!response.ok) {
+    throw new Error(`Failed to load API keys: ${response.statusText}`)
+  }
+
+  const apiKeys = await response.json()
+
+  if (apiKeys.length === 0) {
     return (
-      <div className="space-y-4">
-        {apiKeys.map((key: any) => (
-          <div
-            key={key.id}
-            className="flex items-start justify-between rounded-md border border-gray-200 p-4 hover:bg-gray-50"
-          >
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <h4 className="font-medium text-gray-900">{key.name}</h4>
-                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                  key.is_active
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {key.is_active ? 'Active' : 'Inactive'}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mb-2">
-                <code className="text-sm text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded">
-                  {key.key_prefix}••••••••••••
-                </code>
-              </div>
-              <div className="flex items-center gap-4 text-xs text-gray-500">
-                <span>
-                  Scopes: {Array.isArray(key.scopes) ? key.scopes.join(', ') : 'N/A'}
-                </span>
-                {key.last_used_at && (
-                  <span>
-                    Last used: {new Date(key.last_used_at).toLocaleDateString()}
-                  </span>
-                )}
-                {key.expires_at && (
-                  <span className={new Date(key.expires_at) < new Date() ? 'text-red-600' : ''}>
-                    Expires: {new Date(key.expires_at).toLocaleDateString()}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                className="rounded-md border border-gray-300 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Revoke
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  } catch (error) {
-    return (
-      <div className="text-sm text-red-600">
-        Error loading API keys: {error instanceof Error ? error.message : 'Unknown error'}
+      <div className="text-center py-8">
+        <p className="text-sm text-gray-500 mb-4">
+          No API keys created yet
+        </p>
+        <p className="text-xs text-gray-400">
+          Create your first API key to start using the Q-Persona API
+        </p>
       </div>
     )
   }
+
+  return (
+    <div className="space-y-4">
+      {apiKeys.map((key: any) => (
+        <div
+          key={key.id}
+          className="flex items-start justify-between rounded-md border border-gray-200 p-4 hover:bg-gray-50"
+        >
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <h4 className="font-medium text-gray-900">{key.name}</h4>
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${key.is_active
+                ? 'bg-green-100 text-green-800'
+                : 'bg-gray-100 text-gray-800'
+                }`}>
+                {key.is_active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 mb-2">
+              <code className="text-sm text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded">
+                {key.key_prefix}••••••••••••
+              </code>
+            </div>
+            <div className="flex items-center gap-4 text-xs text-gray-500">
+              <span>
+                Scopes: {Array.isArray(key.scopes) ? key.scopes.join(', ') : 'N/A'}
+              </span>
+              {key.last_used_at && (
+                <span>
+                  Last used: {new Date(key.last_used_at).toLocaleDateString()}
+                </span>
+              )}
+              {key.expires_at && (
+                <span className={new Date(key.expires_at) < new Date() ? 'text-red-600' : ''}>
+                  Expires: {new Date(key.expires_at).toLocaleDateString()}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              className="rounded-md border border-gray-300 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Revoke
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
 }

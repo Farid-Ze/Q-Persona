@@ -9,15 +9,15 @@ import Link from 'next/link'
 
 export default async function SSOSettingsPage() {
   const { user } = await getUser()
-  
+
   if (!user) {
     redirect('/auth/login')
   }
-  
+
   // TODO: Check if user is workspace admin
   // TODO: Get workspace ID from context
   const workspaceId = 'default-workspace'
-  
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
@@ -48,7 +48,7 @@ export default async function SSOSettingsPage() {
           </div>
         </div>
       </nav>
-      
+
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900">Single Sign-On (SSO)</h2>
@@ -56,20 +56,20 @@ export default async function SSOSettingsPage() {
             Configure SSO providers for your workspace
           </p>
         </div>
-        
+
         <div className="space-y-6">
           {/* SSO Connections List */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">SSO Connections</h3>
             <SSOConnectionsList workspaceId={workspaceId} />
           </div>
-          
+
           {/* Add New Connection */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Add New Connection</h3>
             <AddSSOConnectionForm workspaceId={workspaceId} />
           </div>
-          
+
           {/* SSO Information */}
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
             <h4 className="text-sm font-semibold text-blue-900 mb-2">
@@ -111,7 +111,7 @@ export default async function SSOSettingsPage() {
 async function SSOConnectionsList({ workspaceId }: { workspaceId: string }) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  
+
   if (!supabaseUrl || !serviceKey) {
     return (
       <div className="text-sm text-gray-500">
@@ -119,92 +119,79 @@ async function SSOConnectionsList({ workspaceId }: { workspaceId: string }) {
       </div>
     )
   }
-  
-  try {
-    const response = await fetch(
-      `${supabaseUrl}/rest/v1/sso_connections?workspace_id=eq.${workspaceId}&order=created_at.desc`,
-      {
-        headers: {
-          'apikey': serviceKey,
-          'Authorization': `Bearer ${serviceKey}`,
-        },
-        cache: 'no-store',
-      }
-    )
-    
-    if (!response.ok) {
-      return (
-        <div className="text-sm text-red-600">
-          Failed to load SSO connections: {response.statusText}
-        </div>
-      )
+
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/sso_connections?workspace_id=eq.${workspaceId}&order=created_at.desc`,
+    {
+      headers: {
+        'apikey': serviceKey,
+        'Authorization': `Bearer ${serviceKey}`,
+      },
+      cache: 'no-store',
     }
-    
-    const connections = await response.json()
-    
-    if (connections.length === 0) {
-      return (
-        <div className="text-center py-8">
-          <p className="text-sm text-gray-500">
-            No SSO connections configured yet
-          </p>
-        </div>
-      )
-    }
-    
+  )
+
+  if (!response.ok) {
+    throw new Error(`Failed to load SSO connections: ${response.statusText}`)
+  }
+
+  const connections = await response.json()
+
+  if (connections.length === 0) {
     return (
-      <div className="space-y-4">
-        {connections.map((conn: any) => (
-          <div
-            key={conn.id}
-            className="flex items-center justify-between rounded-md border border-gray-200 p-4"
-          >
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h4 className="font-medium text-gray-900">{conn.name}</h4>
-                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                  conn.enabled
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {conn.enabled ? 'Enabled' : 'Disabled'}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-gray-600">
-                Provider: {conn.provider.toUpperCase()}
-                {conn.auto_provision && ' • Auto-provisioning enabled'}
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                className="rounded-md bg-blue-600 px-3 py-1 text-sm font-medium text-white hover:bg-blue-700"
-              >
-                Configure
-              </button>
-              <button
-                className="rounded-md border border-gray-300 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Test
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  } catch (error) {
-    return (
-      <div className="text-sm text-red-600">
-        Error loading SSO connections: {error instanceof Error ? error.message : 'Unknown error'}
+      <div className="text-center py-8">
+        <p className="text-sm text-gray-500">
+          No SSO connections configured yet
+        </p>
       </div>
     )
   }
+
+  return (
+    <div className="space-y-4">
+      {connections.map((conn: any) => (
+        <div
+          key={conn.id}
+          className="flex items-center justify-between rounded-md border border-gray-200 p-4"
+        >
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <h4 className="font-medium text-gray-900">{conn.name}</h4>
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${conn.enabled
+                ? 'bg-green-100 text-green-800'
+                : 'bg-gray-100 text-gray-800'
+                }`}>
+                {conn.enabled ? 'Enabled' : 'Disabled'}
+              </span>
+            </div>
+            <p className="mt-1 text-sm text-gray-600">
+              Provider: {conn.provider.toUpperCase()}
+              {conn.auto_provision && ' • Auto-provisioning enabled'}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              className="rounded-md bg-blue-600 px-3 py-1 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              Configure
+            </button>
+            <button
+              className="rounded-md border border-gray-300 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Test
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
   return (
     <form action={createSSOConnection} className="space-y-6">
       <input type="hidden" name="workspaceId" value={workspaceId} />
-      
+
       <div className="grid grid-cols-2 gap-6">
         <div>
           <label htmlFor="provider" className="block text-sm font-medium text-gray-700">
@@ -223,7 +210,7 @@ function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
             <option value="github">GitHub OAuth</option>
           </select>
         </div>
-        
+
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Connection Name *
@@ -238,7 +225,7 @@ function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
           />
         </div>
       </div>
-      
+
       <div className="rounded-md border border-gray-200 p-4">
         <h4 className="text-sm font-medium text-gray-900 mb-4">SAML Configuration</h4>
         <div className="space-y-4">
@@ -254,7 +241,7 @@ function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
               placeholder="https://idp.example.com/sso"
             />
           </div>
-          
+
           <div>
             <label htmlFor="saml_issuer" className="block text-sm font-medium text-gray-700">
               Issuer (Entity ID)
@@ -267,7 +254,7 @@ function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
               placeholder="https://idp.example.com"
             />
           </div>
-          
+
           <div>
             <label htmlFor="saml_cert" className="block text-sm font-medium text-gray-700">
               X.509 Certificate
@@ -282,7 +269,7 @@ function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
           </div>
         </div>
       </div>
-      
+
       <div className="flex items-center gap-4">
         <label className="flex items-center">
           <input
@@ -296,7 +283,7 @@ function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
           </span>
         </label>
       </div>
-      
+
       <div>
         <label htmlFor="default_role" className="block text-sm font-medium text-gray-700">
           Default Role for New Users
@@ -311,7 +298,7 @@ function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
           <option value="admin">Admin</option>
         </select>
       </div>
-      
+
       <button
         type="submit"
         className="w-full rounded-md bg-blue-600 px-4 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -324,26 +311,26 @@ function AddSSOConnectionForm({ workspaceId }: { workspaceId: string }) {
 
 async function createSSOConnection(formData: FormData) {
   'use server'
-  
+
   const workspaceId = formData.get('workspaceId') as string
   const provider = formData.get('provider') as string
   const name = formData.get('name') as string
   const auto_provision = formData.get('auto_provision') === 'on'
   const default_role = formData.get('default_role') as string
-  
+
   // SAML fields
   const saml_entry_point = formData.get('saml_entry_point') as string
   const saml_issuer = formData.get('saml_issuer') as string
   const saml_cert = formData.get('saml_cert') as string
-  
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  
+
   if (!supabaseUrl || !serviceKey) {
     console.error('Database not configured')
     return
   }
-  
+
   try {
     await fetch(`${supabaseUrl}/rest/v1/sso_connections`, {
       method: 'POST',
@@ -366,7 +353,7 @@ async function createSSOConnection(formData: FormData) {
         created_at: new Date().toISOString(),
       }),
     })
-    
+
     console.log('SSO connection created successfully')
     // TODO: Revalidate page or redirect
   } catch (error) {

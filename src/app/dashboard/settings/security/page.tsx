@@ -9,11 +9,11 @@ import Link from 'next/link'
 
 export default async function SecuritySettingsPage() {
   const { user } = await getUser()
-  
+
   if (!user) {
     redirect('/auth/login')
   }
-  
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
@@ -38,7 +38,7 @@ export default async function SecuritySettingsPage() {
           </div>
         </div>
       </nav>
-      
+
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900">Security Settings</h2>
@@ -46,13 +46,13 @@ export default async function SecuritySettingsPage() {
             Manage your account security and two-factor authentication
           </p>
         </div>
-        
+
         <div className="space-y-6">
           {/* MFA Status */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <MFAStatus userId={user.id} />
           </div>
-          
+
           {/* Security Information */}
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
             <h4 className="text-sm font-semibold text-blue-900 mb-2">
@@ -94,7 +94,7 @@ export default async function SecuritySettingsPage() {
 async function MFAStatus({ userId }: { userId: string }) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  
+
   if (!supabaseUrl || !serviceKey) {
     return (
       <div className="text-sm text-gray-500">
@@ -102,41 +102,29 @@ async function MFAStatus({ userId }: { userId: string }) {
       </div>
     )
   }
-  
-  try {
-    const response = await fetch(
-      `${supabaseUrl}/rest/v1/user_mfa?user_id=eq.${userId}`,
-      {
-        headers: {
-          'apikey': serviceKey,
-          'Authorization': `Bearer ${serviceKey}`,
-        },
-        cache: 'no-store',
-      }
-    )
-    
-    if (!response.ok) {
-      return (
-        <div className="text-sm text-red-600">
-          Failed to load MFA status: {response.statusText}
-        </div>
-      )
+
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/user_mfa?user_id=eq.${userId}`,
+    {
+      headers: {
+        'apikey': serviceKey,
+        'Authorization': `Bearer ${serviceKey}`,
+      },
+      cache: 'no-store',
     }
-    
-    const mfaRecords = await response.json()
-    const mfaEnabled = mfaRecords.length > 0 && mfaRecords[0].mfa_enabled
-    
-    if (mfaEnabled) {
-      return <MFAEnabledView mfa={mfaRecords[0]} />
-    } else {
-      return <MFADisabledView userId={userId} />
-    }
-  } catch (error) {
-    return (
-      <div className="text-sm text-red-600">
-        Error loading MFA status: {error instanceof Error ? error.message : 'Unknown error'}
-      </div>
-    )
+  )
+
+  if (!response.ok) {
+    throw new Error(`Failed to load MFA status: ${response.statusText}`)
+  }
+
+  const mfaRecords = await response.json()
+  const mfaEnabled = mfaRecords.length > 0 && mfaRecords[0].mfa_enabled
+
+  if (mfaEnabled) {
+    return <MFAEnabledView mfa={mfaRecords[0]} />
+  } else {
+    return <MFADisabledView userId={userId} />
   }
 }
 
@@ -154,7 +142,7 @@ function MFAEnabledView({ mfa }: { mfa: any }) {
           ✓ Enabled
         </span>
       </div>
-      
+
       <div className="space-y-4">
         <div className="rounded-md bg-gray-50 p-4">
           <h4 className="text-sm font-medium text-gray-900 mb-2">Active Methods</h4>
@@ -175,7 +163,7 @@ function MFAEnabledView({ mfa }: { mfa: any }) {
             )}
           </ul>
         </div>
-        
+
         <div className="flex gap-3">
           <button
             className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
@@ -207,7 +195,7 @@ function MFADisabledView({ userId }: { userId: string }) {
           Not Enabled
         </span>
       </div>
-      
+
       <div className="space-y-6">
         <div className="rounded-md bg-yellow-50 border border-yellow-200 p-4">
           <div className="flex">
@@ -226,10 +214,10 @@ function MFADisabledView({ userId }: { userId: string }) {
             </div>
           </div>
         </div>
-        
+
         <div>
           <h4 className="text-sm font-medium text-gray-900 mb-4">Choose a Method:</h4>
-          
+
           <div className="space-y-3">
             <button
               className="w-full flex items-center justify-between rounded-md border border-gray-300 p-4 hover:bg-gray-50"
@@ -249,7 +237,7 @@ function MFADisabledView({ userId }: { userId: string }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
-            
+
             <button
               className="w-full flex items-center justify-between rounded-md border border-gray-300 p-4 hover:bg-gray-50"
             >

@@ -210,7 +210,6 @@ async function TemplateGrid({ category, search, sort }: { category: string; sear
     )
   }
 
-  try {
     // TODO: Implement actual database query with filters
     // For now, show placeholder templates
     const templates = getMockTemplates()
@@ -229,20 +228,13 @@ async function TemplateGrid({ category, search, sort }: { category: string; sear
       )
     }
 
-    return (
+  return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {templates.map((template) => (
           <TemplateCard key={template.id} template={template} />
         ))}
       </div>
     )
-  } catch (error) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-red-600">Error loading templates</p>
-      </div>
-    )
-  }
 }
 
 function TemplateCard({ template }: { template: any }) {

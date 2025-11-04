@@ -10,11 +10,11 @@ import Link from 'next/link'
 
 export default async function WebhooksPage() {
   const { user } = await getUser()
-  
+
   if (!user) {
     redirect('/auth/login')
   }
-  
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
@@ -45,7 +45,7 @@ export default async function WebhooksPage() {
           </div>
         </div>
       </nav>
-      
+
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900">Webhooks</h2>
@@ -53,7 +53,7 @@ export default async function WebhooksPage() {
             Configure webhooks to receive real-time notifications about events in your workspace
           </p>
         </div>
-        
+
         <div className="space-y-6">
           {/* Existing Webhooks */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -71,7 +71,7 @@ export default async function WebhooksPage() {
             </div>
             <WebhooksList userId={user.id} />
           </div>
-          
+
           {/* Webhook Documentation */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Webhook Events</h3>
@@ -102,7 +102,7 @@ export default async function WebhooksPage() {
               </div>
             </div>
           </div>
-          
+
           {/* Integration Examples */}
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
             <h4 className="text-sm font-semibold text-blue-900 mb-3">
@@ -112,7 +112,7 @@ export default async function WebhooksPage() {
               <div className="bg-white rounded-lg p-4 border border-blue-200">
                 <h5 className="font-medium text-gray-900 mb-2">Slack</h5>
                 <p className="text-sm text-gray-600">
-                  Get notifications in your team's Slack channel when responses are submitted
+                  Get notifications in your team&apos;s Slack channel when responses are submitted
                 </p>
               </div>
               <div className="bg-white rounded-lg p-4 border border-blue-200">
@@ -138,7 +138,7 @@ export default async function WebhooksPage() {
 async function WebhooksList({ userId }: { userId: string }) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  
+
   if (!supabaseUrl || !serviceKey) {
     return (
       <div className="text-sm text-gray-500">
@@ -146,98 +146,89 @@ async function WebhooksList({ userId }: { userId: string }) {
       </div>
     )
   }
-  
-  try {
-    const response = await fetch(
-      `${supabaseUrl}/rest/v1/webhooks?user_id=eq.${userId}&order=created_at.desc`,
-      {
-        headers: {
-          'apikey': serviceKey,
-          'Authorization': `Bearer ${serviceKey}`,
-        },
-        cache: 'no-store',
-      }
-    )
-    
-    if (!response.ok) {
-      return (
-        <div className="text-sm text-red-600">
-          Failed to load webhooks: {response.statusText}
-        </div>
-      )
+
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/webhooks?user_id=eq.${userId}&order=created_at.desc`,
+    {
+      headers: {
+        'apikey': serviceKey,
+        'Authorization': `Bearer ${serviceKey}`,
+      },
+      cache: 'no-store',
     }
-    
-    const webhooks = await response.json()
-    
-    if (webhooks.length === 0) {
-      return (
-        <div className="text-center py-8">
-          <p className="text-sm text-gray-500 mb-4">
-            No webhooks configured yet
-          </p>
-          <p className="text-xs text-gray-400">
-            Create your first webhook to start receiving event notifications
-          </p>
-        </div>
-      )
-    }
-    
-    return (
-      <div className="space-y-4">
-        {webhooks.map((webhook: any) => (
-          <div
-            key={webhook.id}
-            className="flex items-start justify-between rounded-md border border-gray-200 p-4 hover:bg-gray-50"
-          >
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <h4 className="font-medium text-gray-900">{webhook.name}</h4>
-                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                  webhook.is_active
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {webhook.is_active ? 'Active' : 'Inactive'}
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 mb-2 truncate">
-                {webhook.target_url}
-              </p>
-              <div className="flex items-center gap-4 text-xs text-gray-500">
-                <span>
-                  Events: {Array.isArray(webhook.event_types) ? webhook.event_types.join(', ') : 'N/A'}
-                </span>
-                <span className="text-green-600">
-                  ✓ {webhook.success_count} successful
-                </span>
-                {webhook.failure_count > 0 && (
-                  <span className="text-red-600">
-                    ✗ {webhook.failure_count} failed
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                className="rounded-md border border-gray-300 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Edit
-              </button>
-              <button
-                className="rounded-md border border-red-300 px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-50"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  } catch (error) {
+  )
+
+  if (!response.ok) {
     return (
       <div className="text-sm text-red-600">
-        Error loading webhooks: {error instanceof Error ? error.message : 'Unknown error'}
+        Failed to load webhooks: {response.statusText}
       </div>
     )
   }
+
+  const webhooks = await response.json()
+
+  if (webhooks.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-sm text-gray-500 mb-4">
+          No webhooks configured yet
+        </p>
+        <p className="text-xs text-gray-400">
+          Create your first webhook to start receiving event notifications
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      {webhooks.map((webhook: any) => (
+        <div
+          key={webhook.id}
+          className="flex items-start justify-between rounded-md border border-gray-200 p-4 hover:bg-gray-50"
+        >
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <h4 className="font-medium text-gray-900">{webhook.name}</h4>
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${webhook.is_active
+                ? 'bg-green-100 text-green-800'
+                : 'bg-gray-100 text-gray-800'
+                }`}>
+                {webhook.is_active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            <p className="text-sm text-gray-600 mb-2 truncate">
+              {webhook.target_url}
+            </p>
+            <div className="flex items-center gap-4 text-xs text-gray-500">
+              <span>
+                Events: {Array.isArray(webhook.event_types) ? webhook.event_types.join(', ') : 'N/A'}
+              </span>
+              <span className="text-green-600">
+                ✓ {webhook.success_count} successful
+              </span>
+              {webhook.failure_count > 0 && (
+                <span className="text-red-600">
+                  ✗ {webhook.failure_count} failed
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              className="rounded-md border border-gray-300 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Edit
+            </button>
+            <button
+              className="rounded-md border border-red-300 px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-50"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
 }
