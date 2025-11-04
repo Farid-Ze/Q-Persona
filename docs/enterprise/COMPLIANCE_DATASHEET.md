@@ -496,7 +496,6 @@ We complete security questionnaires for enterprise customers:
 
 **Enterprise Sales** (for compliance discussions):
 - Email: enterprise@q-persona.com
-- Phone: +1 (XXX) XXX-XXXX
 - Schedule Demo: https://q-persona.com/enterprise
 
 ---
