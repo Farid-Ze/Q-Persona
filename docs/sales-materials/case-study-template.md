@@ -1,12 +1,15 @@
 # Customer Case Study Template
 
+**Updated: November 2024 - Enhanced Compliance Focus**
+
 ## Case Study: [Company Name] Achieves [X% Improvement] with Q-Persona
 
 **Industry:** [Banking / Healthcare / Education / Enterprise]  
 **Company Size:** [Number] employees  
 **Location:** [City, Country]  
 **Solution:** Q-Persona [Free / Pro / Business / Enterprise]  
-**Timeline:** [X] months
+**Timeline:** [X] months  
+**Compliance Focus:** [GDPR / HIPAA / SOC 2 / Indonesia PDP / OJK / BI]
 
 ---
 
@@ -274,3 +277,80 @@ Q-Persona is an enterprise-grade survey platform trusted by [X] companies across
 ---
 
 *This case study is based on actual customer results. Individual results may vary. All data verified by [Company Name] as of [Date].*
+
+---
+
+## Compliance-Specific Sections (Add as needed)
+
+### Regulatory Context
+
+**Applicable regulations for [Industry]:**
+- [Regulation 1]: [Brief description]
+- [Regulation 2]: [Brief description]
+- [Regulation 3]: [Brief description]
+
+**Penalties for non-compliance:**
+- Fines: Up to [Amount]
+- Other consequences: [List]
+
+### Audit Trail Impact
+
+**Before Q-Persona:**
+- Manual log creation: [X] hours/week
+- Audit preparation: [Y] weeks
+- Failed audits: [Z] in [timeframe]
+
+**After Q-Persona:**
+- Automated logging: 0 hours/week
+- Audit preparation: [Y] minutes
+- Passed audits: [Z] consecutive
+
+**Audit log features used:**
+- Real-time activity tracking
+- Exportable reports (CSV, JSON, PDF)
+- User action history
+- IP address tracking
+- Timestamp accuracy to millisecond
+
+### Security Documentation Value
+
+**Documents that accelerated IT approval:**
+- ✅ Security Whitepaper - Reviewed by [IT Team]
+- ✅ Compliance Datasheet - Used for compliance review
+- ✅ Data Processing Agreement - Legal team approved
+- ✅ Architecture Diagrams - Security team validated
+
+**Time saved in approval process:**
+- Traditional vendor review: [X] weeks
+- Q-Persona review: [Y] days
+- **Acceleration:** [Z]% faster
+
+> "[Quote about how documentation helped approval]"  
+> — *[IT Security Lead Name], [Title]*
+
+### Compliance ROI Calculation
+
+**Annual compliance costs before Q-Persona:**
+| Cost Category | Amount |
+|--------------|--------|
+| Failed audit fines | Rp [X]M |
+| Audit remediation | Rp [Y]M |
+| Manual compliance work | Rp [Z]M |
+| **Total** | **Rp [Total]M** |
+
+**Annual compliance costs after Q-Persona:**
+| Cost Category | Amount |
+|--------------|--------|
+| Q-Persona Enterprise | Rp [X]M |
+| Reduced remediation | Rp [Y]M |
+| **Total** | **Rp [Total]M** |
+
+**Net savings:** Rp [Amount]M/year ([X]% reduction)
+
+**ROI:** [X]% in first year
+
+**Payback period:** [X] months
+
+---
+
+*End of Compliance Sections*
