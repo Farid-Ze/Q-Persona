@@ -173,7 +173,7 @@ Q-Persona is architected for seamless integration with leading Backend-as-a-Serv
 
 1. **Supabase**: Open-source platform providing PostgreSQL with comprehensive API generation
 2. **Neon**: Serverless PostgreSQL solution featuring database branching capabilities
-3. **PlanetScale**: MySQL-compatible serverless database with vitess-based architecture
+3. **PlanetScale**: MySQL-compatible serverless database with Vitess-based architecture
 4. **Railway**: Full-service infrastructure platform with managed PostgreSQL offerings
 
 ### Configuration Requirements
