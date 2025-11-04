@@ -2,92 +2,157 @@
 
 This directory contains End-to-End (E2E) tests for Q-Persona, built with Playwright.
 
-## Purpose
-
-The primary purpose of these tests is to:
-1. Take full-page screenshots of all workspace pages for documentation
-2. Verify that pages load correctly
-3. Support visual regression testing in the future
-
-## Screenshot Storage
-
-Screenshots are saved to `./screenshots/` directory in the project root, **not** to `/tmp/playwright-logs/` which is temporary and gets cleared on system restart.
-
-This ensures:
-- Screenshots persist across sessions
-- Screenshots can be version-controlled if needed (currently gitignored)
-- Easy access for documentation and review
-
-## Running Tests
-
-### Prerequisites
-
-First, install Playwright browsers:
+## 🚀 Quick Start
 
 ```bash
+# Install Playwright browsers
 npm run playwright:install
-```
 
-### Running All E2E Tests
-
-```bash
+# Run all tests
 npm run test:e2e
-```
 
-### Running Only Screenshot Tests
-
-To capture workspace screenshots:
-
-```bash
+# Generate screenshots only
 npm run test:e2e:screenshots
+
+# Run visual regression tests
+npm run test:e2e:visual
 ```
 
-### Interactive Mode
+## ✨ Features
 
-For debugging and development:
+### 1. **Authentication Handling** ✅
+Automatically handles login for protected routes using environment variables.
+
+### 2. **Visual Regression Testing** ✅
+Compares screenshots against baselines to detect unintended visual changes.
+
+### 3. **Multiple Viewports** ✅
+Captures screenshots in 6 different configurations:
+- Desktop (Light & Dark)
+- Tablet (Light & Dark)
+- Mobile (Light & Dark)
+
+### 4. **Dark Mode Variants** ✅
+Automatically captures both light and dark theme screenshots.
+
+### 5. **CI/CD Automation** ✅
+GitHub Actions workflow for automated testing and screenshot generation.
+
+## 📁 Screenshot Storage
+
+Screenshots are saved to `./screenshots/{viewport-colorScheme}/` directory:
+
+```
+screenshots/
+├── desktop-light/
+├── desktop-dark/
+├── tablet-light/
+├── tablet-dark/
+├── mobile-light/
+└── mobile-dark/
+```
+
+**Not** saved to `/tmp/playwright-logs/` which is temporary and gets cleared.
+
+## 📖 Documentation
+
+- **[ADVANCED_TESTING.md](./ADVANCED_TESTING.md)** - Comprehensive guide covering all features
+- **Quick Reference** - This file
+
+## 🔐 Authentication Setup
+
+Set environment variables for authenticated tests:
 
 ```bash
-npm run test:e2e:ui
+# .env.local
+TEST_USER_EMAIL=test@example.com
+TEST_USER_PASSWORD=your-password
 ```
 
-## Test Structure
+Tests gracefully degrade to unauthenticated mode if credentials are not provided.
 
-### Workspace Screenshots (`workspace-screenshots.spec.ts`)
+## 📸 Screenshot Tests
 
-Captures full-page screenshots of all workspace-related pages:
-- Workspace Members page
-- SSO Settings page
-- API Keys page
-- Audit Logs page
-- Webhooks page
+### Running Tests
 
-Each test:
-1. Navigates to the page
-2. Waits for the network to be idle
-3. Takes a full-page screenshot
-4. Saves to `screenshots/workspace-{page-name}.png`
+```bash
+# All viewports and color schemes
+npm run test:e2e:screenshots
 
-## Configuration
+# Specific viewport
+npx playwright test --project=desktop-light
+npx playwright test --project=mobile-dark
+```
 
-Playwright configuration is in `playwright.config.ts` at the project root.
+### Captured Pages
 
-Key settings:
-- **Base URL**: `http://localhost:3000` (configurable via `BASE_URL` env var)
-- **Screenshot Directory**: `./screenshots/`
-- **Browser**: Chromium (Desktop Chrome device)
-- **Timeout**: 30 seconds per test
-- **Dev Server**: Automatically starts Next.js dev server before tests
+- Workspace Members
+- SSO Settings
+- API Keys
+- Audit Logs  
+- Webhooks
 
-## Notes
+## 🔍 Visual Regression Tests
 
-- Tests currently do not authenticate. You may need to modify tests to handle authentication for protected pages.
-- Screenshots are gitignored by default. If you want to commit screenshots for documentation, remove the relevant line from `.gitignore`.
-- The dev server must be running or will be started automatically when running tests.
+### Running Tests
 
-## Future Enhancements
+```bash
+# Compare against baselines
+npm run test:e2e:visual
 
-- [ ] Add authentication handling for protected routes
-- [ ] Add visual regression testing with screenshot comparison
-- [ ] Capture screenshots in different viewport sizes
-- [ ] Add dark mode screenshot variants
-- [ ] Automate screenshot generation in CI/CD pipeline
+# Update baselines (after UI changes)
+npm run test:e2e:update-snapshots
+```
+
+### How It Works
+
+1. First run creates baseline snapshots
+2. Subsequent runs compare against baselines
+3. Generates diff images on failure
+4. Allows tolerance for anti-aliasing
+
+## 🤖 CI/CD Automation
+
+### GitHub Actions Workflow
+
+Located at `.github/workflows/playwright-screenshots.yml`
+
+**Triggers:**
+- Push to main/develop
+- Pull requests
+- Daily at 2 AM UTC
+- Manual dispatch
+
+**Outputs:**
+- Screenshot artifacts (30-90 day retention)
+- HTML test reports
+- Visual regression diffs
+- PR comments with screenshot lists
+
+### Setup
+
+Add repository secrets:
+- `TEST_USER_EMAIL`
+- `TEST_USER_PASSWORD`
+
+## 📝 Test Files
+
+- **`auth.setup.ts`** - Authentication setup
+- **`workspace-screenshots.spec.ts`** - Screenshot generation
+- **`visual-regression.spec.ts`** - Visual comparison tests
+
+## 🔧 Configuration
+
+See `playwright.config.ts` for:
+- Viewport configurations
+- Timeout settings
+- Reporter options
+- Color scheme settings
+
+## 🆘 Need Help?
+
+See [ADVANCED_TESTING.md](./ADVANCED_TESTING.md) for:
+- Detailed setup instructions
+- Troubleshooting guide
+- Best practices
+- Architecture details

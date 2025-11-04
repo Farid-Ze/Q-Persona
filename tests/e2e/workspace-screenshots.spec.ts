@@ -1,86 +1,77 @@
 import { test, expect } from '@playwright/test';
 import * as path from 'path';
+import * as fs from 'fs';
 
 /**
  * E2E tests for workspace pages
  * Takes full-page screenshots of all workspace pages for documentation
  * Screenshots are saved to ./screenshots/ directory instead of /tmp/playwright-logs/
+ * Supports multiple viewports and dark mode variants
  */
 
 test.describe('Workspace Screenshots', () => {
-  // Configure screenshot directory
-  const screenshotDir = path.join(process.cwd(), 'screenshots');
-
-  test.beforeEach(async ({ page }) => {
-    // TODO: Setup authentication if needed
-    // For now, we'll just navigate to pages that might be publicly accessible
+  // Use authenticated state if available
+  test.use({ 
+    storageState: path.join(__dirname, '../../.auth/user.json'),
   });
 
-  test('capture workspace members page', async ({ page }) => {
-    await page.goto('/dashboard/workspace/members');
+  // Helper function to get screenshot path based on project and page name
+  const getScreenshotPath = (pageName: string, projectName: string): string => {
+    const screenshotDir = path.join(process.cwd(), 'screenshots', projectName);
+    
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(screenshotDir)) {
+      fs.mkdirSync(screenshotDir, { recursive: true });
+    }
+    
+    return path.join(screenshotDir, `${pageName}.png`);
+  };
+
+  // Helper function to take screenshot and verify page
+  const capturePageScreenshot = async (page: any, url: string, pageName: string, projectName: string) => {
+    await page.goto(url);
     
     // Wait for the page to be fully loaded
     await page.waitForLoadState('networkidle');
     
+    // Additional wait for any animations or dynamic content
+    await page.waitForTimeout(1000);
+    
     // Take full-page screenshot
+    const screenshotPath = getScreenshotPath(pageName, projectName);
     await page.screenshot({
-      path: path.join(screenshotDir, 'workspace-members.png'),
+      path: screenshotPath,
       fullPage: true,
     });
     
     // Verify the page loaded correctly
     await expect(page).toHaveTitle(/Q-Persona/);
+    
+    return screenshotPath;
+  };
+
+  test('capture workspace members page', async ({ page }, testInfo) => {
+    const projectName = testInfo.project.name;
+    await capturePageScreenshot(page, '/dashboard/workspace/members', 'workspace-members', projectName);
   });
 
-  test('capture workspace SSO settings page', async ({ page }) => {
-    await page.goto('/dashboard/workspace/settings/sso');
-    
-    await page.waitForLoadState('networkidle');
-    
-    await page.screenshot({
-      path: path.join(screenshotDir, 'workspace-sso-settings.png'),
-      fullPage: true,
-    });
-    
-    await expect(page).toHaveTitle(/Q-Persona/);
+  test('capture workspace SSO settings page', async ({ page }, testInfo) => {
+    const projectName = testInfo.project.name;
+    await capturePageScreenshot(page, '/dashboard/workspace/settings/sso', 'workspace-sso-settings', projectName);
   });
 
-  test('capture workspace API keys page', async ({ page }) => {
-    await page.goto('/dashboard/workspace/settings/api-keys');
-    
-    await page.waitForLoadState('networkidle');
-    
-    await page.screenshot({
-      path: path.join(screenshotDir, 'workspace-api-keys.png'),
-      fullPage: true,
-    });
-    
-    await expect(page).toHaveTitle(/Q-Persona/);
+  test('capture workspace API keys page', async ({ page }, testInfo) => {
+    const projectName = testInfo.project.name;
+    await capturePageScreenshot(page, '/dashboard/workspace/settings/api-keys', 'workspace-api-keys', projectName);
   });
 
-  test('capture workspace audit logs page', async ({ page }) => {
-    await page.goto('/dashboard/workspace/settings/audit');
-    
-    await page.waitForLoadState('networkidle');
-    
-    await page.screenshot({
-      path: path.join(screenshotDir, 'workspace-audit-logs.png'),
-      fullPage: true,
-    });
-    
-    await expect(page).toHaveTitle(/Q-Persona/);
+  test('capture workspace audit logs page', async ({ page }, testInfo) => {
+    const projectName = testInfo.project.name;
+    await capturePageScreenshot(page, '/dashboard/workspace/settings/audit', 'workspace-audit-logs', projectName);
   });
 
-  test('capture workspace webhooks page', async ({ page }) => {
-    await page.goto('/dashboard/workspace/settings/webhooks');
-    
-    await page.waitForLoadState('networkidle');
-    
-    await page.screenshot({
-      path: path.join(screenshotDir, 'workspace-webhooks.png'),
-      fullPage: true,
-    });
-    
-    await expect(page).toHaveTitle(/Q-Persona/);
+  test('capture workspace webhooks page', async ({ page }, testInfo) => {
+    const projectName = testInfo.project.name;
+    await capturePageScreenshot(page, '/dashboard/workspace/settings/webhooks', 'workspace-webhooks', projectName);
   });
 });
