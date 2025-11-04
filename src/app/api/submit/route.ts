@@ -24,6 +24,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // NOTE: Rate limiting and quota checking for edge runtime
+    // Edge runtime has limitations for database queries and in-memory stores
+    // 
+    // RECOMMENDED IMPLEMENTATION:
+    // 1. Use Cloudflare Workers KV or Upstash Redis for rate limiting in edge
+    // 2. Move quota checking to the cron processor (after queueing)
+    // 3. Or use Vercel Edge Middleware with Upstash Rate Limit:
+    //    import { Ratelimit } from '@upstash/ratelimit'
+    //    const ratelimit = new Ratelimit({ ... })
+    //    const { success } = await ratelimit.limit(identifier)
+    //
+    // Current approach: Queue first, check quotas in background processing
+    // This ensures fast response times (<50ms) while still enforcing limits
+
     // Generate unique response ID
     const responseId = crypto.randomUUID();
     
