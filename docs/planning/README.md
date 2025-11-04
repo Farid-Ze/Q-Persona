@@ -9,6 +9,18 @@ Strategic planning and execution roadmaps for Q-Persona.
 
 Comprehensive execution plan to transform Q-Persona from technical platform to revenue-generating enterprise business.
 
+### [ROADMAP_PROGRESS.md](./ROADMAP_PROGRESS.md) ⭐ NEW
+**90-Day Roadmap Progress Tracker**
+
+Live tracking document for monitoring execution of the 90-Day Roadmap. Updated regularly to track task completion, metrics, and blockers.
+
+**Current Status**: Week 1 - Foundation Phase (In Progress)
+
+### [EXECUTION_GUIDE.md](./EXECUTION_GUIDE.md) ⭐ NEW
+**Step-by-Step Execution Guide**
+
+Detailed, actionable guide for executing the 90-Day Roadmap. Includes day-by-day tasks, templates, tools needed, and success tips.
+
 **Goal**: Launch Enterprise tier and close first 3 enterprise deals within 90 days
 
 **Key Phases:**
@@ -132,29 +144,37 @@ Comprehensive execution plan to transform Q-Persona from technical platform to r
 
 ## 📖 How to Use This Roadmap
 
+### Quick Start (You are here! 🎯)
+
+**Ready to start implementing the roadmap?**
+
+1. **Read**: [90_DAY_ROADMAP.md](./90_DAY_ROADMAP.md) - Understand the full plan
+2. **Follow**: [EXECUTION_GUIDE.md](./EXECUTION_GUIDE.md) - Get step-by-step instructions
+3. **Track**: [ROADMAP_PROGRESS.md](./ROADMAP_PROGRESS.md) - Monitor and update progress
+
 ### For Founders/Executives
-1. Review weekly milestones
+1. Review [ROADMAP_PROGRESS.md](./ROADMAP_PROGRESS.md) weekly
 2. Track progress against targets
-3. Adjust resource allocation
-4. Make go/no-go decisions
+3. Adjust resource allocation based on metrics
+4. Make go/no-go decisions at phase gates
 
 ### For Sales Teams
-1. Follow daily activity targets
-2. Use documented playbooks
-3. Report pipeline metrics
-4. Share learnings weekly
+1. Use [EXECUTION_GUIDE.md](./EXECUTION_GUIDE.md) for daily tasks
+2. Follow documented playbooks in [sales-materials/](../sales-materials/)
+3. Report pipeline metrics in [ROADMAP_PROGRESS.md](./ROADMAP_PROGRESS.md)
+4. Share learnings in weekly update log
 
 ### For Product Teams
-1. Prioritize enterprise requests
-2. Monitor feature adoption
-3. Gather customer feedback
-4. Plan next iterations
+1. Prioritize enterprise requests from customer feedback
+2. Monitor feature adoption through admin dashboard
+3. Gather customer feedback during trials
+4. Plan next iterations based on sales learnings
 
 ### For Marketing Teams
-1. Execute content calendar
-2. Run demand gen campaigns
-3. Track lead quality
-4. Optimize conversion rates
+1. Execute content calendar from Week 2 in [EXECUTION_GUIDE.md](./EXECUTION_GUIDE.md)
+2. Run demand gen campaigns (LinkedIn, email)
+3. Track lead quality and conversion rates
+4. Optimize messaging based on demo feedback
 
 ## 🔄 Iteration & Feedback
 
