@@ -1,15 +1,19 @@
 # Form Builder Features
 
+**Status**: ✅ **IMPLEMENTED** (Completed in November 2025)
+
 This document describes the advanced form/questionnaire builder features integrated into Q-Persona, inspired by leading survey platforms.
 
 ## Overview
 
-Q-Persona now includes a professional-grade form builder that combines best practices from:
+Q-Persona now includes a fully functional professional-grade form builder that combines best practices from:
 - **Formbricks** - Open-source survey platform
 - **Typeform** - Conversational form UX
 - **JotForm** - Drag-and-drop builder
 - **Feathery** - Developer-first forms
 - **Tally** - Simple, clean interface
+
+All features described in this document are production-ready and available in the current release.
 
 ## Features
 
@@ -247,7 +251,28 @@ const handleDragEnd = (event) => { ... }
 
 ## Roadmap
 
-### Planned Features
+### ✅ Completed Features
+
+1. **✅ Visual Drag-and-Drop Builder**
+   - Drag to reorder questions
+   - Multiple question types (text, multiple choice, rating, boolean)
+   - Inline editing
+   - Expand/collapse interface
+   - Duplicate and delete questions
+
+2. **✅ Typeform-Style Preview**
+   - Single question mode
+   - All questions mode
+   - Progress indicator
+   - Clean, modern design
+
+3. **✅ Template Management**
+   - Template builder with settings
+   - Template library
+   - Quick actions
+   - Metadata management
+
+### 🔜 Planned Features
 
 1. **Conditional Logic** 🔜
    - Show/hide based on answers

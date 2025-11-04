@@ -36,17 +36,29 @@ That's it! You should see the Q-Persona homepage with all 6 modules.
 
 ### 1. Explore the UI
 - View the homepage showing all modules
+- Test the authentication flow (sign up / sign in)
+- Experience persona-based onboarding
+- Access the dashboard and template builder
 - See the lean architecture features
+
+### 2. Try the Form Builder
+- Navigate to the dashboard after signing in
+- Create a new template with the visual drag-and-drop builder
+- Preview in Typeform-style single-question mode
+- Publish and share questionnaires
 
 ### 2. Test the API
 ```bash
 # Get all users
 curl http://localhost:3000/api/users
 
-# Create a user
+# Create a user (or use the signup form)
 curl -X POST http://localhost:3000/api/users \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","name":"Test User","password":"pass123"}'
+
+# Get system personas
+curl http://localhost:3000/api/personas?system_only=true
 ```
 
 ### 3. Build for Production
@@ -64,37 +76,39 @@ npm start
    cp .env.example .env
    ```
 
-2. **Set up a PostgreSQL database**
+2. **Set up Supabase (Recommended)**
    
-   Choose one:
-   - Local PostgreSQL
-   - [Supabase](https://supabase.com) (free tier available)
-   - [Neon](https://neon.tech) (free tier available)
-   - [Railway](https://railway.app) (free tier available)
-
-3. **Update `.env` with your database credentials**
+   - Go to [Supabase](https://supabase.com) and create a free account
+   - Create a new project
+   - Go to Settings → API and copy your credentials
+   
+3. **Update `.env` with your credentials**
    ```env
-   DB_HOST=your-host
-   DB_PORT=5432
-   DB_NAME=q_persona
-   DB_USER=your-user
-   DB_PASSWORD=your-password
-   DB_SSL=true
+   # Required - Supabase
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   
+   # Optional - Stripe (for monetization features)
+   STRIPE_SECRET_KEY=sk_test_your_secret_key
+   STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+   STRIPE_PRICE_PRO=price_your_pro_id
+   STRIPE_PRICE_BUSINESS=price_your_business_id
+   
+   # Optional - PostHog (for analytics)
+   NEXT_PUBLIC_POSTHOG_KEY=phc_your_key
+   NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
    ```
 
 4. **Run the database schema**
-   ```bash
-   psql -U your-user -d q_persona -f database/schema.sql
-   ```
-
-5. **Install PostgreSQL client**
-   ```bash
-   npm install pg
-   ```
-
-6. **Implement database queries in API routes**
+   - In Supabase dashboard, go to SQL Editor
+   - Copy the contents of `database/schema.sql`
+   - Paste and click "Run"
    
-   See `src/app/api/*/route.ts` for TODO comments
+5. **Restart the development server**
+   ```bash
+   npm run dev
+   ```
 
 ### Deploy to Production
 
@@ -104,14 +118,31 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on deploying to:
 - Railway
 - Others
 
-### Add Authentication
+### Add Stripe Monetization (Optional)
 
-1. Install NextAuth.js
-   ```bash
-   npm install next-auth
+1. Create a Stripe account at [stripe.com](https://stripe.com)
+2. Get your API keys from the Dashboard
+3. Create products and prices for Pro and Business plans
+4. Add credentials to `.env`:
+   ```env
+   STRIPE_SECRET_KEY=sk_test_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   STRIPE_PRICE_PRO=price_...
+   STRIPE_PRICE_BUSINESS=price_...
    ```
+5. See [MONETIZATION_ANALYTICS.md](MONETIZATION_ANALYTICS.md) for detailed setup
 
-2. Follow the [NextAuth.js documentation](https://next-auth.js.org/getting-started/example)
+### Add PostHog Analytics (Optional)
+
+1. Create a PostHog account at [posthog.com](https://posthog.com)
+2. Create a new project
+3. Get your project key
+4. Add to `.env`:
+   ```env
+   NEXT_PUBLIC_POSTHOG_KEY=phc_...
+   NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
+   ```
+5. See [MONETIZATION_ANALYTICS.md](MONETIZATION_ANALYTICS.md) for event tracking guide
 
 ### Customize the UI
 
@@ -128,10 +159,14 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on deploying to:
 
 ## Documentation
 
-- [README.md](README.md) - Complete documentation
+- [README.md](README.md) - Complete documentation with project status
 - [ARCHITECTURE.md](ARCHITECTURE.md) - Architecture details (Indonesian)
-- [API_TESTING.md](API_TESTING.md) - API testing guide
 - [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment guide
+- [MONETIZATION_ANALYTICS.md](MONETIZATION_ANALYTICS.md) - Stripe & PostHog integration
+- [FORM_BUILDER.md](FORM_BUILDER.md) - Form builder features
+- [SUPABASE_INTEGRATION.md](SUPABASE_INTEGRATION.md) - Supabase setup guide
+- [API_TESTING.md](API_TESTING.md) - API testing guide
+- [PACKAGE_UPDATES.md](PACKAGE_UPDATES.md) - Latest package updates
 
 ## Project Structure
 
@@ -177,13 +212,22 @@ npm install
 
 ## What's Included
 
-✅ Next.js 14 with App Router  
-✅ TypeScript configuration  
+✅ Next.js 16 with App Router and Turbopack  
+✅ React 19 with latest features  
+✅ TypeScript 5.9 configuration  
 ✅ Tailwind CSS styling  
+✅ Supabase authentication and database  
+✅ Stripe payment processing (optional)  
+✅ PostHog analytics (optional)  
+✅ Persona-based onboarding with 4 system personas  
+✅ Visual drag-and-drop form builder  
+✅ Typeform-style preview modes  
 ✅ 6 API endpoints (Users, Personas, Templates, Questionnaires, Respondents, Answers)  
-✅ PostgreSQL database schema  
+✅ PostgreSQL database schema with subscriptions support  
+✅ Server Actions for type-safe mutations  
 ✅ Comprehensive documentation  
 ✅ Production-ready build configuration  
 ✅ Security best practices  
+✅ All packages at @latest versions  
 
 Happy coding! 🚀
