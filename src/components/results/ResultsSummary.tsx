@@ -12,6 +12,14 @@ interface ResultsSummaryProps {
   averageTime: number
   responseRate?: number
   lastUpdated: Date
+  // Recommendation #3: Benchmarking data
+  benchmarkCategory?: string
+  averageScore?: number
+  benchmarkComparison?: {
+    percentile: number
+    sampleSize: number
+    category: string
+  }
 }
 
 export function ResultsSummary({
@@ -20,6 +28,9 @@ export function ResultsSummary({
   averageTime,
   responseRate,
   lastUpdated,
+  benchmarkCategory,
+  averageScore,
+  benchmarkComparison,
 }: ResultsSummaryProps) {
   const formatTime = (seconds: number) => {
     if (seconds < 60) return `${seconds}s`
@@ -189,6 +200,48 @@ export function ResultsSummary({
           )}
         </div>
       </div>
+      
+      {/* Benchmark Comparison - Recommendation #3 */}
+      {benchmarkComparison && averageScore !== undefined && (
+        <div className="mt-6 pt-6 border-t">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3">
+            📊 Industry Benchmark Comparison
+          </h3>
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0">
+                <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-gray-900 font-medium mb-2">
+                  Your average score: <span className="text-xl font-bold text-blue-600">{averageScore.toFixed(1)}</span>
+                </p>
+                <p className="text-sm text-gray-700 mb-2">
+                  This places you at the <span className="font-bold text-blue-700">{benchmarkComparison.percentile}th percentile</span> compared to{' '}
+                  <span className="font-semibold">{benchmarkComparison.sampleSize.toLocaleString()}</span> other responses using{' '}
+                  '{benchmarkComparison.category.replace(/_/g, ' ')}' templates.
+                </p>
+                <div className="flex items-center gap-2 text-xs text-gray-600 mt-3">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <span>
+                    {benchmarkComparison.percentile >= 75 
+                      ? 'Excellent performance - you\'re in the top quartile!' 
+                      : benchmarkComparison.percentile >= 50 
+                      ? 'Good performance - above average.' 
+                      : benchmarkComparison.percentile >= 25
+                      ? 'Room for improvement - below average.'
+                      : 'Consider reviewing your approach - bottom quartile.'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -42,6 +42,9 @@ CREATE TABLE templates (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     questions JSONB NOT NULL DEFAULT '[]',
+    -- Recommendation #3: Benchmarking category for intelligence
+    benchmark_category VARCHAR(100), -- e.g., 'product_market_fit', 'employee_satisfaction'
+    usage_count INTEGER DEFAULT 0, -- Recommendation #4: Track template usage
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -271,6 +274,86 @@ CREATE TABLE cdn_assets (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Recommendation #2: Workspace API Keys for public API access
+CREATE TABLE workspace_api_keys (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    workspace_id UUID NOT NULL, -- Link to workspace (when workspace feature is implemented)
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL, -- Key description/name
+    key_hash VARCHAR(255) NOT NULL UNIQUE, -- Hashed API key
+    key_prefix VARCHAR(20) NOT NULL, -- First few chars for display (e.g., 'qp_abc...')
+    scopes JSONB DEFAULT '["read:questionnaires", "write:responses"]', -- API permissions
+    last_used_at TIMESTAMP WITH TIME ZONE,
+    expires_at TIMESTAMP WITH TIME ZONE,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Recommendation #2: Webhooks for outbound integrations
+CREATE TABLE webhooks (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    workspace_id UUID NOT NULL, -- Link to workspace
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    target_url VARCHAR(1000) NOT NULL, -- Destination URL for webhook
+    event_types JSONB DEFAULT '["response.created", "response.completed"]', -- Which events trigger this webhook
+    secret VARCHAR(255), -- For webhook signature verification
+    is_active BOOLEAN DEFAULT true,
+    last_triggered_at TIMESTAMP WITH TIME ZONE,
+    success_count INTEGER DEFAULT 0,
+    failure_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Recommendation #2: Webhook delivery logs
+CREATE TABLE webhook_deliveries (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    webhook_id UUID NOT NULL REFERENCES webhooks(id) ON DELETE CASCADE,
+    event_type VARCHAR(100) NOT NULL,
+    payload JSONB NOT NULL,
+    response_status INTEGER, -- HTTP status code
+    response_body TEXT,
+    delivered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    success BOOLEAN DEFAULT false
+);
+
+-- Recommendation #3: Benchmark scores aggregation
+CREATE TABLE benchmark_scores (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    benchmark_category VARCHAR(100) NOT NULL, -- e.g., 'product_market_fit'
+    score_type VARCHAR(50) NOT NULL, -- 'mean', 'median', 'p25', 'p50', 'p75', 'p90'
+    score_value DECIMAL(10,2) NOT NULL,
+    sample_size INTEGER NOT NULL, -- Number of responses used for calculation
+    calculation_date DATE NOT NULL,
+    metadata JSONB DEFAULT '{}', -- Additional context
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(benchmark_category, score_type, calculation_date)
+);
+
+-- Recommendation #4: Expert profiles
+CREATE TABLE expert_profiles (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    username VARCHAR(100) NOT NULL UNIQUE, -- For profile URL /experts/[username]
+    display_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    bio TEXT,
+    affiliation VARCHAR(255),
+    website_url VARCHAR(500),
+    avatar_url VARCHAR(500),
+    is_verified BOOLEAN DEFAULT false,
+    total_templates INTEGER DEFAULT 0, -- Cache counter
+    total_downloads INTEGER DEFAULT 0, -- Cache counter
+    average_rating DECIMAL(3,2) DEFAULT 0.0, -- Cache
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Link expert profiles to marketplace templates
+ALTER TABLE marketplace_templates ADD COLUMN expert_profile_id UUID REFERENCES expert_profiles(id) ON DELETE SET NULL;
+
 -- Updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -311,6 +394,15 @@ CREATE TRIGGER update_marketplace_templates_updated_at BEFORE UPDATE ON marketpl
 CREATE TRIGGER update_template_reviews_updated_at BEFORE UPDATE ON template_reviews
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+CREATE TRIGGER update_workspace_api_keys_updated_at BEFORE UPDATE ON workspace_api_keys
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_webhooks_updated_at BEFORE UPDATE ON webhooks
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_expert_profiles_updated_at BEFORE UPDATE ON expert_profiles
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- Additional indexes for new tables
 CREATE INDEX idx_user_mfa_user_id ON user_mfa(user_id);
 CREATE INDEX idx_user_mfa_enabled ON user_mfa(mfa_enabled);
@@ -327,6 +419,26 @@ CREATE INDEX idx_template_reviews_rating ON template_reviews(rating);
 CREATE INDEX idx_cdn_assets_key ON cdn_assets(asset_key);
 CREATE INDEX idx_cdn_assets_type ON cdn_assets(asset_type);
 CREATE INDEX idx_cdn_assets_workspace_id ON cdn_assets(workspace_id);
+
+-- Indexes for new tables (Recommendations #2, #3, #4)
+CREATE INDEX idx_workspace_api_keys_user_id ON workspace_api_keys(user_id);
+CREATE INDEX idx_workspace_api_keys_workspace_id ON workspace_api_keys(workspace_id);
+CREATE INDEX idx_workspace_api_keys_key_hash ON workspace_api_keys(key_hash);
+CREATE INDEX idx_workspace_api_keys_active ON workspace_api_keys(is_active);
+CREATE INDEX idx_webhooks_workspace_id ON webhooks(workspace_id);
+CREATE INDEX idx_webhooks_user_id ON webhooks(user_id);
+CREATE INDEX idx_webhooks_active ON webhooks(is_active);
+CREATE INDEX idx_webhook_deliveries_webhook_id ON webhook_deliveries(webhook_id);
+CREATE INDEX idx_webhook_deliveries_event_type ON webhook_deliveries(event_type);
+CREATE INDEX idx_webhook_deliveries_delivered_at ON webhook_deliveries(delivered_at);
+CREATE INDEX idx_benchmark_scores_category ON benchmark_scores(benchmark_category);
+CREATE INDEX idx_benchmark_scores_date ON benchmark_scores(calculation_date);
+CREATE INDEX idx_benchmark_scores_category_date ON benchmark_scores(benchmark_category, calculation_date);
+CREATE INDEX idx_expert_profiles_username ON expert_profiles(username);
+CREATE INDEX idx_expert_profiles_user_id ON expert_profiles(user_id);
+CREATE INDEX idx_expert_profiles_verified ON expert_profiles(is_verified);
+CREATE INDEX idx_templates_benchmark_category ON templates(benchmark_category);
+CREATE INDEX idx_templates_usage_count ON templates(usage_count);
 
 -- Insert default system personas for persona-based onboarding
 INSERT INTO personas (name, description, attributes, is_system) VALUES
