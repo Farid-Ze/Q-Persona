@@ -4,6 +4,47 @@
 
 Q-Persona is a sophisticated, service-oriented solution designed for organizations seeking to streamline questionnaire management and persona-based data collection. Built on cutting-edge technologies including Next.js, Supabase, and PostgreSQL, the platform delivers a scalable, maintainable architecture suitable for enterprise deployments.
 
+## 🚀 Project Status
+
+**Current Version**: 0.1.0 (Active Development)
+
+### ✅ Implemented Features
+
+- **Core Platform**: Next.js 16 + React 19 + TypeScript + Tailwind CSS
+- **Authentication**: Supabase Auth with email/password sign-in and sign-up
+- **Database**: PostgreSQL with Supabase integration and comprehensive schema
+- **Stripe Monetization**: Payment processing, subscription management, and webhook handling
+- **PostHog Analytics**: Event tracking, user behavior analysis, and business metrics
+- **Persona-Based Onboarding**: Customized user experience with 4 predefined personas (Mahasiswa, Startup, Peneliti, Bisnis)
+- **Visual Form Builder**: Drag-and-drop questionnaire creation with multiple question types
+- **Template Management**: Reusable questionnaire templates with metadata
+- **Typeform-Style Preview**: Single-question and all-questions preview modes
+- **RESTful API**: Complete CRUD operations for all 6 core modules
+- **Server Actions**: Type-safe mutations for personas and authentication
+- **Latest Packages**: All dependencies updated to @latest versions (Next.js 16, React 19, Stripe 19, etc.)
+
+### 📋 In Progress
+
+- Conditional logic for questionnaires
+- Advanced analytics dashboard
+- Real-time response tracking
+- Usage limits enforcement
+
+### 🔜 Planned Features
+
+- Multi-language support (i18n)
+- Advanced question types (file upload, date picker, matrix)
+- Templates marketplace
+- Theme customization
+- Email notifications
+- A/B testing with PostHog feature flags
+
+For detailed feature documentation, see:
+- [Monetization & Analytics](./MONETIZATION_ANALYTICS.md)
+- [Form Builder](./FORM_BUILDER.md)
+- [Supabase Integration](./SUPABASE_INTEGRATION.md)
+- [Package Updates](./PACKAGE_UPDATES.md)
+
 ## Technical Architecture
 
 Q-Persona leverages a modern serverless architecture designed for optimal performance, scalability, and maintainability:
@@ -32,12 +73,16 @@ Users → Personas → Templates → Questionnaires → Respondents → Answers
 
 The platform is built on a robust technology foundation ensuring reliability, performance, and developer productivity:
 
-- **Next.js 14**: Industry-leading React framework featuring the App Router architecture
-- **TypeScript**: Strongly-typed development environment ensuring code quality and maintainability
+- **Next.js 16**: Latest React framework with Turbopack, App Router, and optimized performance
+- **React 19**: Latest React version with improved performance and developer experience
+- **TypeScript 5.9**: Strongly-typed development environment ensuring code quality and maintainability
 - **Tailwind CSS**: Modern utility-first CSS framework for consistent, responsive design
 - **Supabase**: Comprehensive Backend-as-a-Service solution (Authentication + Database Management)
 - **PostgreSQL**: Enterprise-grade relational database system managed by Supabase
+- **Stripe 19**: Modern payment processing and subscription management
+- **PostHog**: Product analytics and feature flags for data-driven decisions
 - **Server Actions**: Type-safe server mutations for secure data operations
+- **@dnd-kit**: Accessible drag-and-drop for form builder functionality
 
 ## Implementation Guide
 
@@ -76,10 +121,23 @@ cp .env.example .env
 
 Populate the `.env` file with your Supabase credentials:
 ```env
+# Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Stripe Configuration (Optional - for monetization features)
+STRIPE_SECRET_KEY=sk_test_your_secret_key_here
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+STRIPE_PRICE_PRO=price_your_pro_price_id_here
+STRIPE_PRICE_BUSINESS=price_your_business_price_id_here
+
+# PostHog Analytics (Optional - for analytics features)
+NEXT_PUBLIC_POSTHOG_KEY=phc_your_posthog_key_here
+NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 ```
+
+> **Note**: Stripe and PostHog credentials are optional. The application will run without them, but monetization and analytics features will be disabled.
 
 5. Initialize database schema:
    - Access your Supabase project dashboard → SQL Editor
@@ -107,13 +165,29 @@ Q-Persona/
 │   │   │   ├── templates/      # Template management endpoints
 │   │   │   ├── questionnaires/ # Questionnaire management endpoints
 │   │   │   ├── respondents/    # Respondent management endpoints
-│   │   │   └── answers/        # Answer submission endpoints
+│   │   │   ├── answers/        # Answer submission endpoints
+│   │   │   ├── user-personas/  # User persona associations
+│   │   │   └── stripe-webhooks/# Stripe payment webhooks
+│   │   ├── actions/            # Server Actions
+│   │   │   ├── auth.ts         # Authentication actions
+│   │   │   └── personas.ts     # Persona CRUD actions
+│   │   ├── auth/               # Authentication pages
+│   │   │   ├── login/          # Login page
+│   │   │   └── signup/         # Signup page
+│   │   ├── dashboard/          # Protected dashboard
+│   │   │   └── templates/      # Template management UI
+│   │   ├── onboarding/         # Persona-based onboarding
 │   │   ├── layout.tsx          # Application root layout
 │   │   ├── page.tsx            # Landing page component
 │   │   └── globals.css         # Global stylesheet definitions
 │   ├── components/             # Reusable React components
+│   │   ├── analytics/          # Analytics provider (PostHog)
+│   │   └── form-builder/       # Form builder components
 │   ├── lib/                    # Utility functions and configurations
-│   │   └── db.ts               # Database connection configuration
+│   │   ├── db.ts               # Database connection configuration
+│   │   ├── supabase/           # Supabase client utilities
+│   │   ├── stripe/             # Stripe integration
+│   │   └── analytics/          # PostHog analytics utilities
 │   └── types/                  # TypeScript type definitions
 │       └── index.ts            # Core type declarations
 ├── database/
@@ -234,6 +308,19 @@ We welcome contributions from the development community. To contribute to Q-Pers
 4. Submit a pull request with a comprehensive description of changes
 
 All contributions are reviewed to ensure they align with project standards and objectives.
+
+## Additional Documentation
+
+For detailed information on specific features and implementation:
+
+- **[QUICKSTART.md](./QUICKSTART.md)** - Get started in 5 minutes
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Lean service-based architecture (Indonesian)
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment to various platforms
+- **[MONETIZATION_ANALYTICS.md](./MONETIZATION_ANALYTICS.md)** - Stripe and PostHog integration
+- **[FORM_BUILDER.md](./FORM_BUILDER.md)** - Visual form builder features
+- **[SUPABASE_INTEGRATION.md](./SUPABASE_INTEGRATION.md)** - Supabase setup and best practices
+- **[API_TESTING.md](./API_TESTING.md)** - API endpoint testing guide
+- **[PACKAGE_UPDATES.md](./PACKAGE_UPDATES.md)** - Latest package updates and migration guide
 
 ## License
 

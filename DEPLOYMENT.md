@@ -29,12 +29,20 @@ Vercel is the recommended platform for Next.js applications.
    
    In the Vercel dashboard, add these environment variables:
    ```
-   DB_HOST=your-database-host.com
-   DB_PORT=5432
-   DB_NAME=q_persona
-   DB_USER=your_db_user
-   DB_PASSWORD=your_db_password
-   DB_SSL=true
+   # Required - Supabase
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+   NEXT_PUBLIC_SITE_URL=https://your-project.vercel.app
+   
+   # Optional - Stripe (for monetization)
+   STRIPE_SECRET_KEY=sk_live_your_secret_key
+   STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+   STRIPE_PRICE_PRO=price_your_pro_id
+   STRIPE_PRICE_BUSINESS=price_your_business_id
+   
+   # Optional - PostHog (for analytics)
+   NEXT_PUBLIC_POSTHOG_KEY=phc_your_key
+   NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
    ```
 
 4. **Deploy**
@@ -69,12 +77,20 @@ Vercel is the recommended platform for Next.js applications.
    
    Add in Site settings → Environment variables:
    ```
-   DB_HOST=your-database-host.com
-   DB_PORT=5432
-   DB_NAME=q_persona
-   DB_USER=your_db_user
-   DB_PASSWORD=your_db_password
-   DB_SSL=true
+   # Required - Supabase
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+   NEXT_PUBLIC_SITE_URL=https://your-site.netlify.app
+   
+   # Optional - Stripe (for monetization)
+   STRIPE_SECRET_KEY=sk_live_your_secret_key
+   STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+   STRIPE_PRICE_PRO=price_your_pro_id
+   STRIPE_PRICE_BUSINESS=price_your_business_id
+   
+   # Optional - PostHog (for analytics)
+   NEXT_PUBLIC_POSTHOG_KEY=phc_your_key
+   NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
    ```
 
 5. **Deploy**
@@ -167,26 +183,35 @@ Railway provides both hosting and database in one platform.
 
 ## Environment Variables Reference
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DB_HOST` | Database host | `db.xxx.supabase.co` |
-| `DB_PORT` | Database port | `5432` |
-| `DB_NAME` | Database name | `q_persona` |
-| `DB_USER` | Database user | `postgres` |
-| `DB_PASSWORD` | Database password | `your_secure_password` |
-| `DB_SSL` | Enable SSL | `true` |
+| Variable | Description | Example | Required |
+|----------|-------------|---------|----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL | `https://xxx.supabase.co` | ✅ Yes |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key | `eyJhbGc...` | ✅ Yes |
+| `NEXT_PUBLIC_SITE_URL` | Your site URL | `https://q-persona.com` | ✅ Yes |
+| `STRIPE_SECRET_KEY` | Stripe secret key | `sk_live_...` or `sk_test_...` | ⚠️ Optional |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook secret | `whsec_...` | ⚠️ Optional |
+| `STRIPE_PRICE_PRO` | Stripe Pro plan price ID | `price_...` | ⚠️ Optional |
+| `STRIPE_PRICE_BUSINESS` | Stripe Business plan price ID | `price_...` | ⚠️ Optional |
+| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project key | `phc_...` | ⚠️ Optional |
+| `NEXT_PUBLIC_POSTHOG_HOST` | PostHog API host | `https://app.posthog.com` | ⚠️ Optional |
+
+**Note**: Variables marked as "Optional" are only required if you want to use the respective features (Stripe for monetization, PostHog for analytics). The application will work without them.
 
 ## Post-Deployment Checklist
 
 - [ ] Verify the application loads correctly
-- [ ] Test all API endpoints
+- [ ] Test authentication (login/signup)
+- [ ] Test onboarding flow with persona selection
 - [ ] Check database connectivity
 - [ ] Verify environment variables are set
 - [ ] Test creating/reading data through the API
+- [ ] Test form builder functionality
+- [ ] Test Stripe checkout flow (if configured)
+- [ ] Verify Stripe webhooks (if configured)
+- [ ] Verify PostHog event tracking (if configured)
 - [ ] Set up custom domain (if needed)
 - [ ] Configure SSL/HTTPS (usually automatic)
 - [ ] Set up monitoring and error tracking
-- [ ] Configure analytics (optional)
 - [ ] Set up backup strategy for database
 
 ## Continuous Deployment
