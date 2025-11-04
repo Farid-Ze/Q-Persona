@@ -1,8 +1,41 @@
-export default function Home() {
+import Link from 'next/link'
+import { getUser } from '@/app/actions/auth'
+
+export default async function Home() {
+  const { user } = await getUser()
+  
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">
-        <h1 className="text-4xl font-bold mb-8">Q-Persona</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold">Q-Persona</h1>
+          <div className="flex gap-4">
+            {user ? (
+              <Link 
+                href="/dashboard"
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link 
+                  href="/auth/login"
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Sign in
+                </Link>
+                <Link 
+                  href="/auth/signup"
+                  className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                >
+                  Get started
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+        
         <p className="mb-4">Lean Service-Based Architecture</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
@@ -41,8 +74,8 @@ export default function Home() {
           <h3 className="text-lg font-semibold mb-2">Architecture Features</h3>
           <ul className="list-disc list-inside space-y-2 text-gray-700">
             <li>Next.js Frontend (React with SSR/SSG)</li>
-            <li>Backend as a Service (BaaS) approach</li>
-            <li>Serverless Functions for custom logic</li>
+            <li>Supabase Backend (Authentication & Database)</li>
+            <li>Server Actions for type-safe mutations</li>
             <li>PostgreSQL Database</li>
             <li>Modern authentication system</li>
           </ul>

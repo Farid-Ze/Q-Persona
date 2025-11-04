@@ -1,15 +1,15 @@
 # Q-Persona
 
-A modern, lean service-based architecture for questionnaire and persona management built with Next.js and PostgreSQL.
+A modern, lean service-based architecture for questionnaire and persona management built with Next.js, Supabase, and PostgreSQL.
 
 ## Architecture Overview
 
 Q-Persona implements a serverless/semi-serverless architecture with:
 
 - **Frontend**: Next.js (React) with static and dynamic rendering
-- **Backend**: Backend as a Service (BaaS) approach with serverless API routes
-- **Database**: PostgreSQL managing the complete data flow
-- **Authentication**: Modern authentication system (ready for integration)
+- **Backend**: Supabase (Backend as a Service) with Server Actions
+- **Database**: PostgreSQL via Supabase
+- **Authentication**: Supabase Auth with built-in session management
 
 ## Data Flow
 
@@ -19,7 +19,7 @@ The application follows a structured data hierarchy:
 Users → Personas → Templates → Questionnaires → Respondents → Answers
 ```
 
-1. **Users**: User accounts and authentication
+1. **Users**: User accounts and authentication via Supabase Auth
 2. **Personas**: User-created personas for different purposes
 3. **Templates**: Reusable questionnaire templates linked to personas
 4. **Questionnaires**: Active surveys created from templates
@@ -31,15 +31,16 @@ Users → Personas → Templates → Questionnaires → Respondents → Answers
 - **Next.js 14**: React framework with App Router
 - **TypeScript**: Type-safe development
 - **Tailwind CSS**: Utility-first CSS framework
-- **PostgreSQL**: Relational database
-- **Serverless Functions**: API routes for backend logic
+- **Supabase**: Backend as a Service (Auth + Database)
+- **PostgreSQL**: Relational database (managed by Supabase)
+- **Server Actions**: Type-safe mutations
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 18+ 
-- PostgreSQL database (local or cloud-based BaaS)
+- Supabase account (free tier available at [supabase.com](https://supabase.com))
 - npm or yarn
 
 ### Installation
@@ -55,20 +56,29 @@ cd Q-Persona
 npm install
 ```
 
-3. Set up environment variables:
+3. Set up Supabase project:
+   - Go to [supabase.com](https://supabase.com) and create a new project
+   - Wait for the database to be provisioned
+   - Go to Project Settings → API to get your credentials
+
+4. Set up environment variables:
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your database credentials.
-
-4. Set up the database:
-```bash
-# Connect to your PostgreSQL database and run:
-psql -U your_user -d your_database -f database/schema.sql
+Edit `.env` with your Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-5. Run the development server:
+5. Set up the database schema:
+   - Go to your Supabase project → SQL Editor
+   - Paste the contents of `database/schema.sql`
+   - Click "Run" to execute the schema
+
+6. Run the development server:
 ```bash
 npm run dev
 ```
