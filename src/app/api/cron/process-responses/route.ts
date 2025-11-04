@@ -89,9 +89,10 @@ async function processResponseBatch() {
   await updateQueueStatus(queueIds, 'processing');
 
   // Prepare batch inserts
-  const respondents = [];
+  const respondents: any[] = [];
   const answers = [];
   const exceededQuota = [];
+  const touchedQuestionnaireIds = new Set<string>();
 
   for (const item of queueItems) {
     const payload = item.payload;
@@ -123,6 +124,10 @@ async function processResponseBatch() {
       started_at: payload.metadata?.submitted_at || new Date().toISOString(),
       completed_at: payload.metadata?.submitted_at || new Date().toISOString(),
     });
+
+    if (payload.questionnaire_id) {
+      touchedQuestionnaireIds.add(payload.questionnaire_id);
+    }
 
     // Create answer records
     if (Array.isArray(payload.answers)) {
@@ -168,6 +173,9 @@ async function processResponseBatch() {
 
     // Mark as completed
     await updateQueueStatus(queueIds, 'completed');
+
+    // Trigger incremental benchmark recomputation per questionnaire (best-effort)
+    await triggerIncrementalBenchmarks(Array.from(touchedQuestionnaireIds));
 
     return { processed: queueItems.length, failed: 0 };
 
@@ -253,4 +261,34 @@ async function logFailedJobs(queueItems: any[], error: any) {
   } catch (logError) {
     console.error('Failed to log failed jobs:', logError);
   }
+}
+
+/**
+ * Trigger internal incremental benchmark updates
+ */
+async function triggerIncrementalBenchmarks(questionnaireIds: string[]) {
+  if (!questionnaireIds.length) return;
+  const internalSecret = process.env.INTERNAL_API_SECRET || process.env.CRON_SECRET;
+  // Try to infer the base URL for calling our own API
+  const baseEnv = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL;
+  const baseUrl = baseEnv ? (baseEnv.startsWith('http') ? baseEnv : `https://${baseEnv}`) : '';
+
+  await Promise.allSettled(
+    questionnaireIds.map(async (qid) => {
+      try {
+        const url = `${baseUrl}/api/internal/benchmarks/incremental`;
+        await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(internalSecret ? { 'Authorization': `Bearer ${internalSecret}` } : {}),
+          },
+          body: JSON.stringify({ questionnaire_id: qid })
+        });
+      } catch (e) {
+        // Non-blocking; log and continue
+        console.error('Failed to trigger incremental benchmark for', qid, e);
+      }
+    })
+  );
 }

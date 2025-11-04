@@ -5,6 +5,7 @@
 
 import { redirect } from 'next/navigation'
 import { getUser } from '@/app/actions/auth'
+import { hasFeatureForUser } from '@/lib/billing/features'
 import Link from 'next/link'
 
 export default async function SSOSettingsPage() {
@@ -17,6 +18,9 @@ export default async function SSOSettingsPage() {
   // TODO: Check if user is workspace admin
   // TODO: Get workspace ID from context
   const workspaceId = 'default-workspace'
+
+  // Feature gate: SSO is business-only by default
+  const ssoEnabled = await hasFeatureForUser(user.id, 'sso')
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -57,17 +61,46 @@ export default async function SSOSettingsPage() {
           </p>
         </div>
 
+        {!ssoEnabled && (
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-6">
+            <h3 className="text-lg font-semibold text-amber-900 mb-2">Upgrade to enable SSO</h3>
+            <p className="text-sm text-amber-800 mb-4">
+              SSO is available on the Business plan. Upgrade to enable SAML/OAuth provider configuration and enterprise controls.
+            </p>
+            <a
+              href="/dashboard/billing/upgrade"
+              className="inline-flex items-center rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+            >
+              View plans
+            </a>
+          </div>
+        )}
+
         <div className="space-y-6">
           {/* SSO Connections List */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">SSO Connections</h3>
-            <SSOConnectionsList workspaceId={workspaceId} />
+            {ssoEnabled ? (
+              <SSOConnectionsList workspaceId={workspaceId} />
+            ) : (
+              <div className="text-sm text-gray-500">SSO is disabled on your current plan.</div>
+            )}
           </div>
 
           {/* Add New Connection */}
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Add New Connection</h3>
-            <AddSSOConnectionForm workspaceId={workspaceId} />
+            {ssoEnabled ? (
+              <AddSSOConnectionForm workspaceId={workspaceId} />
+            ) : (
+              <button
+                disabled
+                className="w-full cursor-not-allowed rounded-md bg-gray-200 px-4 py-3 text-sm font-medium text-gray-500"
+                title="Upgrade to enable SSO"
+              >
+                Create SSO Connection (Upgrade required)
+              </button>
+            )}
           </div>
 
           {/* SSO Information */}
