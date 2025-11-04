@@ -24,6 +24,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // TODO: Add rate limiting (Recommendation #2)
+    // Note: Rate limiting should be implemented at API Gateway/CDN level for edge runtime
+    // Or use Upstash Rate Limit which works in edge runtime
+    
+    // TODO: Check quota limits (Recommendation #2)
+    // This should happen in the cron processor to avoid slowing down edge response
+
     // Generate unique response ID
     const responseId = crypto.randomUUID();
     

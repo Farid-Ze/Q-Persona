@@ -91,9 +91,20 @@ async function processResponseBatch() {
   // Prepare batch inserts
   const respondents = [];
   const answers = [];
+  const exceededQuota = [];
   
   for (const item of queueItems) {
     const payload = item.payload;
+    
+    // Check quota before processing (Recommendation #2)
+    // TODO: Implement actual quota check
+    // For now, process all items
+    const quotaOk = true; // await checkResponseQuota(payload.questionnaire_id)
+    
+    if (!quotaOk) {
+      exceededQuota.push(item.id);
+      continue;
+    }
     
     // Create respondent record
     respondents.push({
@@ -155,6 +166,9 @@ async function processResponseBatch() {
   } catch (error) {
     console.error('Batch processing error:', error);
     
+    // Log failed jobs to failed_jobs table (Recommendation #1)
+    await logFailedJobs(queueItems, error);
+    
     // Mark as failed and increment retry count
     await updateQueueStatus(queueIds, 'failed', true);
     
@@ -197,4 +211,38 @@ async function updateQueueStatus(
       body: JSON.stringify(updates),
     }
   );
+}
+
+/**
+ * Log failed jobs to failed_jobs table (Recommendation #1)
+ */
+async function logFailedJobs(queueItems: any[], error: any) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  
+  if (!supabaseUrl || !serviceKey) return;
+  
+  const failedJobs = queueItems.map(item => ({
+    queue_name: 'response_queue',
+    payload: item.payload,
+    error_message: error instanceof Error ? error.message : String(error),
+    error_stack: error instanceof Error ? error.stack : undefined,
+    retry_count: item.retry_count || 0,
+    status: 'failed',
+  }));
+  
+  try {
+    await fetch(`${supabaseUrl}/rest/v1/failed_jobs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': serviceKey,
+        'Authorization': `Bearer ${serviceKey}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(failedJobs),
+    });
+  } catch (logError) {
+    console.error('Failed to log failed jobs:', logError);
+  }
 }

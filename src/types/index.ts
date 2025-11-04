@@ -76,6 +76,10 @@ export interface Subscription {
   current_period_start?: Date;
   current_period_end?: Date;
   cancel_at_period_end: boolean;
+  // Quota limits (Recommendation #2)
+  max_questionnaires: number;
+  max_responses_per_month: number;
+  max_api_calls_per_minute: number;
   created_at: Date;
   updated_at: Date;
 }
@@ -147,4 +151,60 @@ export interface ApiResponse<T> {
   success: boolean;
   data?: T;
   error?: string;
+}
+
+// Failed Jobs (Recommendation #1)
+export interface FailedJob {
+  id: string;
+  queue_name: string;
+  payload: any;
+  error_message?: string;
+  error_stack?: string;
+  failed_at: Date;
+  retry_count: number;
+  max_retries: number;
+  status: 'failed' | 'retrying' | 'resolved';
+  resolved_at?: Date;
+  resolved_by?: string;
+}
+
+// Audit Logs (Recommendation #3)
+export interface AuditLog {
+  id: string;
+  workspace_id?: string;
+  user_id?: string;
+  action: string;
+  resource_type?: string;
+  resource_id?: string;
+  metadata: Record<string, any>;
+  ip_address?: string;
+  user_agent?: string;
+  created_at: Date;
+}
+
+// Expert Submissions (Recommendation #4)
+export interface ExpertSubmission {
+  id: string;
+  expert_id?: string;
+  expert_email: string;
+  expert_name: string;
+  template_name: string;
+  template_description?: string;
+  template_questions: Question[];
+  status: 'pending' | 'approved' | 'rejected';
+  reviewed_by?: string;
+  reviewed_at?: Date;
+  review_notes?: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+// Response Queue
+export interface ResponseQueue {
+  id: string;
+  payload: any;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  retry_count: number;
+  created_at: Date;
+  processed_at?: Date;
 }
