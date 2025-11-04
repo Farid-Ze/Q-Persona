@@ -6,6 +6,7 @@
 
 import { redirect } from 'next/navigation'
 import { getUser } from '@/app/actions/auth'
+import { hasFeatureForUser } from '@/lib/billing/features'
 import Link from 'next/link'
 
 export default async function AuditLogPage() {
@@ -21,6 +22,8 @@ export default async function AuditLogPage() {
 
   // WARNING: This hardcoded value will show incorrect audit logs
   // Implement proper workspace context before deployment
+
+  const auditEnabled = await hasFeatureForUser(user.id, 'audit_logs')
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -55,9 +58,28 @@ export default async function AuditLogPage() {
           </p>
         </div>
 
+        {!auditEnabled && (
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-6">
+            <h3 className="text-lg font-semibold text-amber-900 mb-2">Upgrade to enable Audit Logs</h3>
+            <p className="text-sm text-amber-800 mb-4">
+              Detailed audit logs are available on the Enterprise plan. Upgrade to access complete compliance features.
+            </p>
+            <a
+              href="/dashboard/billing/upgrade"
+              className="inline-flex items-center rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+            >
+              View plans
+            </a>
+          </div>
+        )}
+
         <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
           <div className="p-6">
-            <AuditLogList workspaceId={workspaceId} />
+            {auditEnabled ? (
+              <AuditLogList workspaceId={workspaceId} />
+            ) : (
+              <div className="text-sm text-gray-500">Audit logs are disabled on your current plan.</div>
+            )}
           </div>
         </div>
       </main>

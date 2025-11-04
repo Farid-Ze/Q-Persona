@@ -46,16 +46,15 @@ export default function PricingPage() {
       name: 'Business',
       price: '$99',
       period: '/month',
-      description: 'For teams that need collaboration and security',
+      description: 'For teams that need collaboration and growth',
       features: [
         'Everything in Pro',
         '10,000 responses/month',
         'Team collaboration',
-        'SSO (SAML, OAuth)',
-        'Basic audit logs (30 days)',
+        'Advanced analytics & exports',
         'Role-based access control',
         'Priority support',
-        'Dedicated account manager',
+        'API access & webhooks',
       ],
       cta: 'Start Free Trial',
       ctaLink: '/auth/signup?plan=business',
@@ -63,15 +62,18 @@ export default function PricingPage() {
     },
     {
       name: 'Enterprise',
-      price: '$10,000',
-      period: '/year',
+      price: 'Contact us',
+      period: '',
       description: 'For regulated industries requiring complete compliance',
       features: [
         'Everything in Business',
         'Unlimited responses',
         'Complete audit logs (unlimited)',
+        'SSO (SAML, OAuth)',
+        'SCIM 2.0 user provisioning',
+        'Data residency (EU/US/APAC)',
         'Multi-factor authentication',
-        '99.5% uptime SLA',
+        '99.9% uptime SLA',
         'Custom integrations',
         'Advanced security features',
         'Dedicated account manager',
@@ -149,8 +151,8 @@ export default function PricingPage() {
               <div
                 key={tier.name}
                 className={`relative rounded-2xl ${tier.highlighted
-                    ? 'border-2 border-blue-600 shadow-xl'
-                    : 'border border-gray-200 shadow-sm'
+                  ? 'border-2 border-blue-600 shadow-xl'
+                  : 'border border-gray-200 shadow-sm'
                   } bg-white p-8 ${tier.enterprise ? 'lg:col-span-1' : ''}`}
               >
                 {tier.highlighted && (
@@ -197,8 +199,8 @@ export default function PricingPage() {
                 <Link
                   href={tier.ctaLink}
                   className={`block w-full rounded-lg py-3 text-center font-medium ${tier.highlighted || tier.enterprise
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                 >
                   {tier.cta}
@@ -256,19 +258,19 @@ export default function PricingPage() {
                 />
                 <ComparisonRow
                   feature="SSO (SAML, OAuth)"
-                  values={[false, false, true, true]}
-                />
-                <ComparisonRow
-                  feature="Audit Logs"
-                  values={[false, false, '30 days', 'Unlimited']}
-                />
-                <ComparisonRow
-                  feature="Multi-Factor Auth"
                   values={[false, false, false, true]}
                 />
                 <ComparisonRow
+                  feature="Audit Logs"
+                  values={[false, false, false, 'Unlimited']}
+                />
+                <ComparisonRow
+                  feature="Multi-Factor Auth"
+                  values={[false, true, true, true]}
+                />
+                <ComparisonRow
                   feature="SLA Guarantee"
-                  values={[false, false, false, '99.5%']}
+                  values={[false, false, false, '99.9%']}
                 />
                 <ComparisonRow
                   feature="Support"

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { getServerAuthAdapter } from '@/lib/services/authAdapter'
 import { trackPersonaSelected, trackOnboardingCompleted } from '@/lib/analytics/server'
 
 /**
@@ -10,11 +11,10 @@ import { trackPersonaSelected, trackOnboardingCompleted } from '@/lib/analytics/
 export async function GET(req: NextRequest) {
   try {
     const supabase = await createClient()
+    const auth = getServerAuthAdapter()
+    const authUser = await auth.getUserFromRequest(req.headers)
 
-    // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
+    if (!authUser) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         created_at,
         personas (*)
       `)
-      .eq('user_id', user.id)
+      .eq('user_id', authUser.id)
 
     if (error) {
       console.error('Error fetching user personas:', error)
@@ -55,11 +55,10 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createClient()
+    const auth = getServerAuthAdapter()
+    const authUser = await auth.getUserFromRequest(req.headers)
 
-    // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
+    if (!authUser) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -80,11 +79,11 @@ export async function POST(req: NextRequest) {
     await supabase
       .from('user_personas')
       .delete()
-      .eq('user_id', user.id)
+      .eq('user_id', authUser.id)
 
     // Insert new user personas
     const insertData = persona_ids.map(persona_id => ({
-      user_id: user.id,
+      user_id: authUser.id,
       persona_id,
     }))
 
@@ -108,13 +107,13 @@ export async function POST(req: NextRequest) {
     // Track analytics events
     if (data && data.length > 0) {
       // Track onboarding completed
-      await trackOnboardingCompleted(user.id, data.length)
+      await trackOnboardingCompleted(authUser.id, data.length)
 
       // Track each persona selection
       for (const item of data) {
         const persona = (item as any).personas
         if (persona) {
-          await trackPersonaSelected(user.id, persona.id, persona.name)
+          await trackPersonaSelected(authUser.id, persona.id, persona.name)
         }
       }
     }
@@ -135,11 +134,10 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const supabase = await createClient()
+    const auth = getServerAuthAdapter()
+    const authUser = await auth.getUserFromRequest(req.headers)
 
-    // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
+    if (!authUser) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -159,7 +157,7 @@ export async function DELETE(req: NextRequest) {
     const { error } = await supabase
       .from('user_personas')
       .delete()
-      .eq('user_id', user.id)
+      .eq('user_id', authUser.id)
       .eq('persona_id', personaId)
 
     if (error) {

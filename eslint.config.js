@@ -14,4 +14,21 @@ module.exports = [
             'react-hooks/error-boundaries': 'error',
         },
     },
+    {
+        files: ['src/app/**/*.{ts,tsx}', 'src/components/**/*.{ts,tsx}'],
+        rules: {
+            // Forbid direct usage of Supabase JS SDK in UI layers; use adapters/services instead
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@supabase/supabase-js'],
+                            message: 'Import Supabase SDK only within src/lib/services or src/lib/supabase. Use service adapters in UI/routes.'
+                        },
+                    ],
+                },
+            ],
+        },
+    },
 ]
