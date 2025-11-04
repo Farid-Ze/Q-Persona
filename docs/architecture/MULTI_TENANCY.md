@@ -90,6 +90,34 @@ Templates also include expert validation fields:
    - Can only view resources
    - Cannot modify anything
 
+### Workspace Role Codes
+
+The platform uses three standardized role codes:
+
+| Role Code | Level | Description | Typical Use Cases |
+|-----------|-------|-------------|-------------------|
+| `viewer` | 1 | Read-only access | Stakeholders, clients, external collaborators |
+| `editor` | 2 | Can create and edit content | Content creators, researchers, analysts |
+| `admin` | 3 | Full workspace control | Workspace owners, team leads, managers |
+
+**Role Capabilities Matrix:**
+
+| Action | Viewer | Editor | Admin |
+|--------|--------|--------|-------|
+| View questionnaires | ✅ | ✅ | ✅ |
+| View templates | ✅ | ✅ | ✅ |
+| Create questionnaires | ❌ | ✅ | ✅ |
+| Create templates | ❌ | ✅ | ✅ |
+| Update questionnaires | ❌ | ✅ | ✅ |
+| Update templates | ❌ | ✅ | ✅ |
+| Delete questionnaires | ❌ | ❌ | ✅ |
+| Delete templates | ❌ | ❌ | ✅ |
+| Update workspace settings | ❌ | ❌ | ✅ |
+| Manage billing | ❌ | ❌ | ✅ |
+| Invite members | ❌ | ❌ | ✅ |
+| Remove members | ❌ | ❌ | ✅ |
+| Change member roles | ❌ | ❌ | ✅ |
+
 ### Permission Model
 
 The authorization system uses a hierarchical permission model:
@@ -107,6 +135,49 @@ Actions require minimum role levels:
 - Create/Update operations: `editor`
 - Delete operations: `admin`
 - Workspace management: `admin`
+
+### Action Permission Codes
+
+The platform uses standardized action permission codes for fine-grained access control. These codes are defined in `src/lib/auth/authorization.ts`:
+
+```typescript
+export const ACTION_PERMISSIONS = {
+  // Questionnaire actions
+  'questionnaires:create': 'editor',
+  'questionnaires:read': 'viewer',
+  'questionnaires:update': 'editor',
+  'questionnaires:delete': 'admin',
+  
+  // Template actions
+  'templates:create': 'editor',
+  'templates:read': 'viewer',
+  'templates:update': 'editor',
+  'templates:delete': 'admin',
+  
+  // Workspace management
+  'workspace:update': 'admin',
+  'workspace:billing': 'admin',
+  'workspace:members:invite': 'admin',
+  'workspace:members:remove': 'admin',
+  'workspace:members:update-role': 'admin',
+};
+```
+
+**Usage Example:**
+
+```typescript
+import { canPerformAction } from '@/lib/auth/authorization';
+
+// Check if user can delete a questionnaire
+if (canPerformAction(ctx, 'questionnaires:delete')) {
+  // Proceed with deletion
+}
+
+// Check if user can invite members
+if (canPerformAction(ctx, 'workspace:members:invite')) {
+  // Show invite button
+}
+```
 
 ### Implementation Files
 
@@ -149,6 +220,17 @@ X-Workspace-ID: xxx
 X-User-Role: admin
 ```
 
+**Request Headers:**
+- `Authorization`: User authentication token
+- `X-Workspace-ID`: The workspace context for the request
+- `X-User-Role`: User's role in the workspace (`viewer`, `editor`, or `admin`)
+
+**Response Status Codes:**
+- `200`: Success
+- `401`: Unauthorized (not authenticated)
+- `403`: Forbidden (insufficient permissions for action)
+- `404`: Not found or not in workspace
+
 ### Authorization Checks
 
 All API routes must check:
@@ -162,6 +244,31 @@ const ctx = await getAuthorizationContext(request, userId, workspaceId);
 if (!canPerformAction(ctx, 'questionnaires:delete')) {
   return new Response('Forbidden', { status: 403 });
 }
+```
+
+**Common Action Permission Checks:**
+
+```typescript
+// Reading resources
+canPerformAction(ctx, 'questionnaires:read')  // viewer or higher
+canPerformAction(ctx, 'templates:read')       // viewer or higher
+
+// Creating/updating resources
+canPerformAction(ctx, 'questionnaires:create')  // editor or higher
+canPerformAction(ctx, 'questionnaires:update')  // editor or higher
+canPerformAction(ctx, 'templates:create')       // editor or higher
+canPerformAction(ctx, 'templates:update')       // editor or higher
+
+// Deleting resources
+canPerformAction(ctx, 'questionnaires:delete')  // admin only
+canPerformAction(ctx, 'templates:delete')       // admin only
+
+// Workspace management
+canPerformAction(ctx, 'workspace:update')              // admin only
+canPerformAction(ctx, 'workspace:billing')             // admin only
+canPerformAction(ctx, 'workspace:members:invite')      // admin only
+canPerformAction(ctx, 'workspace:members:remove')      // admin only
+canPerformAction(ctx, 'workspace:members:update-role') // admin only
 ```
 
 ## Row Level Security (RLS)

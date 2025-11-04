@@ -104,6 +104,25 @@ Scopes control access:
 - `write:questionnaires` - Create questionnaires
 - `read:responses` - View responses
 - `write:responses` - Submit responses
+- `read:templates` - View templates
+- `write:templates` - Create templates
+
+**API Permission Scopes:**
+
+| Scope | Description | Workspace Role Required |
+|-------|-------------|------------------------|
+| `read:questionnaires` | View questionnaires | viewer or higher |
+| `write:questionnaires` | Create/update questionnaires | editor or higher |
+| `delete:questionnaires` | Delete questionnaires | admin only |
+| `read:templates` | View templates | viewer or higher |
+| `write:templates` | Create/update templates | editor or higher |
+| `delete:templates` | Delete templates | admin only |
+| `read:responses` | View responses | viewer or higher |
+| `write:responses` | Submit responses | Any authenticated user |
+| `manage:workspace` | Modify workspace settings | admin only |
+| `manage:members` | Invite/remove members | admin only |
+
+**Note:** API keys inherit the creator's workspace role. An API key created by a `viewer` cannot perform write operations, even if the scope is granted.
 
 #### UI Pages
 - `/dashboard/workspace/settings/api-keys` - Manage API keys

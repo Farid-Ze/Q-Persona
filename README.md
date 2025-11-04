@@ -52,7 +52,17 @@ Q-Persona leverages a modern serverless architecture designed for optimal perfor
 - **Presentation Layer**: Next.js (React framework) supporting both static and dynamic content rendering
 - **Application Layer**: Supabase Backend-as-a-Service with Server Actions for secure, type-safe operations
 - **Data Layer**: PostgreSQL relational database managed through Supabase infrastructure
-- **Security Layer**: Supabase Authentication with enterprise-grade session management
+- **Security Layer**: Supabase Authentication with enterprise-grade session management and RBAC
+
+**Workspace-Based Multi-Tenancy:**
+
+Q-Persona implements workspace-based multi-tenancy with Role-Based Access Control (RBAC):
+
+- **Workspace Role Codes**: `viewer` (read-only), `editor` (create/modify), `admin` (full control)
+- **Action Permissions**: Granular permission codes for fine-grained access control
+- **Resource Isolation**: All questionnaires, templates, and data are workspace-scoped
+
+See [Multi-Tenancy Documentation](./docs/architecture/MULTI_TENANCY.md) for complete details.
 
 ## Information Architecture
 

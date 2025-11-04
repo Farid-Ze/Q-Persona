@@ -14,6 +14,54 @@ This document provides examples for testing the Q-Persona API endpoints.
 http://localhost:3000/api
 ```
 
+## Authentication and Authorization
+
+Q-Persona uses workspace-based authentication with Role-Based Access Control (RBAC).
+
+### Request Headers
+
+All authenticated API requests should include:
+
+```bash
+Authorization: Bearer <token>
+X-Workspace-ID: <workspace-uuid>
+X-User-Role: <viewer|editor|admin>
+```
+
+### Workspace Role Codes
+
+| Role Code | Level | Permissions |
+|-----------|-------|-------------|
+| `viewer` | 1 | Read-only access to all resources |
+| `editor` | 2 | Can create and modify questionnaires and templates |
+| `admin` | 3 | Full workspace control including member management |
+
+### Action Permission Codes
+
+API endpoints check permissions using standardized action codes:
+
+| Action Code | Required Role | Endpoints |
+|-------------|---------------|-----------|
+| `questionnaires:read` | `viewer` | GET /api/questionnaires |
+| `questionnaires:create` | `editor` | POST /api/questionnaires |
+| `questionnaires:update` | `editor` | PUT /api/questionnaires/[id] |
+| `questionnaires:delete` | `admin` | DELETE /api/questionnaires/[id] |
+| `templates:read` | `viewer` | GET /api/templates |
+| `templates:create` | `editor` | POST /api/templates |
+| `templates:update` | `editor` | PUT /api/templates/[id] |
+| `templates:delete` | `admin` | DELETE /api/templates/[id] |
+| `workspace:update` | `admin` | PUT /api/workspaces/[id] |
+| `workspace:billing` | `admin` | GET/POST /api/workspaces/[id]/billing |
+| `workspace:members:invite` | `admin` | POST /api/workspaces/[id]/members |
+| `workspace:members:remove` | `admin` | DELETE /api/workspaces/[id]/members/[id] |
+
+### Authorization Response Codes
+
+- `200`: Success
+- `401`: Unauthorized (not authenticated)
+- `403`: Forbidden (insufficient workspace permissions)
+- `404`: Not found or not in workspace
+
 ## API Endpoints
 
 ### 1. Users API
