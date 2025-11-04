@@ -312,6 +312,96 @@ export default function SecurityPage() {
         </div>
       </div>
 
+      {/* Documentation Downloads */}
+      <div className="py-16 bg-white border-t border-gray-200">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Compliance Documentation
+            </h2>
+            <p className="text-lg text-gray-600">
+              Download comprehensive security and compliance documentation for your IT review
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <a
+              href="https://github.com/Farid-Ze/Q-Persona/blob/main/docs/enterprise/security-whitepaper.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block group rounded-lg border-2 border-gray-200 p-6 hover:border-blue-500 hover:shadow-lg transition"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600">
+                    Security Whitepaper
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    30+ pages covering architecture, encryption, audit logging, and security controls
+                  </p>
+                  <div className="flex items-center text-sm text-blue-600 font-medium">
+                    View Document
+                    <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            <a
+              href="https://github.com/Farid-Ze/Q-Persona/blob/main/docs/enterprise/compliance-datasheet.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block group rounded-lg border-2 border-gray-200 p-6 hover:border-blue-500 hover:shadow-lg transition"
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600">
+                    Compliance Datasheet
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Complete compliance status for GDPR, HIPAA, SOC 2, ISO 27001, and regional regulations
+                  </p>
+                  <div className="flex items-center text-sm text-blue-600 font-medium">
+                    View Document
+                    <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-sm text-gray-600 mb-4">
+              Need additional documentation for your IT security review?
+            </p>
+            <Link
+              href="/enterprise#demo"
+              className="text-blue-600 hover:text-blue-700 font-medium"
+            >
+              Contact our security team for DPA, BAA, and other compliance documents →
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* CTA */}
       <div className="bg-blue-600 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">

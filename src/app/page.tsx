@@ -9,7 +9,25 @@ export default async function Home() {
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold">Q-Persona</h1>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
+            <Link 
+              href="/marketplace"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900"
+            >
+              Marketplace
+            </Link>
+            <Link 
+              href="/enterprise"
+              className="text-sm font-medium text-blue-600 hover:text-blue-700"
+            >
+              Enterprise
+            </Link>
+            <Link 
+              href="/pricing"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900"
+            >
+              Pricing
+            </Link>
             {user ? (
               <Link 
                 href="/dashboard"
@@ -79,6 +97,46 @@ export default async function Home() {
             <li>PostgreSQL Database</li>
             <li>Modern authentication system</li>
           </ul>
+        </div>
+
+        {/* Enterprise CTA */}
+        <div className="mt-12 p-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h3 className="text-2xl font-bold mb-2">Enterprise-Grade Security Built In</h3>
+              <p className="text-blue-100 mb-4">
+                Complete audit logging, SSO integration, and compliance documentation for regulated industries
+              </p>
+              <ul className="space-y-2 text-sm text-blue-100">
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Complete audit trail with immutable logging
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  GDPR compliant • HIPAA ready • SOC 2 in progress
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  SSO (SAML, OAuth) • Multi-factor authentication
+                </li>
+              </ul>
+            </div>
+            <div className="ml-8">
+              <Link
+                href="/enterprise"
+                className="inline-block rounded-lg bg-white px-6 py-3 text-blue-600 font-semibold hover:bg-gray-100 transition"
+              >
+                Learn More →
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </main>

@@ -267,13 +267,13 @@ export default function EnterprisePage() {
               icon="📋"
               title="Security Whitepaper"
               description="Complete security architecture, data flow, and encryption details"
-              link="/docs/enterprise/security-whitepaper"
+              link="https://github.com/Farid-Ze/Q-Persona/blob/main/docs/enterprise/security-whitepaper.md"
             />
             <ComplianceCard
               icon="✅"
               title="Compliance Datasheet"
               description="GDPR, HIPAA, SOC 2, and regional compliance status"
-              link="/docs/enterprise/compliance-datasheet"
+              link="https://github.com/Farid-Ze/Q-Persona/blob/main/docs/enterprise/compliance-datasheet.md"
             />
             <ComplianceCard
               icon="🔒"
