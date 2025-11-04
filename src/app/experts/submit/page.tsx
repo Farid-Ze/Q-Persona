@@ -206,6 +206,8 @@ async function submitTemplate(formData: FormData) {
     templateQuestions = JSON.parse(templateQuestionsStr)
   } catch (error) {
     console.error('Invalid JSON:', error)
+    // TODO: Implement proper error feedback to user
+    // For now, just log and return
     return
   }
   
@@ -219,7 +221,7 @@ async function submitTemplate(formData: FormData) {
   
   // Insert into expert_submissions table
   try {
-    await fetch(`${supabaseUrl}/rest/v1/expert_submissions`, {
+    const response = await fetch(`${supabaseUrl}/rest/v1/expert_submissions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -238,8 +240,12 @@ async function submitTemplate(formData: FormData) {
       }),
     })
     
+    if (!response.ok) {
+      throw new Error('Failed to submit template')
+    }
+    
     console.log('Template submitted successfully')
-    // TODO: Redirect to success page or show success message
+    // TODO: Implement redirect to success page
   } catch (error) {
     console.error('Failed to submit template:', error)
   }

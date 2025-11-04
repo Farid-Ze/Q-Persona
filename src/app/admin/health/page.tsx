@@ -15,8 +15,9 @@ export default async function AdminHealthPage() {
     redirect('/auth/login')
   }
   
-  // TODO: Check if user is Super Admin
-  // For now, allow all authenticated users - implement proper RBAC later
+  // SECURITY WARNING: This page is accessible to all authenticated users
+  // TODO: Implement Super Admin role check before production deployment
+  // Example: if (user.role !== 'super_admin') { redirect('/dashboard') }
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -186,10 +187,83 @@ async function retryFailedJob(formData: FormData) {
   
   const jobId = formData.get('jobId') as string
   
-  // TODO: Implement retry logic
-  // 1. Fetch the failed job
-  // 2. Re-push to response_queue
-  // 3. Update failed_job status to 'resolved'
+  if (!jobId) {
+    console.error('No job ID provided')
+    return
+  }
   
-  console.log('Retrying job:', jobId)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY
+  
+  if (!supabaseUrl || !serviceKey) {
+    console.error('Database not configured')
+    return
+  }
+  
+  try {
+    // 1. Fetch the failed job
+    const failedJobResponse = await fetch(
+      `${supabaseUrl}/rest/v1/failed_jobs?id=eq.${jobId}`,
+      {
+        headers: {
+          'apikey': serviceKey,
+          'Authorization': `Bearer ${serviceKey}`,
+        },
+      }
+    )
+    
+    if (!failedJobResponse.ok) {
+      throw new Error('Failed to fetch job')
+    }
+    
+    const failedJobs = await failedJobResponse.json()
+    
+    if (failedJobs.length === 0) {
+      console.error('Job not found:', jobId)
+      return
+    }
+    
+    const failedJob = failedJobs[0]
+    
+    // 2. Re-push to response_queue
+    await fetch(`${supabaseUrl}/rest/v1/response_queue`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': serviceKey,
+        'Authorization': `Bearer ${serviceKey}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        payload: failedJob.payload,
+        status: 'pending',
+        retry_count: 0,
+        created_at: new Date().toISOString(),
+      }),
+    })
+    
+    // 3. Update failed_job status to 'resolved'
+    await fetch(
+      `${supabaseUrl}/rest/v1/failed_jobs?id=eq.${jobId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': serviceKey,
+          'Authorization': `Bearer ${serviceKey}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          status: 'resolved',
+          resolved_at: new Date().toISOString(),
+        }),
+      }
+    )
+    
+    console.log('Job retried successfully:', jobId)
+    // TODO: Implement revalidation or redirect to refresh page
+    
+  } catch (error) {
+    console.error('Failed to retry job:', error)
+  }
 }

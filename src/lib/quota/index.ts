@@ -98,7 +98,18 @@ async function checkQuotaWithLimit(
   );
   
   const contentRange = countResponse.headers.get('content-range');
-  const current = contentRange ? parseInt(contentRange.split('/')[1]) : 0;
+  let current = 0;
+  
+  // Safely parse content-range header (format: "0-0/123")
+  if (contentRange) {
+    const parts = contentRange.split('/');
+    if (parts.length === 2) {
+      const count = parseInt(parts[1], 10);
+      if (!isNaN(count)) {
+        current = count;
+      }
+    }
+  }
   
   const percentage = (current / limit) * 100;
   const allowed = current < limit;
@@ -162,7 +173,18 @@ export async function checkQuestionnaireQuota(
     );
     
     const contentRange = countResponse.headers.get('content-range');
-    const current = contentRange ? parseInt(contentRange.split('/')[1]) : 0;
+    let current = 0;
+    
+    // Safely parse content-range header (format: "0-0/123")
+    if (contentRange) {
+      const parts = contentRange.split('/');
+      if (parts.length === 2) {
+        const count = parseInt(parts[1], 10);
+        if (!isNaN(count)) {
+          current = count;
+        }
+      }
+    }
     
     const percentage = (current / limit) * 100;
     const allowed = current < limit;

@@ -15,8 +15,12 @@ export default async function AuditLogPage() {
     redirect('/auth/login')
   }
   
-  // TODO: Get workspace ID from context/params
-  const workspaceId = 'default-workspace' // Placeholder
+  // TODO: Get workspace ID from URL params or user context
+  // For now using placeholder - MUST BE FIXED before production
+  const workspaceId = 'default-workspace' 
+  
+  // WARNING: This hardcoded value will show incorrect audit logs
+  // Implement proper workspace context before deployment
   
   return (
     <div className="min-h-screen bg-gray-50">

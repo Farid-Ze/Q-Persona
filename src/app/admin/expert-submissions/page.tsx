@@ -14,7 +14,9 @@ export default async function ExpertSubmissionsPage() {
     redirect('/auth/login')
   }
   
-  // TODO: Check if user is Super Admin
+  // SECURITY WARNING: This page is accessible to all authenticated users
+  // TODO: Implement Super Admin role check before production deployment
+  // Example: if (user.role !== 'super_admin') { redirect('/dashboard') }
   
   return (
     <div className="min-h-screen bg-gray-50">

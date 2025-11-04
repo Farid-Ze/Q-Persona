@@ -151,6 +151,7 @@ export async function getWorkspacePlanType(
 
 /**
  * Clean up old entries from rate limit store (call periodically)
+ * Only run in Node.js runtime, not in edge runtime
  */
 export function cleanupRateLimitStore() {
   const now = Date.now();
@@ -161,7 +162,11 @@ export function cleanupRateLimitStore() {
   }
 }
 
-// Clean up every 5 minutes
-if (typeof setInterval !== 'undefined') {
-  setInterval(cleanupRateLimitStore, 5 * 60 * 1000);
+// Clean up every 5 minutes - only in Node.js runtime
+// In edge runtime, cleanup happens naturally during rate limit checks
+if (typeof setInterval !== 'undefined' && typeof window === 'undefined') {
+  // Check if we're in a Node.js environment (not browser, not edge)
+  if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+    setInterval(cleanupRateLimitStore, 5 * 60 * 1000);
+  }
 }
