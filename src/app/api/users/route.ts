@@ -29,7 +29,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // TODO: Validate input
-    // TODO: Hash password
+    // TODO: Hash password with bcrypt or argon2:
+    //   import bcrypt from 'bcrypt';
+    //   const saltRounds = 10;
+    //   const password_hash = await bcrypt.hash(body.password, saltRounds);
     // TODO: Insert into database via BaaS
     
     const response: ApiResponse<User> = {
@@ -38,7 +41,7 @@ export async function POST(request: NextRequest) {
         id: 'temp-id',
         email: body.email,
         name: body.name,
-        password_hash: 'hashed',
+        password_hash: '[PLACEHOLDER - implement proper hashing]',
         created_at: new Date(),
         updated_at: new Date()
       }

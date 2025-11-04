@@ -13,8 +13,11 @@ export const dbConfig = {
   password: process.env.DB_PASSWORD || '',
   
   // SSL settings for cloud databases
+  // In production, always use proper SSL certificate validation
   ssl: process.env.DB_SSL === 'true' ? {
-    rejectUnauthorized: false
+    rejectUnauthorized: process.env.NODE_ENV === 'production',
+    // For production with custom CA certificates:
+    // ca: process.env.DB_SSL_CA,
   } : false,
   
   // Connection pool settings
@@ -30,11 +33,13 @@ export const dbConfig = {
  * - DB_HOST: db.{project-ref}.supabase.co
  * - DB_PORT: 5432
  * - DB_SSL: true
+ * - Uses managed certificates (rejectUnauthorized: true)
  * 
  * Neon:
  * - DB_HOST: {endpoint-id}.{region}.aws.neon.tech
  * - DB_PORT: 5432
  * - DB_SSL: true
+ * - Uses managed certificates (rejectUnauthorized: true)
  * 
  * PlanetScale (MySQL):
  * - Requires different configuration
