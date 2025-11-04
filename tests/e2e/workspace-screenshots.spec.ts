@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -28,7 +28,7 @@ test.describe('Workspace Screenshots', () => {
   };
 
   // Helper function to take screenshot and verify page
-  const capturePageScreenshot = async (page: any, url: string, pageName: string, projectName: string) => {
+  const capturePageScreenshot = async (page: Page, url: string, pageName: string, projectName: string) => {
     await page.goto(url);
     
     // Wait for the page to be fully loaded

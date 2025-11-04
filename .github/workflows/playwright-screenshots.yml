@@ -15,6 +15,9 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
     
     steps:
     - name: Checkout code
@@ -75,6 +78,10 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write  # For PR comments
     
     steps:
     - name: Checkout code

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import * as path from 'path';
 
 /**
@@ -14,7 +14,7 @@ test.describe('Visual Regression Tests', () => {
   });
 
   // Helper function to prepare page and take snapshot
-  const comparePageSnapshot = async (page: any, url: string, snapshotName: string) => {
+  const comparePageSnapshot = async (page: Page, url: string, snapshotName: string) => {
     await page.goto(url);
     
     // Wait for the page to be fully loaded
