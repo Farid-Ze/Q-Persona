@@ -31,6 +31,11 @@ Comprehensive guides for all platform features and capabilities.
 - [API Testing](./features/API_TESTING.md) - RESTful API reference
 - [Package Updates](./features/PACKAGE_UPDATES.md) - Version management
 
+**Key Concepts:**
+- **Workspace Role Codes**: `viewer`, `editor`, `admin` - Hierarchical access control
+- **Action Permission Codes**: Fine-grained permissions (e.g., `questionnaires:delete`, `workspace:billing`)
+- See [Multi-Tenancy](./architecture/MULTI_TENANCY.md) for complete RBAC documentation
+
 ### 💼 [Enterprise](./enterprise/)
 Enterprise features, business strategy, and go-to-market documentation.
 

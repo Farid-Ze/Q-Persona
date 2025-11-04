@@ -39,10 +39,13 @@ Technical architecture, deployment, and infrastructure documentation for Q-Perso
 ### Advanced Architecture
 
 **[MULTI_TENANCY.md](./MULTI_TENANCY.md)**
-- Multi-tenancy architecture
-- Workspace isolation
-- Data separation
-- Row-level security (RLS)
+- Multi-tenancy architecture with workspace isolation
+- Role-Based Access Control (RBAC) with hierarchical permissions
+- Workspace role codes: `viewer`, `editor`, `admin`
+- Action permission codes (e.g., `questionnaires:delete`, `workspace:billing`)
+- Data separation and security
+- Row-level security (RLS) policies
+- API authorization patterns
 - Performance considerations
 
 **[PERFORMANCE_ARCHITECTURE.md](./PERFORMANCE_ARCHITECTURE.md)**

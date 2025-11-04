@@ -92,60 +92,75 @@
 
 ### 2. Pre-Populated Team Members (8 users)
 
+**Note:** All users are assigned standardized workspace role codes for consistent permission management.
+
 #### User 1: Sarah Tan (Admin)
 - **Email:** sarah.tan@acmebank.demo
-- **Role:** Workspace Admin
+- **Role Code:** `admin` (Level 3 - Full Control)
 - **Department:** IT Security
 - **MFA:** Enabled
-- **Recent Activity:** Created 3 surveys, exported audit logs
+- **Permissions:** All action codes including `workspace:billing`, `workspace:members:invite`, `questionnaires:delete`
+- **Recent Activity:** Created 3 surveys, exported audit logs, managed team members
 
 #### User 2: Ahmad Rahman (Admin)
 - **Email:** ahmad.rahman@acmebank.demo
-- **Role:** Workspace Admin
+- **Role Code:** `admin` (Level 3 - Full Control)
 - **Department:** Compliance
 - **MFA:** Enabled
-- **Recent Activity:** Reviewed compliance survey results
+- **Permissions:** All action codes including `workspace:update`, `templates:delete`
+- **Recent Activity:** Reviewed compliance survey results, accessed audit logs
 
 #### User 3: Linda Wijaya (Editor)
 - **Email:** linda.wijaya@acmebank.demo
-- **Role:** Editor
+- **Role Code:** `editor` (Level 2 - Create & Modify)
 - **Department:** HR
 - **MFA:** Enabled
-- **Recent Activity:** Created employee satisfaction survey
+- **Permissions:** `questionnaires:create`, `questionnaires:update`, `templates:create`, `templates:update`
+- **Cannot:** Delete resources, manage billing, invite members
+- **Recent Activity:** Created employee satisfaction survey, modified templates
 
 #### User 4: David Santoso (Editor)
 - **Email:** david.santoso@acmebank.demo
-- **Role:** Editor
+- **Role Code:** `editor` (Level 2 - Create & Modify)
 - **Department:** Marketing
 - **MFA:** Not enabled
-- **Recent Activity:** Launched NPS survey
+- **Permissions:** `questionnaires:create`, `questionnaires:update`, `templates:read`
+- **Cannot:** Delete resources, access workspace settings
+- **Recent Activity:** Launched NPS survey, updated questionnaire settings
 
 #### User 5: Maya Putri (Editor)
 - **Email:** maya.putri@acmebank.demo
-- **Role:** Editor
+- **Role Code:** `editor` (Level 2 - Create & Modify)
 - **Department:** Product
 - **MFA:** Enabled
-- **Recent Activity:** Analyzing feature request data
+- **Permissions:** `questionnaires:create`, `templates:create`, `templates:update`
+- **Cannot:** Delete or manage workspace
+- **Recent Activity:** Analyzing feature request data, created product survey
 
 #### User 6: Budi Setiawan (Viewer)
 - **Email:** budi.setiawan@acmebank.demo
-- **Role:** Viewer (Read-only)
+- **Role Code:** `viewer` (Level 1 - Read-Only)
 - **Department:** Finance
 - **MFA:** Not enabled
-- **Recent Activity:** Viewed NPS dashboard
+- **Permissions:** `questionnaires:read`, `templates:read` only
+- **Cannot:** Create, modify, or delete anything
+- **Recent Activity:** Viewed NPS dashboard, exported read-only reports
 
 #### User 7: Rina Kusuma (Viewer)
 - **Email:** rina.kusuma@acmebank.demo
-- **Role:** Viewer
+- **Role Code:** `viewer` (Level 1 - Read-Only)
 - **Department:** Operations
 - **MFA:** Not enabled
+- **Permissions:** `questionnaires:read`, `templates:read` only
+- **Cannot:** Modify any data or settings
 - **Recent Activity:** Accessed branch feedback report
 
 #### User 8: [DEACTIVATED] Former Employee
 - **Email:** john.doe@acmebank.demo
-- **Role:** N/A (Access revoked via SSO)
+- **Role Code:** N/A (Access revoked via SSO)
 - **Department:** IT (Former)
-- **Purpose:** Show instant deprovisioning
+- **Purpose:** Show instant deprovisioning and audit trail of access removal
+- **Demo Point:** Show how the action code `workspace:members:remove` was used in audit logs
 
 ---
 

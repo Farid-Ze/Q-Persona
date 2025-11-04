@@ -49,6 +49,48 @@ Generate a secure CRON_SECRET:
 openssl rand -base64 32
 ```
 
+## Step 2.5: Understanding Workspace Roles and Permissions
+
+Q-Persona uses a Role-Based Access Control (RBAC) system with three workspace roles:
+
+**Workspace Role Codes:**
+- `viewer` (Level 1): Read-only access to all resources
+- `editor` (Level 2): Can create and modify questionnaires and templates
+- `admin` (Level 3): Full workspace control including billing and member management
+
+**Action Permission Codes:**
+
+All operations in Q-Persona use standardized permission codes. Here are the key codes:
+
+| Permission Code | Required Role | Description |
+|----------------|---------------|-------------|
+| `questionnaires:read` | `viewer` | View questionnaires |
+| `questionnaires:create` | `editor` | Create new questionnaires |
+| `questionnaires:update` | `editor` | Modify questionnaires |
+| `questionnaires:delete` | `admin` | Delete questionnaires |
+| `templates:read` | `viewer` | View templates |
+| `templates:create` | `editor` | Create new templates |
+| `templates:update` | `editor` | Modify templates |
+| `templates:delete` | `admin` | Delete templates |
+| `workspace:update` | `admin` | Modify workspace settings |
+| `workspace:billing` | `admin` | Access billing settings |
+| `workspace:members:invite` | `admin` | Invite new members |
+| `workspace:members:remove` | `admin` | Remove members |
+| `workspace:members:update-role` | `admin` | Change member roles |
+
+**Example Usage in Code:**
+
+```typescript
+import { canPerformAction } from '@/lib/auth/authorization';
+
+// Check if user can perform action
+if (canPerformAction(ctx, 'questionnaires:delete')) {
+  // User is admin - allow deletion
+} else {
+  // Return 403 Forbidden
+}
+```
+
 ## Step 3: Test the Features
 
 ### A. Test Public API

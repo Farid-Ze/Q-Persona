@@ -13,10 +13,34 @@ This document verifies Q-Persona's readiness for enterprise sales and operations
 - [ ] **ISO 27001** - (Future: requires certification)
 
 ### Access Control
-- [x] **Role-Based Access Control (RBAC)** - Admin, Editor, Viewer roles
+- [x] **Role-Based Access Control (RBAC)** - Admin, Editor, Viewer roles with hierarchical permissions
 - [x] **Workspace Isolation** - Data separated by workspace
+- [x] **Action Permission Codes** - Fine-grained control with standardized permission codes
+- [x] **Permission Hierarchy** - Viewer (level 1) → Editor (level 2) → Admin (level 3)
 - [ ] **Single Sign-On (SSO)** - (Future: SAML/OAuth integration)
 - [ ] **Multi-Factor Authentication (MFA)** - (Future: 2FA requirement)
+
+**Workspace Role Codes:**
+- `viewer` - Read-only access to all resources
+- `editor` - Can create and modify content
+- `admin` - Full workspace control including billing and member management
+
+**Action Permission Codes:**
+| Permission Code | Required Role | Description |
+|----------------|---------------|-------------|
+| `questionnaires:read` | viewer | View questionnaires |
+| `questionnaires:create` | editor | Create new questionnaires |
+| `questionnaires:update` | editor | Modify questionnaires |
+| `questionnaires:delete` | admin | Delete questionnaires |
+| `templates:read` | viewer | View templates |
+| `templates:create` | editor | Create new templates |
+| `templates:update` | editor | Modify templates |
+| `templates:delete` | admin | Delete templates |
+| `workspace:update` | admin | Modify workspace settings |
+| `workspace:billing` | admin | Access billing settings |
+| `workspace:members:invite` | admin | Invite new members |
+| `workspace:members:remove` | admin | Remove members |
+| `workspace:members:update-role` | admin | Change member roles |
 
 ### Data Protection
 - [x] **Database Encryption** - Supabase provides encryption at rest

@@ -21,8 +21,11 @@ Q-Persona/
 │   │   ├── DEPLOYMENT.md              # Deployment guide
 │   │   ├── SUPABASE_INTEGRATION.md    # Database setup
 │   │   ├── MIGRATION.md               # Schema migrations
-│   │   ├── MULTI_TENANCY.md           # Workspace isolation
+│   │   ├── MULTI_TENANCY.md           # Workspace isolation & RBAC codes
 │   │   └── PERFORMANCE_ARCHITECTURE.md # Optimization strategies
+│   │       # Note: MULTI_TENANCY.md contains complete documentation
+│   │       # of workspace role codes (viewer, editor, admin) and
+│   │       # action permission codes (e.g., questionnaires:delete)
 │   │
 │   ├── features/                      # Feature documentation
 │   │   ├── README.md                  # Section overview

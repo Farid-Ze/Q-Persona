@@ -77,8 +77,16 @@ Comprehensive guides for Q-Persona's key features and capabilities.
 - ✅ Single Sign-On (SSO)
 - ✅ Multi-Factor Authentication (MFA)
 - ✅ Audit Logging
-- ✅ Role-Based Access Control (RBAC)
-- ✅ Multi-tenancy
+- ✅ Role-Based Access Control (RBAC) with standardized codes
+- ✅ Multi-tenancy with workspace isolation
+- ✅ Fine-grained Action Permissions
+
+**Workspace Role Codes:**
+- `viewer` - Read-only access
+- `editor` - Create and modify content
+- `admin` - Full workspace control
+
+**Action Permission Codes:** See [MULTI_TENANCY.md](../architecture/MULTI_TENANCY.md) for complete list
 
 ### Admin & Operations ✅
 - ✅ Failed Job Dashboard
