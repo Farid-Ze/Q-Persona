@@ -14,6 +14,10 @@ export async function createCheckoutSession(
   successUrl: string,
   cancelUrl: string
 ) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured')
+  }
+  
   const supabase = await createClient()
   
   // Get or create Stripe customer
@@ -76,6 +80,10 @@ export async function createCheckoutSession(
 }
 
 export async function createPortalSession(userId: string, returnUrl: string) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured')
+  }
+  
   const supabase = await createClient()
   
   const { data: subscription } = await supabase

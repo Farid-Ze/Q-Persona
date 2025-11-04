@@ -14,6 +14,8 @@ import Stripe from 'stripe'
 async function getUserIdFromEvent(
   subscription: Stripe.Subscription
 ): Promise<string | null> {
+  if (!stripe) return null
+  
   // Try to get from subscription metadata
   if (subscription.metadata?.user_id) {
     return subscription.metadata.user_id
@@ -36,6 +38,13 @@ async function getUserIdFromEvent(
 }
 
 export async function POST(req: NextRequest) {
+  if (!stripe) {
+    return NextResponse.json(
+      { error: 'Stripe is not configured' },
+      { status: 503 }
+    )
+  }
+  
   const body = await req.text()
   const signature = req.headers.get('stripe-signature')
   
@@ -83,16 +92,16 @@ export async function POST(req: NextRequest) {
           }
           
           // Retrieve the subscription to get full details
-          const subscription = await stripe.subscriptions.retrieve(
+          const subscription: Stripe.Subscription = await stripe.subscriptions.retrieve(
             session.subscription as string
-          )
+          ) as Stripe.Subscription
           
           await updateSubscriptionStatus(userId, {
             stripe_subscription_id: subscription.id,
             stripe_price_id: subscription.items.data[0].price.id,
             status: subscription.status,
-            current_period_start: subscription.current_period_start,
-            current_period_end: subscription.current_period_end,
+            current_period_start: subscription.items.data[0].current_period_start,
+            current_period_end: subscription.items.data[0].current_period_end,
             cancel_at_period_end: subscription.cancel_at_period_end,
           })
         }
@@ -112,8 +121,8 @@ export async function POST(req: NextRequest) {
           stripe_subscription_id: subscription.id,
           stripe_price_id: subscription.items.data[0].price.id,
           status: subscription.status,
-          current_period_start: subscription.current_period_start,
-          current_period_end: subscription.current_period_end,
+          current_period_start: subscription.items.data[0].current_period_start,
+          current_period_end: subscription.items.data[0].current_period_end,
           cancel_at_period_end: subscription.cancel_at_period_end,
         })
         break
@@ -132,8 +141,8 @@ export async function POST(req: NextRequest) {
           stripe_subscription_id: subscription.id,
           stripe_price_id: subscription.items.data[0].price.id,
           status: 'canceled',
-          current_period_start: subscription.current_period_start,
-          current_period_end: subscription.current_period_end,
+          current_period_start: subscription.items.data[0].current_period_start,
+          current_period_end: subscription.items.data[0].current_period_end,
           cancel_at_period_end: true,
         })
         break

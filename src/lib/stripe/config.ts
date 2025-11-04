@@ -5,14 +5,16 @@ import Stripe from 'stripe'
  * Server-side only
  */
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not defined in environment variables')
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+
+if (!stripeSecretKey) {
+  console.warn('STRIPE_SECRET_KEY is not defined in environment variables. Stripe features will be disabled.')
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2023-10-16',
+export const stripe = stripeSecretKey ? new Stripe(stripeSecretKey, {
+  apiVersion: '2025-10-29.clover',
   typescript: true,
-})
+}) : null
 
 /**
  * Stripe pricing configuration
