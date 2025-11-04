@@ -7,6 +7,15 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/screenshots/
+/tmp/playwright-logs/
+/.auth/
+# Keep baseline snapshots but ignore diffs
+tests/e2e/**/*-actual.png
+tests/e2e/**/*-diff.png
 
 # next.js
 /.next/

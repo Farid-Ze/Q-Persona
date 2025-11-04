@@ -1,0 +1,154 @@
+name: Playwright Screenshots & Visual Regression Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run daily at 2 AM UTC to catch visual regressions early
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # Allow manual triggering
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+      
+    - name: Setup test environment
+      run: |
+        cp .env.example .env.local || echo "No .env.example found"
+        # Set test credentials if available from secrets
+        echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL }}" >> .env.local
+        echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> .env.local
+        
+    - name: Run Playwright tests
+      run: npm run test:e2e
+      env:
+        CI: true
+        
+    - name: Upload screenshots
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: screenshots
+        path: screenshots/
+        retention-days: 30
+        
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+        
+    - name: Upload visual regression diff
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: visual-regression-diffs
+        path: |
+          tests/e2e/**/*-actual.png
+          tests/e2e/**/*-diff.png
+        retention-days: 30
+
+  # Separate job for screenshot generation only (faster)
+  screenshots:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write  # For PR comments
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+      
+    - name: Setup test environment
+      run: |
+        cp .env.example .env.local || echo "No .env.example found"
+        echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL }}" >> .env.local
+        echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> .env.local
+        
+    - name: Generate screenshots
+      run: npm run test:e2e:screenshots
+      env:
+        CI: true
+        
+    - name: Upload screenshots
+      uses: actions/upload-artifact@v4
+      with:
+        name: workspace-screenshots
+        path: screenshots/
+        retention-days: 90
+        
+    - name: Comment PR with screenshot links
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Get list of screenshots
+          const screenshotsDir = 'screenshots';
+          const projects = fs.readdirSync(screenshotsDir);
+          
+          let comment = '## 📸 Generated Screenshots\n\n';
+          comment += 'Screenshots have been generated for all viewport sizes and color schemes:\n\n';
+          
+          projects.forEach(project => {
+            const projectDir = path.join(screenshotsDir, project);
+            if (fs.statSync(projectDir).isDirectory()) {
+              const files = fs.readdirSync(projectDir);
+              comment += `### ${project}\n`;
+              files.forEach(file => {
+                comment += `- ${file}\n`;
+              });
+              comment += '\n';
+            }
+          });
+          
+          comment += '\n📦 Download the screenshots artifact from the workflow run to view them.';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
