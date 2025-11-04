@@ -8,18 +8,18 @@ import { getUser } from '@/app/actions/auth'
 
 export async function GET(request: NextRequest) {
   const { user } = await getUser()
-  
+
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  
+
   if (!supabaseUrl || !serviceKey) {
     return NextResponse.json({ error: 'Configuration error' }, { status: 500 })
   }
-  
+
   try {
     // Fetch webhooks for user
     const response = await fetch(
@@ -31,13 +31,13 @@ export async function GET(request: NextRequest) {
         },
       }
     )
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch webhooks')
     }
-    
+
     const webhooks = await response.json()
-    
+
     return NextResponse.json({ data: webhooks })
   } catch (error) {
     console.error('Error fetching webhooks:', error)
@@ -47,31 +47,31 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const { user } = await getUser()
-  
+
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  
+
   if (!supabaseUrl || !serviceKey) {
     return NextResponse.json({ error: 'Configuration error' }, { status: 500 })
   }
-  
+
   try {
     const body = await request.json()
-    
+
     if (!body.name || !body.target_url || !body.workspace_id) {
       return NextResponse.json(
         { error: 'Bad request', message: 'name, target_url, and workspace_id are required' },
         { status: 400 }
       )
     }
-    
+
     // Generate secret for webhook signature
     const secret = generateWebhookSecret()
-    
+
     const response = await fetch(`${supabaseUrl}/rest/v1/webhooks`, {
       method: 'POST',
       headers: {
@@ -91,13 +91,13 @@ export async function POST(request: NextRequest) {
         created_at: new Date().toISOString(),
       }),
     })
-    
+
     if (!response.ok) {
       throw new Error('Failed to create webhook')
     }
-    
+
     const webhook = await response.json()
-    
+
     return NextResponse.json({ data: webhook[0] }, { status: 201 })
   } catch (error) {
     console.error('Error creating webhook:', error)
@@ -107,28 +107,28 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const { user } = await getUser()
-  
+
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  
+
   const { searchParams } = new URL(request.url)
   const webhookId = searchParams.get('id')
-  
+
   if (!webhookId) {
     return NextResponse.json(
       { error: 'Bad request', message: 'id is required' },
       { status: 400 }
     )
   }
-  
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  
+
   if (!supabaseUrl || !serviceKey) {
     return NextResponse.json({ error: 'Configuration error' }, { status: 500 })
   }
-  
+
   try {
     const response = await fetch(
       `${supabaseUrl}/rest/v1/webhooks?id=eq.${webhookId}&user_id=eq.${user.id}`,
@@ -140,11 +140,11 @@ export async function DELETE(request: NextRequest) {
         },
       }
     )
-    
+
     if (!response.ok) {
       throw new Error('Failed to delete webhook')
     }
-    
+
     return NextResponse.json({ message: 'Webhook deleted successfully' })
   } catch (error) {
     console.error('Error deleting webhook:', error)

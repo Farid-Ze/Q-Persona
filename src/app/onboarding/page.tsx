@@ -22,7 +22,7 @@ export default function OnboardingPage() {
     try {
       const response = await fetch('/api/personas')
       const data = await response.json()
-      
+
       if (data.success) {
         // Filter only system personas for onboarding
         const systemPersonas = data.data.filter((p: Persona) => p.is_system)
@@ -135,10 +135,9 @@ export default function OnboardingPage() {
                 onClick={() => togglePersona(persona.id)}
                 className={`
                   relative cursor-pointer rounded-lg border-2 p-6 transition-all
-                  ${
-                    isSelected
-                      ? 'border-blue-600 bg-blue-50 shadow-md'
-                      : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+                  ${isSelected
+                    ? 'border-blue-600 bg-blue-50 shadow-md'
+                    : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
                   }
                 `}
               >
@@ -200,10 +199,9 @@ export default function OnboardingPage() {
             disabled={saving || selectedPersonas.size === 0}
             className={`
               px-6 py-3 rounded-lg font-medium text-white transition-colors
-              ${
-                saving || selectedPersonas.size === 0
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
+              ${saving || selectedPersonas.size === 0
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700'
               }
             `}
           >

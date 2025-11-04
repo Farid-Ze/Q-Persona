@@ -38,7 +38,7 @@ export function useCollaborationAwareness(
 
     // Listen for editing_lock changes
     const channel = `editing:${resourceType}:${resourceId}`
-    
+
     // TODO: Implement actual Supabase Realtime subscription
     // const subscription = supabase
     //   .channel(channel)
@@ -71,7 +71,7 @@ export function useCollaborationAwareness(
       })
 
       const data = await response.json()
-      
+
       if (data.success) {
         setIsEditing(true)
         return true
@@ -98,7 +98,7 @@ export function useCollaborationAwareness(
           user_id: currentUserId,
         }),
       })
-      
+
       setIsEditing(false)
     } catch (error) {
       console.error('Failed to release editing lock:', error)

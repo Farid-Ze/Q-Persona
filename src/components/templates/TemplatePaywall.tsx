@@ -28,10 +28,10 @@ export function TemplatePaywall({ remainingQuestions, templateName }: TemplatePa
         <h3 className="text-xl font-bold text-gray-900 mb-2">
           Unlock {remainingQuestions} More Validated Questions
         </h3>
-        
+
         <p className="text-gray-600 mb-6">
           {templateName ? `"${templateName}" contains ` : 'This template contains '}
-          {remainingQuestions} additional expert-validated questions. 
+          {remainingQuestions} additional expert-validated questions.
           Upgrade to Pro to access the complete template.
         </p>
 
@@ -42,7 +42,7 @@ export function TemplatePaywall({ remainingQuestions, templateName }: TemplatePa
           >
             Upgrade to Pro - $10/month
           </Link>
-          
+
           <button
             className="block w-full px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition"
           >

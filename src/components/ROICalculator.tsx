@@ -6,7 +6,7 @@ export default function ROICalculator() {
   const [users, setUsers] = useState(100)
   const [responsesPerMonth, setResponsesPerMonth] = useState(1000)
   const [currentTool, setCurrentTool] = useState('none')
-  
+
   // Calculate costs and savings
   const calculateROI = () => {
     // Non-compliance costs (annual)
@@ -14,10 +14,10 @@ export default function ROICalculator() {
     const auditRemediation = 200000000 // Rp 200M
     const manualLogReconstruction = 100000000 // Rp 100M
     const totalNonComplianceCost = regulatoryFines + auditRemediation + manualLogReconstruction
-    
+
     // Q-Persona Enterprise cost
     const qPersonaAnnualCost = 140000000 // Rp 140M ($10,000/year at 14,000 IDR/USD)
-    
+
     // Current tool costs (annual estimate)
     const currentToolCosts = {
       'none': 0,
@@ -26,7 +26,7 @@ export default function ROICalculator() {
       'typeform': 168000000, // ~$12K/year
       'qualtrics': 700000000 // ~$50K/year
     }
-    
+
     // Calculate savings
     const currentToolCost = currentToolCosts[currentTool as keyof typeof currentToolCosts] || 0
     const complianceSavings = totalNonComplianceCost * 0.9 // Assume 90% risk reduction
@@ -34,7 +34,7 @@ export default function ROICalculator() {
     const totalSavings = complianceSavings + toolCostSavings
     const netSavings = totalSavings - qPersonaAnnualCost
     const roi = ((netSavings / qPersonaAnnualCost) * 100).toFixed(0)
-    
+
     // Determine recommended tier
     let recommendedTier = 'Enterprise'
     if (users <= 10 && responsesPerMonth <= 100) {
@@ -44,7 +44,7 @@ export default function ROICalculator() {
     } else if (users <= 200 && responsesPerMonth <= 50000) {
       recommendedTier = 'Business'
     }
-    
+
     return {
       totalNonComplianceCost,
       qPersonaAnnualCost,
@@ -57,9 +57,9 @@ export default function ROICalculator() {
       toolCostSavings
     }
   }
-  
+
   const results = calculateROI()
-  
+
   // Format currency (Indonesian Rupiah)
   const formatIDR = (amount: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -69,7 +69,7 @@ export default function ROICalculator() {
       maximumFractionDigits: 0
     }).format(amount)
   }
-  
+
   // Format as millions
   const formatMillions = (amount: number) => {
     return `Rp ${(amount / 1000000).toFixed(0)}M`
@@ -91,7 +91,7 @@ export default function ROICalculator() {
           {/* Input Section */}
           <div className="bg-gray-50 rounded-lg p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Your Organization</h3>
-            
+
             <div className="space-y-6">
               {/* Number of Users */}
               <div>
@@ -160,7 +160,7 @@ export default function ROICalculator() {
           {/* Results Section */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Your ROI Analysis</h3>
-            
+
             <div className="space-y-6">
               {/* Recommended Tier */}
               <div className="bg-white rounded-lg p-4 shadow">

@@ -197,8 +197,8 @@ export default async function ResultsPage({
                 question.type === 'rating'
                   ? 'bar'
                   : question.type === 'boolean'
-                  ? 'pie'
-                  : 'bar'
+                    ? 'pie'
+                    : 'bar'
               }
             />
           ))}

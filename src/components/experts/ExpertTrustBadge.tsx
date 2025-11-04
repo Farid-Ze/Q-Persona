@@ -15,10 +15,10 @@ interface ExpertTrustBadgeProps {
   size?: 'sm' | 'md' | 'lg'
 }
 
-export function ExpertTrustBadge({ 
-  expert, 
+export function ExpertTrustBadge({
+  expert,
   validationDate,
-  size = 'md' 
+  size = 'md'
 }: ExpertTrustBadgeProps) {
   const [showModal, setShowModal] = useState(false)
 
@@ -42,11 +42,11 @@ export function ExpertTrustBadge({
 
       {/* Expert Details Modal */}
       {showModal && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
           onClick={() => setShowModal(false)}
         >
-          <div 
+          <div
             className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >

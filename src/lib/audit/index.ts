@@ -21,18 +21,18 @@ export interface AuditLogParams {
 export async function logAudit(params: AuditLogParams): Promise<void> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_KEY;
-  
+
   if (!supabaseUrl || !serviceKey) {
     console.warn('Audit logging disabled: Database not configured');
     return;
   }
-  
-  const ipAddress = params.request?.headers.get('x-forwarded-for') || 
-                   params.request?.headers.get('x-real-ip') || 
-                   'unknown';
-  
+
+  const ipAddress = params.request?.headers.get('x-forwarded-for') ||
+    params.request?.headers.get('x-real-ip') ||
+    'unknown';
+
   const userAgent = params.request?.headers.get('user-agent') || 'unknown';
-  
+
   try {
     await fetch(`${supabaseUrl}/rest/v1/audit_logs`, {
       method: 'POST',
@@ -70,31 +70,31 @@ export const AUDIT_ACTIONS = {
   QUESTIONNAIRE_UPDATED: 'questionnaire.updated',
   QUESTIONNAIRE_DELETED: 'questionnaire.deleted',
   QUESTIONNAIRE_PUBLISHED: 'questionnaire.published',
-  
+
   // Template actions
   TEMPLATE_CREATED: 'template.created',
   TEMPLATE_VIEWED: 'template.viewed',
   TEMPLATE_UPDATED: 'template.updated',
   TEMPLATE_DELETED: 'template.deleted',
-  
+
   // Member actions
   MEMBER_INVITED: 'member.invited',
   MEMBER_REMOVED: 'member.removed',
   MEMBER_ROLE_CHANGED: 'member.role_changed',
-  
+
   // Workspace actions
   WORKSPACE_CREATED: 'workspace.created',
   WORKSPACE_UPDATED: 'workspace.updated',
   WORKSPACE_SETTINGS_CHANGED: 'workspace.settings_changed',
-  
+
   // Billing actions
   BILLING_PLAN_CHANGED: 'billing.plan_changed',
   BILLING_PAYMENT_METHOD_ADDED: 'billing.payment_method_added',
-  
+
   // Response actions
   RESPONSE_VIEWED: 'response.viewed',
   RESPONSE_EXPORTED: 'response.exported',
-  
+
   // Admin actions
   FAILED_JOB_RETRIED: 'admin.failed_job_retried',
   EXPERT_SUBMISSION_REVIEWED: 'admin.expert_submission_reviewed',

@@ -7,22 +7,22 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const templateId = searchParams.get('template_id');
     const status = searchParams.get('status');
-    
+
     // TODO: Implement database query via BaaS
     const questionnaires: Questionnaire[] = [];
-    
+
     const response: ApiResponse<Questionnaire[]> = {
       success: true,
       data: questionnaires
     };
-    
+
     return NextResponse.json(response);
   } catch (error) {
     const response: ApiResponse<Questionnaire[]> = {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error'
     };
-    
+
     return NextResponse.json(response, { status: 500 });
   }
 }
@@ -31,10 +31,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // TODO: Validate input
     // TODO: Insert into database via BaaS
-    
+
     const response: ApiResponse<Questionnaire> = {
       success: true,
       data: {
@@ -49,14 +49,14 @@ export async function POST(request: NextRequest) {
         updated_at: new Date()
       }
     };
-    
+
     return NextResponse.json(response, { status: 201 });
   } catch (error) {
     const response: ApiResponse<Questionnaire> = {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error'
     };
-    
+
     return NextResponse.json(response, { status: 500 });
   }
 }

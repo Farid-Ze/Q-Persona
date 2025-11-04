@@ -89,7 +89,7 @@ export default async function WorkspaceMembersPage() {
               </p>
             </div>
           </div>
-          
+
           {/* Progress bar */}
           <div className="mt-4">
             <div className="w-full bg-gray-200 rounded-full h-2">

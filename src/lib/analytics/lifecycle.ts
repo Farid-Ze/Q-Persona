@@ -14,11 +14,11 @@ export const LIFECYCLE_TRIGGERS = {
   SUBSCRIPTION_CANCELLED_STUDENT: 'lifecycle:subscription_cancelled:student',
   GRADUATION_APPROACHING: 'lifecycle:graduation_approaching',
   FIRST_JOB_LANDED: 'lifecycle:first_job',
-  
+
   // Career transitions
   PERSONA_CHANGED_TO_STARTUP: 'lifecycle:persona_changed:startup',
   DORMANT_USER_90_DAYS: 'lifecycle:dormant:90_days',
-  
+
   // Re-engagement
   RETURNED_AFTER_PAUSE: 'lifecycle:returned',
   PORTFOLIO_CREATED: 'lifecycle:portfolio_created',
@@ -54,7 +54,7 @@ const EMAIL_CAMPAIGNS = {
       },
     ],
   },
-  
+
   STARTUP_TRANSITION: {
     id: 'startup_transition',
     trigger: LIFECYCLE_TRIGGERS.PERSONA_CHANGED_TO_STARTUP,
@@ -76,7 +76,7 @@ const EMAIL_CAMPAIGNS = {
       },
     ],
   },
-  
+
   DORMANT_REACTIVATION: {
     id: 'dormant_reactivation',
     trigger: LIFECYCLE_TRIGGERS.DORMANT_USER_90_DAYS,
@@ -197,9 +197,9 @@ export async function handlePersonaChange(
 export async function checkDormantUsers() {
   // TODO: Query database for users who haven't logged in for 90 days
   // and had a Pro subscription
-  
+
   const dormantUsers: any[] = [] // Placeholder
-  
+
   for (const user of dormantUsers) {
     await triggerLifecycleEmail(
       user.id,

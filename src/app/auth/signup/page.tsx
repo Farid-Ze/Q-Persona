@@ -12,7 +12,7 @@ export default function SignUpPage() {
             Start managing questionnaires with Q-Persona
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" action={signUp}>
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
@@ -29,7 +29,7 @@ export default function SignUpPage() {
                 placeholder="John Doe"
               />
             </div>
-            
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
@@ -44,7 +44,7 @@ export default function SignUpPage() {
                 placeholder="you@example.com"
               />
             </div>
-            
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -73,7 +73,7 @@ export default function SignUpPage() {
               Sign up
             </button>
           </div>
-          
+
           <div className="text-center">
             <a href="/auth/login" className="text-sm text-blue-600 hover:text-blue-500">
               Already have an account? Sign in

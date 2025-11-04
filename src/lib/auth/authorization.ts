@@ -42,14 +42,14 @@ export function requireRole(requiredRole: WorkspaceMember['role']) {
   ): Promise<NextResponse | null> => {
     if (!isAuthorized(ctx, requiredRole)) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Forbidden: Insufficient permissions. Required role: ' + requiredRole 
+        {
+          success: false,
+          error: 'Forbidden: Insufficient permissions. Required role: ' + requiredRole
         },
         { status: 403 }
       );
     }
-    
+
     return null; // Allow request to proceed
   };
 }
@@ -78,13 +78,13 @@ export const ACTION_PERMISSIONS = {
   'questionnaires:read': 'viewer' as const,
   'questionnaires:update': 'editor' as const,
   'questionnaires:delete': 'admin' as const,
-  
+
   // Template actions
   'templates:create': 'editor' as const,
   'templates:read': 'viewer' as const,
   'templates:update': 'editor' as const,
   'templates:delete': 'admin' as const,
-  
+
   // Workspace management
   'workspace:update': 'admin' as const,
   'workspace:billing': 'admin' as const,

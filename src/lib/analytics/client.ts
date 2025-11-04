@@ -11,15 +11,15 @@ let isInitialized = false
 
 export function initPostHog() {
   if (typeof window === 'undefined' || isInitialized) return
-  
+
   const apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY
   const apiHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com'
-  
+
   if (!apiKey) {
     console.warn('PostHog API key not found. Analytics disabled.')
     return
   }
-  
+
   posthog.init(apiKey, {
     api_host: apiHost,
     loaded: (posthog) => {
@@ -28,7 +28,7 @@ export function initPostHog() {
       }
     },
   })
-  
+
   isInitialized = true
 }
 
@@ -37,7 +37,7 @@ export function trackEvent(eventName: string, properties?: Record<string, any>) 
     console.warn('PostHog not initialized. Call initPostHog() first.')
     return
   }
-  
+
   posthog.capture(eventName, properties)
 }
 
@@ -46,7 +46,7 @@ export function identifyUser(userId: string, traits?: Record<string, any>) {
     console.warn('PostHog not initialized. Call initPostHog() first.')
     return
   }
-  
+
   posthog.identify(userId, traits)
 }
 

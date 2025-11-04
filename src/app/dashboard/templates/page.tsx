@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 
 export default async function TemplatesPage() {
   const { user } = await getUser()
-  
+
   if (!user) {
     redirect('/auth/login')
   }

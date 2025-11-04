@@ -6,22 +6,22 @@ import { createClient } from '@/lib/supabase/server';
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()
-    
+
     // Get system_only param to filter system personas
     const searchParams = request.nextUrl.searchParams;
     const systemOnly = searchParams.get('system_only') === 'true';
-    
+
     let query = supabase
       .from('personas')
       .select('*')
       .order('created_at', { ascending: false })
-    
+
     if (systemOnly) {
       query = query.eq('is_system', true)
     }
-    
+
     const { data, error } = await query
-    
+
     if (error) {
       console.error('Error fetching personas:', error)
       const response: ApiResponse<Persona[]> = {
@@ -30,19 +30,19 @@ export async function GET(request: NextRequest) {
       };
       return NextResponse.json(response, { status: 500 });
     }
-    
+
     const response: ApiResponse<Persona[]> = {
       success: true,
       data: data || []
     };
-    
+
     return NextResponse.json(response);
   } catch (error) {
     const response: ApiResponse<Persona[]> = {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error'
     };
-    
+
     return NextResponse.json(response, { status: 500 });
   }
 }
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
     const body = await request.json();
-    
+
     // Validate input
     if (!body.name) {
       const response: ApiResponse<Persona> = {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       };
       return NextResponse.json(response, { status: 400 });
     }
-    
+
     // Insert into database
     const { data, error } = await supabase
       .from('personas')
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       })
       .select()
       .single()
-    
+
     if (error) {
       console.error('Error creating persona:', error)
       const response: ApiResponse<Persona> = {
@@ -82,19 +82,19 @@ export async function POST(request: NextRequest) {
       };
       return NextResponse.json(response, { status: 500 });
     }
-    
+
     const response: ApiResponse<Persona> = {
       success: true,
       data: data
     };
-    
+
     return NextResponse.json(response, { status: 201 });
   } catch (error) {
     const response: ApiResponse<Persona> = {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error'
     };
-    
+
     return NextResponse.json(response, { status: 500 });
   }
 }

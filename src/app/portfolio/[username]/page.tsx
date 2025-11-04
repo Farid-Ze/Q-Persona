@@ -78,7 +78,7 @@ export default async function PortfolioPage({
               </span>
             </div>
           )}
-          
+
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             {portfolio.user_name}
           </h1>
@@ -117,7 +117,7 @@ export default async function PortfolioPage({
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             Featured Research
           </h2>
-          
+
           {portfolio.projects.map((project) => (
             <div
               key={project.id}

@@ -17,28 +17,28 @@ export async function createCheckoutSession(
   if (!stripe) {
     throw new Error('Stripe is not configured')
   }
-  
+
   const supabase = await createClient()
-  
+
   // Get or create Stripe customer
   let customerId: string | undefined
-  
+
   const { data: subscription } = await supabase
     .from('subscriptions')
     .select('stripe_customer_id')
     .eq('user_id', userId)
     .single()
-  
+
   if (subscription?.stripe_customer_id) {
     customerId = subscription.stripe_customer_id
   } else {
     // Get user email
     const { data: { user } } = await supabase.auth.getUser()
-    
+
     if (!user?.email) {
       throw new Error('User email not found')
     }
-    
+
     // Create Stripe customer
     const customer = await stripe.customers.create({
       email: user.email,
@@ -46,9 +46,9 @@ export async function createCheckoutSession(
         user_id: userId,
       },
     })
-    
+
     customerId = customer.id
-    
+
     // Save customer ID
     await supabase
       .from('subscriptions')
@@ -57,7 +57,7 @@ export async function createCheckoutSession(
         stripe_customer_id: customerId,
       })
   }
-  
+
   // Create checkout session
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
@@ -75,7 +75,7 @@ export async function createCheckoutSession(
       user_id: userId,
     },
   })
-  
+
   return session
 }
 
@@ -83,43 +83,43 @@ export async function createPortalSession(userId: string, returnUrl: string) {
   if (!stripe) {
     throw new Error('Stripe is not configured')
   }
-  
+
   const supabase = await createClient()
-  
+
   const { data: subscription } = await supabase
     .from('subscriptions')
     .select('stripe_customer_id')
     .eq('user_id', userId)
     .single()
-  
+
   if (!subscription?.stripe_customer_id) {
     throw new Error('No Stripe customer found')
   }
-  
+
   const session = await stripe.billingPortal.sessions.create({
     customer: subscription.stripe_customer_id,
     return_url: returnUrl,
   })
-  
+
   return session
 }
 
 export async function getSubscriptionStatus(userId: string) {
   const supabase = await createClient()
-  
+
   const { data: subscription, error } = await supabase
     .from('subscriptions')
     .select('*')
     .eq('user_id', userId)
     .single()
-  
+
   if (error || !subscription) {
     return {
       status: 'inactive',
       plan_type: 'free',
     }
   }
-  
+
   return subscription
 }
 
@@ -135,7 +135,7 @@ export async function updateSubscriptionStatus(
   }
 ) {
   const supabase = await createClient()
-  
+
   // Map Stripe status to our status
   const statusMap: Record<string, string> = {
     'active': 'active',
@@ -144,9 +144,9 @@ export async function updateSubscriptionStatus(
     'canceled': 'canceled',
     'unpaid': 'inactive',
   }
-  
+
   const mappedStatus = statusMap[subscriptionData.status] || 'inactive'
-  
+
   // Determine plan type based on price ID
   let planType = 'free'
   if (subscriptionData.stripe_price_id === process.env.STRIPE_PRICE_PRO) {
@@ -154,7 +154,7 @@ export async function updateSubscriptionStatus(
   } else if (subscriptionData.stripe_price_id === process.env.STRIPE_PRICE_BUSINESS) {
     planType = 'business'
   }
-  
+
   const { error } = await supabase
     .from('subscriptions')
     .upsert({
@@ -167,12 +167,12 @@ export async function updateSubscriptionStatus(
       current_period_end: new Date(subscriptionData.current_period_end * 1000).toISOString(),
       cancel_at_period_end: subscriptionData.cancel_at_period_end,
     })
-  
+
   if (error) {
     console.error('Error updating subscription:', error)
     throw error
   }
-  
+
   // Track subscription event
   if (mappedStatus === 'active') {
     // TODO: Get actual amount from Stripe subscription or invoice

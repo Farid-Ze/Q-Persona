@@ -72,21 +72,19 @@ export default function NewTemplatePage() {
           <div className="flex gap-8">
             <button
               onClick={() => setActiveTab('build')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'build'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'build'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               Build
             </button>
             <button
               onClick={() => setActiveTab('settings')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'settings'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'settings'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               Settings
             </button>

@@ -52,7 +52,7 @@ export async function canUserPerformAction(
   action: 'read' | 'write' | 'delete'
 ): Promise<boolean> {
   const role = await getUserWorkspaceRole(userId, workspaceId);
-  
+
   if (!role) return false;
 
   switch (action) {

@@ -25,27 +25,27 @@ export async function GET(request: NextRequest) {
   // Verify cron secret to prevent unauthorized access
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
-  
+
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     const result = await processResponseBatch();
-    
+
     return NextResponse.json({
       success: true,
       processed: result.processed,
       failed: result.failed,
       timestamp: new Date().toISOString(),
     });
-    
+
   } catch (error) {
     console.error('Worker error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
 async function processResponseBatch() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_KEY;
-  
+
   if (!supabaseUrl || !serviceKey) {
     throw new Error('Missing Supabase configuration');
   }
@@ -79,7 +79,7 @@ async function processResponseBatch() {
   }
 
   const queueItems = await queueResponse.json();
-  
+
   if (queueItems.length === 0) {
     return { processed: 0, failed: 0 };
   }
@@ -92,10 +92,10 @@ async function processResponseBatch() {
   const respondents = [];
   const answers = [];
   const exceededQuota = [];
-  
+
   for (const item of queueItems) {
     const payload = item.payload;
-    
+
     // Check quota before processing (Recommendation #2)
     // NOTE: Quota checking is currently simplified to avoid blocking legitimate responses
     // In production, this should be implemented with proper workspace lookup
@@ -108,12 +108,12 @@ async function processResponseBatch() {
     //   }
     // For now, process all items to ensure no data loss
     const quotaOk = true;
-    
+
     if (!quotaOk) {
       exceededQuota.push(item.id);
       continue;
     }
-    
+
     // Create respondent record
     respondents.push({
       id: payload.respondent_id,
@@ -123,7 +123,7 @@ async function processResponseBatch() {
       started_at: payload.metadata?.submitted_at || new Date().toISOString(),
       completed_at: payload.metadata?.submitted_at || new Date().toISOString(),
     });
-    
+
     // Create answer records
     if (Array.isArray(payload.answers)) {
       for (const answer of payload.answers) {
@@ -151,7 +151,7 @@ async function processResponseBatch() {
         body: JSON.stringify(respondents),
       });
     }
-    
+
     // Batch insert answers
     if (answers.length > 0) {
       await fetch(`${supabaseUrl}/rest/v1/answers`, {
@@ -165,21 +165,21 @@ async function processResponseBatch() {
         body: JSON.stringify(answers),
       });
     }
-    
+
     // Mark as completed
     await updateQueueStatus(queueIds, 'completed');
-    
+
     return { processed: queueItems.length, failed: 0 };
-    
+
   } catch (error) {
     console.error('Batch processing error:', error);
-    
+
     // Log failed jobs to failed_jobs table (Recommendation #1)
     await logFailedJobs(queueItems, error);
-    
+
     // Mark as failed and increment retry count
     await updateQueueStatus(queueIds, 'failed', true);
-    
+
     return { processed: 0, failed: queueItems.length };
   }
 }
@@ -188,23 +188,23 @@ async function processResponseBatch() {
  * Update queue status
  */
 async function updateQueueStatus(
-  ids: string[], 
-  status: string, 
+  ids: string[],
+  status: string,
   incrementRetry: boolean = false
 ) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_KEY;
-  
+
   const updates: any = {
     status,
     processed_at: new Date().toISOString(),
   };
-  
+
   if (incrementRetry) {
     // This would need a PATCH request with increment logic
     // For now, just mark as failed
   }
-  
+
   // Update all items in batch
   await fetch(
     `${supabaseUrl}/rest/v1/response_queue?id=in.(${ids.join(',')})`,
@@ -227,9 +227,9 @@ async function updateQueueStatus(
 async function logFailedJobs(queueItems: any[], error: any) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_KEY;
-  
+
   if (!supabaseUrl || !serviceKey) return;
-  
+
   const failedJobs = queueItems.map(item => ({
     queue_name: 'response_queue',
     payload: item.payload,
@@ -238,7 +238,7 @@ async function logFailedJobs(queueItems: any[], error: any) {
     retry_count: item.retry_count || 0,
     status: 'failed',
   }));
-  
+
   try {
     await fetch(`${supabaseUrl}/rest/v1/failed_jobs`, {
       method: 'POST',

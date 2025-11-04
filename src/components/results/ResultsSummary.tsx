@@ -89,23 +89,23 @@ export function ResultsSummary({
     },
     ...(responseRate !== undefined
       ? [
-          {
-            label: 'Response Rate',
-            value: `${responseRate.toFixed(1)}%`,
-            icon: (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                />
-              </svg>
-            ),
-            color: 'indigo',
-            trend: responseRate >= 20 ? 'up' : 'down',
-          },
-        ]
+        {
+          label: 'Response Rate',
+          value: `${responseRate.toFixed(1)}%`,
+          icon: (
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+              />
+            </svg>
+          ),
+          color: 'indigo',
+          trend: responseRate >= 20 ? 'up' : 'down',
+        },
+      ]
       : []),
   ]
 
@@ -141,9 +141,8 @@ export function ResultsSummary({
               </div>
               {stat.trend !== 'neutral' && (
                 <div
-                  className={`text-xs font-medium ${
-                    stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
-                  }`}
+                  className={`text-xs font-medium ${stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                    }`}
                 >
                   {stat.trend === 'up' ? '↑' : '↓'}
                 </div>
@@ -199,7 +198,7 @@ export function ResultsSummary({
           )}
         </div>
       </div>
-      
+
       {/* Benchmark Comparison - Recommendation #3 */}
       {benchmarkComparison && averageScore !== undefined && (
         <div className="mt-6 pt-6 border-t">
@@ -227,13 +226,13 @@ export function ResultsSummary({
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                   </svg>
                   <span>
-                    {benchmarkComparison.percentile >= 75 
-                      ? 'Excellent performance - you\'re in the top quartile!' 
-                      : benchmarkComparison.percentile >= 50 
-                      ? 'Good performance - above average.' 
-                      : benchmarkComparison.percentile >= 25
-                      ? 'Room for improvement - below average.'
-                      : 'Consider reviewing your approach - bottom quartile.'}
+                    {benchmarkComparison.percentile >= 75
+                      ? 'Excellent performance - you\'re in the top quartile!'
+                      : benchmarkComparison.percentile >= 50
+                        ? 'Good performance - above average.'
+                        : benchmarkComparison.percentile >= 25
+                          ? 'Room for improvement - below average.'
+                          : 'Consider reviewing your approach - bottom quartile.'}
                   </span>
                 </div>
               </div>

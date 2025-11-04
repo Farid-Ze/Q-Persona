@@ -28,26 +28,26 @@ export interface UploadResult {
 export async function uploadAsset(options: UploadOptions): Promise<UploadResult> {
   // For now, return mock result
   // TODO: Implement actual CDN upload
-  
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_KEY;
-  
+
   if (!supabaseUrl || !serviceKey) {
     return {
       success: false,
       error: 'CDN not configured',
     };
   }
-  
+
   try {
     // Generate unique key if not provided
     const key = options.key || `uploads/${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // In production, upload to actual CDN
     // For now, log the upload and track in database
-    
+
     const cdnUrl = `https://cdn.q-persona.com/${key}`;
-    
+
     // Track asset in database
     await trackAsset({
       asset_key: key,
@@ -57,7 +57,7 @@ export async function uploadAsset(options: UploadOptions): Promise<UploadResult>
       workspace_id: options.workspaceId,
       metadata: options.metadata || {},
     });
-    
+
     return {
       success: true,
       url: cdnUrl,
@@ -85,9 +85,9 @@ async function trackAsset(asset: {
 }) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_KEY;
-  
+
   if (!supabaseUrl || !serviceKey) return;
-  
+
   try {
     await fetch(`${supabaseUrl}/rest/v1/cdn_assets`, {
       method: 'POST',
@@ -131,26 +131,26 @@ export function getOptimizedImageUrl(
 ): string {
   // If using Cloudflare, use their image transformation
   // https://developers.cloudflare.com/images/image-resizing/
-  
+
   const {
     width = 800,
     height,
     quality = 85,
     format = 'auto',
   } = options;
-  
+
   // For local/dev, return original URL
   if (!url.includes('cdn.q-persona.com')) {
     return url;
   }
-  
+
   // Build Cloudflare image transformation URL
   const params = new URLSearchParams();
   params.set('width', width.toString());
   if (height) params.set('height', height.toString());
   params.set('quality', quality.toString());
   params.set('format', format);
-  
+
   return `https://cdn.q-persona.com/cdn-cgi/image/${params.toString()}/${url.replace('https://cdn.q-persona.com/', '')}`;
 }
 
@@ -160,7 +160,7 @@ export function getOptimizedImageUrl(
 export function getCDNUrl(path: string, version?: string): string {
   const cdnDomain = process.env.NEXT_PUBLIC_CDN_DOMAIN || 'cdn.q-persona.com';
   const v = version || process.env.NEXT_PUBLIC_APP_VERSION || 'latest';
-  
+
   return `https://${cdnDomain}${path}?v=${v}`;
 }
 
@@ -171,12 +171,12 @@ export function getCDNUrl(path: string, version?: string): string {
 export async function purgeCDNCache(urls: string[]): Promise<boolean> {
   const cloudflareZoneId = process.env.CLOUDFLARE_ZONE_ID;
   const cloudflareApiToken = process.env.CLOUDFLARE_API_TOKEN;
-  
+
   if (!cloudflareZoneId || !cloudflareApiToken) {
     console.warn('Cloudflare not configured, skipping cache purge');
     return false;
   }
-  
+
   try {
     const response = await fetch(
       `https://api.cloudflare.com/client/v4/zones/${cloudflareZoneId}/purge_cache`,
@@ -189,7 +189,7 @@ export async function purgeCDNCache(urls: string[]): Promise<boolean> {
         body: JSON.stringify({ files: urls }),
       }
     );
-    
+
     return response.ok;
   } catch (error) {
     console.error('Failed to purge CDN cache:', error);
@@ -211,7 +211,7 @@ export async function getCDNAnalytics(
 }> {
   // TODO: Implement with actual CDN provider API
   // For now, return mock data
-  
+
   return {
     bandwidth: 1024 * 1024 * 500, // 500 MB
     requests: 10000,

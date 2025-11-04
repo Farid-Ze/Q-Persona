@@ -62,14 +62,14 @@ export function ResultsChart({
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis 
-          dataKey="label" 
+        <XAxis
+          dataKey="label"
           angle={-45}
           textAnchor="end"
           height={100}
         />
         <YAxis />
-        <Tooltip 
+        <Tooltip
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
               const data = payload[0].payload
@@ -108,7 +108,7 @@ export function ResultsChart({
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip 
+        <Tooltip
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
               const data = payload[0].payload

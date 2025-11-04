@@ -11,12 +11,16 @@ import { trackUserSignedUp } from '@/lib/analytics/server'
  */
 
 export async function signUp(formData: FormData) {
+  // Gracefully handle missing Supabase env in local/dev
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    redirect('/auth/signup?error=' + encodeURIComponent('Supabase is not configured'))
+  }
   const supabase = await createClient()
-  
+
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   const name = formData.get('name') as string
-  
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -26,41 +30,47 @@ export async function signUp(formData: FormData) {
       },
     },
   })
-  
+
   if (error) {
     redirect('/auth/signup?error=' + encodeURIComponent(error.message))
   }
-  
+
   // Track user signup event
   if (data.user) {
     await trackUserSignedUp(data.user.id, email, name)
   }
-  
+
   revalidatePath('/', 'layout')
   // Redirect to onboarding instead of dashboard
   redirect('/onboarding')
 }
 
 export async function signIn(formData: FormData) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    redirect('/auth/login?error=' + encodeURIComponent('Supabase is not configured'))
+  }
   const supabase = await createClient()
-  
+
   const email = formData.get('email') as string
   const password = formData.get('password') as string
-  
+
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
-  
+
   if (error) {
     redirect('/auth/login?error=' + encodeURIComponent(error.message))
   }
-  
+
   revalidatePath('/', 'layout')
   redirect('/dashboard')
 }
 
 export async function signOut() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    redirect('/')
+  }
   const supabase = await createClient()
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
@@ -68,13 +78,14 @@ export async function signOut() {
 }
 
 export async function getUser() {
+  // If Supabase is not configured, treat as logged out without erroring.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return { user: null, error: null }
+  }
   const supabase = await createClient()
-  
   const { data: { user }, error } = await supabase.auth.getUser()
-  
   if (error) {
     return { user: null, error: error.message }
   }
-  
   return { user, error: null }
 }

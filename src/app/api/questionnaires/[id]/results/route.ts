@@ -18,7 +18,7 @@ export async function GET(
 
     // TODO: Implement actual database queries with Supabase
     // This is a placeholder structure showing what the API should return
-    
+
     // Mock aggregated data
     const resultsData = {
       summary: {

@@ -51,7 +51,7 @@ export default async function MarketplacePage({
           <p className="text-xl text-blue-100 mb-8">
             Discover professional questionnaires created by industry experts
           </p>
-          
+
           {/* Search Bar */}
           <form className="max-w-2xl mx-auto">
             <div className="flex gap-2">
@@ -100,7 +100,7 @@ export default async function MarketplacePage({
                   <TemplateCount category={category} search={search} />
                 </p>
               </div>
-              
+
               <SortDropdown currentSort={sort} />
             </div>
 
@@ -129,11 +129,10 @@ function CategoryList({ currentCategory }: { currentCategory: string }) {
         <li key={cat.id}>
           <Link
             href={`/marketplace?category=${cat.id}`}
-            className={`block rounded-md px-3 py-2 text-sm ${
-              currentCategory === cat.id
+            className={`block rounded-md px-3 py-2 text-sm ${currentCategory === cat.id
                 ? 'bg-blue-50 text-blue-700 font-medium'
                 : 'text-gray-700 hover:bg-gray-50'
-            }`}
+              }`}
           >
             <div className="flex items-center justify-between">
               <span>{cat.name}</span>
@@ -210,31 +209,31 @@ async function TemplateGrid({ category, search, sort }: { category: string; sear
     )
   }
 
-    // TODO: Implement actual database query with filters
-    // For now, show placeholder templates
-    const templates = getMockTemplates()
+  // TODO: Implement actual database query with filters
+  // For now, show placeholder templates
+  const templates = getMockTemplates()
 
-    if (templates.length === 0) {
-      return (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No templates found</p>
-          <Link
-            href="/experts/submit"
-            className="mt-4 inline-block text-blue-600 hover:text-blue-700"
-          >
-            Be the first to contribute a template →
-          </Link>
-        </div>
-      )
-    }
-
-  return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {templates.map((template) => (
-          <TemplateCard key={template.id} template={template} />
-        ))}
+  if (templates.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500">No templates found</p>
+        <Link
+          href="/experts/submit"
+          className="mt-4 inline-block text-blue-600 hover:text-blue-700"
+        >
+          Be the first to contribute a template →
+        </Link>
       </div>
     )
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {templates.map((template) => (
+        <TemplateCard key={template.id} template={template} />
+      ))}
+    </div>
+  )
 }
 
 function TemplateCard({ template }: { template: any }) {

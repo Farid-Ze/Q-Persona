@@ -25,7 +25,7 @@ export function limitTemplateQuestions(
   }
 
   const FREE_PREVIEW_LIMIT = 5;
-  
+
   if (questions.length <= FREE_PREVIEW_LIMIT) {
     return {
       questions,

@@ -59,16 +59,14 @@ export function QuestionnairePreview({
               <button
                 key={index}
                 onClick={() => handleAnswer(question.id, option)}
-                className={`w-full max-w-2xl text-left rounded-lg border-2 px-6 py-4 text-lg transition-all ${
-                  value === option
+                className={`w-full max-w-2xl text-left rounded-lg border-2 px-6 py-4 text-lg transition-all ${value === option
                     ? 'border-blue-500 bg-blue-50 text-blue-900'
                     : 'border-gray-200 bg-white hover:border-gray-300'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    value === option ? 'border-blue-500' : 'border-gray-300'
-                  }`}>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${value === option ? 'border-blue-500' : 'border-gray-300'
+                    }`}>
                     {value === option && (
                       <div className="w-3 h-3 rounded-full bg-blue-500" />
                     )}
@@ -87,11 +85,10 @@ export function QuestionnairePreview({
               <button
                 key={index}
                 onClick={() => handleAnswer(question.id, option)}
-                className={`w-16 h-16 rounded-lg border-2 text-xl font-semibold transition-all ${
-                  value === option
+                className={`w-16 h-16 rounded-lg border-2 text-xl font-semibold transition-all ${value === option
                     ? 'border-blue-500 bg-blue-500 text-white'
                     : 'border-gray-200 bg-white hover:border-blue-300'
-                }`}
+                  }`}
               >
                 {option}
               </button>
@@ -106,11 +103,10 @@ export function QuestionnairePreview({
               <button
                 key={option}
                 onClick={() => handleAnswer(question.id, option)}
-                className={`px-12 py-4 rounded-lg border-2 text-lg font-medium transition-all ${
-                  value === option
+                className={`px-12 py-4 rounded-lg border-2 text-lg font-medium transition-all ${value === option
                     ? 'border-blue-500 bg-blue-500 text-white'
                     : 'border-gray-200 bg-white hover:border-blue-300'
-                }`}
+                  }`}
               >
                 {option}
               </button>

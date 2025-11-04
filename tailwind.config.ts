@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  // Use class-based dark mode so the app defaults to light theme unless `html` has `class="dark"`.
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',

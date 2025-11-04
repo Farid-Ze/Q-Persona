@@ -12,7 +12,7 @@ export default function LoginPage() {
             Access your questionnaire management dashboard
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" action={signIn}>
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
@@ -29,7 +29,7 @@ export default function LoginPage() {
                 placeholder="you@example.com"
               />
             </div>
-            
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -54,7 +54,7 @@ export default function LoginPage() {
               Sign in
             </button>
           </div>
-          
+
           <div className="text-center">
             <a href="/auth/signup" className="text-sm text-blue-600 hover:text-blue-500">
               Don&apos;t have an account? Sign up

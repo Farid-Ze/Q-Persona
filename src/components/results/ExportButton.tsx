@@ -93,9 +93,8 @@ export function ExportButton({
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `${questionnaireTitle}-${format}-${Date.now()}.${
-        format === 'excel' ? 'xlsx' : format
-      }`
+      a.download = `${questionnaireTitle}-${format}-${Date.now()}.${format === 'excel' ? 'xlsx' : format
+        }`
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -151,11 +150,10 @@ export function ExportButton({
                   key={format.id}
                   onClick={() => handleExport(format.id)}
                   disabled={!format.available}
-                  className={`w-full flex items-start gap-3 p-3 rounded-lg text-left transition ${
-                    format.available
+                  className={`w-full flex items-start gap-3 p-3 rounded-lg text-left transition ${format.available
                       ? 'hover:bg-gray-50 cursor-pointer'
                       : 'opacity-50 cursor-not-allowed'
-                  }`}
+                    }`}
                 >
                   <span className="text-2xl">{format.icon}</span>
                   <div className="flex-1">

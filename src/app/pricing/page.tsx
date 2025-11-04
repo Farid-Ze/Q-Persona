@@ -148,11 +148,10 @@ export default function PricingPage() {
             {tiers.map((tier) => (
               <div
                 key={tier.name}
-                className={`relative rounded-2xl ${
-                  tier.highlighted
+                className={`relative rounded-2xl ${tier.highlighted
                     ? 'border-2 border-blue-600 shadow-xl'
                     : 'border border-gray-200 shadow-sm'
-                } bg-white p-8 ${tier.enterprise ? 'lg:col-span-1' : ''}`}
+                  } bg-white p-8 ${tier.enterprise ? 'lg:col-span-1' : ''}`}
               >
                 {tier.highlighted && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -161,7 +160,7 @@ export default function PricingPage() {
                     </span>
                   </div>
                 )}
-                
+
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-gray-900">{tier.name}</h3>
                   <p className="mt-2 text-sm text-gray-600">{tier.description}</p>
@@ -197,11 +196,10 @@ export default function PricingPage() {
 
                 <Link
                   href={tier.ctaLink}
-                  className={`block w-full rounded-lg py-3 text-center font-medium ${
-                    tier.highlighted || tier.enterprise
+                  className={`block w-full rounded-lg py-3 text-center font-medium ${tier.highlighted || tier.enterprise
                       ? 'bg-blue-600 text-white hover:bg-blue-700'
                       : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   {tier.cta}
                 </Link>
@@ -217,7 +215,7 @@ export default function PricingPage() {
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
             Compare Plans
           </h2>
-          
+
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead>
@@ -240,41 +238,41 @@ export default function PricingPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                <ComparisonRow 
-                  feature="Questionnaires" 
-                  values={['3', 'Unlimited', 'Unlimited', 'Unlimited']} 
+                <ComparisonRow
+                  feature="Questionnaires"
+                  values={['3', 'Unlimited', 'Unlimited', 'Unlimited']}
                 />
-                <ComparisonRow 
-                  feature="Responses/month" 
-                  values={['100', '1,000', '10,000', 'Unlimited']} 
+                <ComparisonRow
+                  feature="Responses/month"
+                  values={['100', '1,000', '10,000', 'Unlimited']}
                 />
-                <ComparisonRow 
-                  feature="Team Members" 
-                  values={['1', '5', 'Unlimited', 'Unlimited']} 
+                <ComparisonRow
+                  feature="Team Members"
+                  values={['1', '5', 'Unlimited', 'Unlimited']}
                 />
-                <ComparisonRow 
-                  feature="Custom Branding" 
-                  values={[false, true, true, true]} 
+                <ComparisonRow
+                  feature="Custom Branding"
+                  values={[false, true, true, true]}
                 />
-                <ComparisonRow 
-                  feature="SSO (SAML, OAuth)" 
-                  values={[false, false, true, true]} 
+                <ComparisonRow
+                  feature="SSO (SAML, OAuth)"
+                  values={[false, false, true, true]}
                 />
-                <ComparisonRow 
-                  feature="Audit Logs" 
-                  values={[false, false, '30 days', 'Unlimited']} 
+                <ComparisonRow
+                  feature="Audit Logs"
+                  values={[false, false, '30 days', 'Unlimited']}
                 />
-                <ComparisonRow 
-                  feature="Multi-Factor Auth" 
-                  values={[false, false, false, true]} 
+                <ComparisonRow
+                  feature="Multi-Factor Auth"
+                  values={[false, false, false, true]}
                 />
-                <ComparisonRow 
-                  feature="SLA Guarantee" 
-                  values={[false, false, false, '99.5%']} 
+                <ComparisonRow
+                  feature="SLA Guarantee"
+                  values={[false, false, false, '99.5%']}
                 />
-                <ComparisonRow 
-                  feature="Support" 
-                  values={['Email', 'Priority Email', 'Priority + Phone', '24/7 Dedicated']} 
+                <ComparisonRow
+                  feature="Support"
+                  values={['Email', 'Priority Email', 'Priority + Phone', '24/7 Dedicated']}
                 />
               </tbody>
             </table>
@@ -314,7 +312,7 @@ export default function PricingPage() {
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
             Frequently Asked Questions
           </h2>
-          
+
           <div className="space-y-8">
             <FAQItem
               question="Can I switch plans later?"

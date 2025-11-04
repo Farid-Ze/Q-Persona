@@ -72,7 +72,7 @@ export default function SecurityPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
             Multi-Layer Security Architecture
           </h2>
-          
+
           <div className="space-y-8">
             <SecurityLayer
               number="1"
@@ -134,7 +134,7 @@ export default function SecurityPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
             Compliance Status
           </h2>
-          
+
           <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
@@ -194,14 +194,14 @@ export default function SecurityPage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               Incident Response Policy
             </h2>
-            
+
             <div className="prose prose-blue max-w-none">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Our Commitment</h3>
               <p className="text-gray-600 mb-6">
                 Q-Persona maintains a comprehensive incident response plan to quickly identify,
                 contain, and resolve security incidents while maintaining transparency with our customers.
               </p>
-              
+
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Response Timeline</h3>
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start">
@@ -225,7 +225,7 @@ export default function SecurityPage() {
                   Post-incident review and report
                 </li>
               </ul>
-              
+
               <h3 className="text-xl font-semibold text-gray-900 mb-4 mt-8">Report a Security Issue</h3>
               <p className="text-gray-600 mb-4">
                 If you discover a security vulnerability, please report it to:
@@ -247,7 +247,7 @@ export default function SecurityPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
             Infrastructure & Data Residency
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="rounded-lg border border-gray-200 p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Primary Infrastructure</h3>
@@ -278,7 +278,7 @@ export default function SecurityPage() {
                 </li>
               </ul>
             </div>
-            
+
             <div className="rounded-lg border border-gray-200 p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Data Residency</h3>
               <ul className="space-y-3 text-gray-600">
@@ -433,7 +433,7 @@ function SecurityBadge({ title, status, description }: {
     'Ready': 'bg-blue-100 text-blue-800',
     'In Progress': 'bg-yellow-100 text-yellow-800',
   }
-  
+
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 text-center">
       <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
@@ -485,7 +485,7 @@ function ComplianceRow({ standard, status, details, statusColor }: {
     yellow: 'bg-yellow-100 text-yellow-800',
     gray: 'bg-gray-100 text-gray-800',
   }
-  
+
   return (
     <tr>
       <td className="px-6 py-4 text-sm font-medium text-gray-900">{standard}</td>

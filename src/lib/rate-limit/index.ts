@@ -47,10 +47,10 @@ export function checkRateLimit(
 ): RateLimitResult {
   const now = Date.now();
   const key = identifier;
-  
+
   // Get or create entry
   let entry = rateLimitStore.get(key);
-  
+
   // Reset if window has passed
   if (!entry || now > entry.resetAt) {
     entry = {
@@ -58,14 +58,14 @@ export function checkRateLimit(
       resetAt: now + config.windowMs,
     };
   }
-  
+
   // Increment count
   entry.count++;
   rateLimitStore.set(key, entry);
-  
+
   // Check if limit exceeded
   const success = entry.count <= config.maxRequests;
-  
+
   return {
     success,
     limit: config.maxRequests,
@@ -83,7 +83,7 @@ export function rateLimitMiddleware(
 ): NextResponse | null {
   const config = RATE_LIMITS[planType];
   const result = checkRateLimit(identifier, config);
-  
+
   if (!result.success) {
     return NextResponse.json(
       {
@@ -104,7 +104,7 @@ export function rateLimitMiddleware(
       }
     );
   }
-  
+
   return null;
 }
 
@@ -116,11 +116,11 @@ export async function getWorkspacePlanType(
 ): Promise<'free' | 'pro' | 'business'> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_KEY;
-  
+
   if (!supabaseUrl || !serviceKey) {
     return 'free'; // Default to free if DB not configured
   }
-  
+
   try {
     const response = await fetch(
       `${supabaseUrl}/rest/v1/subscriptions?workspace_id=eq.${workspaceId}&limit=1`,
@@ -131,17 +131,17 @@ export async function getWorkspacePlanType(
         },
       }
     );
-    
+
     if (!response.ok) {
       return 'free';
     }
-    
+
     const subscriptions = await response.json();
-    
+
     if (subscriptions.length === 0) {
       return 'free';
     }
-    
+
     return subscriptions[0].plan_type || 'free';
   } catch (error) {
     console.error('Failed to get plan type:', error);

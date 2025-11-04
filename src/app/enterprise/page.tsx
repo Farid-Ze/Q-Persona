@@ -52,18 +52,18 @@ export default function EnterprisePage() {
                 ✓ Trusted by Fortune 500 Companies
               </span>
             </div>
-            
+
             <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-6">
               Enterprise-Grade Survey Platform
               <br />
               <span className="text-blue-600">with Complete Audit Trail</span>
             </h1>
-            
+
             <p className="mx-auto max-w-2xl text-xl text-gray-600 mb-12">
               The only survey platform built for regulated industries with complete compliance,
               audit logging, SSO integration, and enterprise security.
             </p>
-            
+
             <div className="flex justify-center gap-4">
               <Link
                 href="#demo"
@@ -78,7 +78,7 @@ export default function EnterprisePage() {
                 See Features
               </Link>
             </div>
-            
+
             <div className="mt-12 flex justify-center gap-12 text-sm text-gray-600">
               <div className="flex items-center gap-2">
                 <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -261,7 +261,7 @@ export default function EnterprisePage() {
               Comprehensive documentation and certifications to pass your IT security review
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <ComplianceCard
               icon="📋"
@@ -404,11 +404,10 @@ function PricingTier({ name, price, period, features, cta, ctaLink, highlighted,
   enterprise?: boolean
 }) {
   return (
-    <div className={`rounded-lg p-8 ${
-      highlighted 
-        ? 'border-2 border-blue-500 bg-white shadow-xl scale-105' 
+    <div className={`rounded-lg p-8 ${highlighted
+        ? 'border-2 border-blue-500 bg-white shadow-xl scale-105'
         : 'border border-gray-200 bg-white'
-    }`}>
+      }`}>
       {highlighted && (
         <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 mb-4">
           Most Popular
@@ -431,13 +430,12 @@ function PricingTier({ name, price, period, features, cta, ctaLink, highlighted,
       </ul>
       <Link
         href={ctaLink}
-        className={`mt-8 block w-full rounded-md px-4 py-3 text-center font-semibold ${
-          enterprise
+        className={`mt-8 block w-full rounded-md px-4 py-3 text-center font-semibold ${enterprise
             ? 'bg-gray-900 text-white hover:bg-gray-800'
             : highlighted
-            ? 'bg-blue-600 text-white hover:bg-blue-700'
-            : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-        }`}
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+          }`}
       >
         {cta}
       </Link>

@@ -5,11 +5,11 @@ import Link from 'next/link'
 
 export default async function DashboardPage() {
   const { user } = await getUser()
-  
+
   if (!user) {
     redirect('/auth/login')
   }
-  
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
@@ -36,7 +36,7 @@ export default async function DashboardPage() {
           </div>
         </div>
       </nav>
-      
+
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
@@ -44,7 +44,7 @@ export default async function DashboardPage() {
             Manage your questionnaires and personas
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href="/dashboard/personas"
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
               Create and manage user personas for your questionnaires
             </p>
           </Link>
-          
+
           <Link
             href="/dashboard/templates"
             className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
               Design reusable questionnaire templates
             </p>
           </Link>
-          
+
           <Link
             href="/dashboard/questionnaires"
             className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
               Create and deploy questionnaires to collect responses
             </p>
           </Link>
-          
+
           <Link
             href="/dashboard/respondents"
             className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"
@@ -85,7 +85,7 @@ export default async function DashboardPage() {
               View and manage survey respondents
             </p>
           </Link>
-          
+
           <Link
             href="/dashboard/answers"
             className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"

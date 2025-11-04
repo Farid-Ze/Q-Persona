@@ -13,14 +13,14 @@ export async function trackServerEvent(
   userId?: string
 ) {
   const supabase = await createClient()
-  
+
   // Get user if not provided
   let currentUserId = userId
   if (!currentUserId) {
     const { data: { user } } = await supabase.auth.getUser()
     currentUserId = user?.id
   }
-  
+
   const { error } = await supabase
     .from('analytics_events')
     .insert({
@@ -28,7 +28,7 @@ export async function trackServerEvent(
       event_name: eventName,
       event_properties: properties || {}
     })
-  
+
   if (error) {
     console.error('Error tracking event:', error)
   }

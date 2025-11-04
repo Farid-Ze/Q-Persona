@@ -11,7 +11,7 @@ export const dbConfig = {
   database: process.env.DB_NAME || 'q_persona',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || '',
-  
+
   // SSL settings for cloud databases
   // In production, always use proper SSL certificate validation
   ssl: process.env.DB_SSL === 'true' ? {
@@ -19,7 +19,7 @@ export const dbConfig = {
     // For production with custom CA certificates:
     // ca: process.env.DB_SSL_CA,
   } : false,
-  
+
   // Connection pool settings
   max: parseInt(process.env.DB_POOL_MAX || '20'),
   idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT || '30000'),
