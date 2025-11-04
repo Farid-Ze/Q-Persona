@@ -208,3 +208,85 @@ export interface ResponseQueue {
   created_at: Date;
   processed_at?: Date;
 }
+
+// MFA (Multi-Factor Authentication)
+export interface UserMFA {
+  id: string;
+  user_id: string;
+  mfa_enabled: boolean;
+  mfa_secret?: string;
+  backup_codes: string[];
+  phone_number?: string;
+  phone_verified: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
+// SSO (Single Sign-On) Connection
+export interface SSOConnection {
+  id: string;
+  workspace_id?: string;
+  provider: 'saml' | 'google' | 'microsoft' | 'github';
+  name: string;
+  enabled: boolean;
+  // SAML
+  saml_entry_point?: string;
+  saml_issuer?: string;
+  saml_cert?: string;
+  // OAuth
+  oauth_client_id?: string;
+  oauth_client_secret?: string;
+  oauth_redirect_uri?: string;
+  // Settings
+  auto_provision: boolean;
+  default_role: 'admin' | 'editor' | 'viewer';
+  metadata: Record<string, any>;
+  created_at: Date;
+  updated_at: Date;
+}
+
+// Marketplace Template
+export interface MarketplaceTemplate {
+  id: string;
+  template_id: string;
+  expert_id?: string;
+  is_public: boolean;
+  is_featured: boolean;
+  is_verified: boolean;
+  category?: string;
+  tags: string[];
+  preview_image_url?: string;
+  download_count: number;
+  rating_average: number;
+  rating_count: number;
+  price_cents: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
+// Template Review
+export interface TemplateReview {
+  id: string;
+  marketplace_template_id: string;
+  user_id: string;
+  rating: number; // 1-5
+  review_text?: string;
+  is_verified_download: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
+// CDN Asset
+export interface CDNAsset {
+  id: string;
+  asset_key: string;
+  asset_type: 'image' | 'video' | 'document' | 'template_export';
+  file_size?: number;
+  mime_type?: string;
+  cdn_url?: string;
+  original_url?: string;
+  uploaded_by?: string;
+  workspace_id?: string;
+  metadata: Record<string, any>;
+  created_at: Date;
+}
