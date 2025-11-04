@@ -72,7 +72,7 @@ Q-Persona is fully compliant with the EU General Data Protection Regulation (GDP
 ### Compliance Evidence
 - Privacy Policy: https://q-persona.com/privacy
 - Data Processing Agreement (DPA): Available on request
-- GDPR Compliance Checklist: [Download PDF](#)
+- GDPR Compliance Checklist: Available on request
 
 ---
 
@@ -118,7 +118,7 @@ Q-Persona implements all required Technical and Administrative Safeguards under 
 **To Request BAA:** Contact sales@q-persona.com
 
 ### Compliance Evidence
-- HIPAA Security Rule Checklist: [Download PDF](#)
+- HIPAA Security Rule Checklist: Available on request
 - Business Associate Agreement Template: Available on request
 - Technical Safeguards Documentation: [Security Whitepaper](./security-whitepaper.md)
 
@@ -422,7 +422,7 @@ As a Singapore-based company, Q-Persona fully complies with the Personal Data Pr
 | **Terms of Service** | Legal terms and conditions | https://q-persona.com/terms |
 | **DPA Template** | Data Processing Agreement | On request |
 | **BAA Template** | HIPAA Business Associate Agreement | On request |
-| **Subprocessor List** | Third-party vendors | [Download PDF](#) |
+| **Subprocessor List** | Third-party vendors | On request |
 | **SOC 2 Report** | Type I/II (when available) | Enterprise customers only |
 | **Penetration Test Report** | Annual security assessment | Enterprise customers (NDA) |
 
@@ -479,7 +479,7 @@ As a Singapore-based company, Q-Persona fully complies with the Personal Data Pr
 
 **General Compliance Inquiries:**
 - Email: compliance@q-persona.com
-- Phone: +62-21-XXXX-XXXX (Enterprise)
+- Contact: Schedule via enterprise demo page
 
 **Data Protection Officer (DPO):**
 - Email: dpo@q-persona.com
@@ -491,7 +491,7 @@ As a Singapore-based company, Q-Persona fully complies with the Personal Data Pr
 
 **Sales (Compliance Questions):**
 - Email: sales@q-persona.com
-- Phone: +62-21-XXXX-XXXX
+- Contact: https://q-persona.com/enterprise#demo
 
 ---
 

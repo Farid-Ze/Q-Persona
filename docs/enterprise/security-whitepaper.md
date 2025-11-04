@@ -521,7 +521,7 @@ T+7d:    Post-incident review & report
 
 **Sales & Compliance:**
 - **Email:** sales@q-persona.com
-- **Phone:** +62-21-XXXX-XXXX (Enterprise customers)
+- **Contact:** Schedule a call via our enterprise page
 - **Schedule Demo:** https://q-persona.com/enterprise#demo
 
 **Documentation:**
