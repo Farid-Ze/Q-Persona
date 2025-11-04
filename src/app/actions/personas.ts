@@ -5,10 +5,10 @@ import { revalidatePath } from 'next/cache'
 
 /**
  * Server Actions for Persona management
- * Following best practices from Next.js + Supabase patterns
+ * Updated to work with system personas and user_personas junction table
  */
 
-export async function getPersonas(userId?: string) {
+export async function getPersonas(systemOnly: boolean = false) {
   const supabase = await createClient()
   
   let query = supabase
@@ -16,14 +16,34 @@ export async function getPersonas(userId?: string) {
     .select('*')
     .order('created_at', { ascending: false })
   
-  if (userId) {
-    query = query.eq('user_id', userId)
+  if (systemOnly) {
+    query = query.eq('is_system', true)
   }
   
   const { data, error } = await query
   
   if (error) {
     console.error('Error fetching personas:', error)
+    return { data: null, error: error.message }
+  }
+  
+  return { data, error: null }
+}
+
+export async function getUserPersonas(userId: string) {
+  const supabase = await createClient()
+  
+  const { data, error } = await supabase
+    .from('user_personas')
+    .select(`
+      id,
+      created_at,
+      personas (*)
+    `)
+    .eq('user_id', userId)
+  
+  if (error) {
+    console.error('Error fetching user personas:', error)
     return { data: null, error: error.message }
   }
   
@@ -47,10 +67,10 @@ export async function createPersona(formData: {
   const { data, error } = await supabase
     .from('personas')
     .insert({
-      user_id: user.id,
       name: formData.name,
       description: formData.description,
-      attributes: formData.attributes || {}
+      attributes: formData.attributes || {},
+      is_system: false,
     })
     .select()
     .single()

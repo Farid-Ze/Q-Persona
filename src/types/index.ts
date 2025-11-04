@@ -14,12 +14,42 @@ export interface User {
 
 export interface Persona {
   id: string;
-  user_id: string;
   name: string;
   description: string;
   attributes: Record<string, any>;
+  is_system: boolean;
   created_at: Date;
   updated_at: Date;
+}
+
+export interface UserPersona {
+  id: string;
+  user_id: string;
+  persona_id: string;
+  created_at: Date;
+}
+
+export interface Subscription {
+  id: string;
+  user_id: string;
+  stripe_customer_id?: string;
+  stripe_subscription_id?: string;
+  stripe_price_id?: string;
+  status: 'active' | 'inactive' | 'canceled' | 'past_due' | 'trialing';
+  plan_type: 'free' | 'pro' | 'business';
+  current_period_start?: Date;
+  current_period_end?: Date;
+  cancel_at_period_end: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface AnalyticsEvent {
+  id: string;
+  user_id?: string;
+  event_name: string;
+  event_properties: Record<string, any>;
+  created_at: Date;
 }
 
 export interface Template {
