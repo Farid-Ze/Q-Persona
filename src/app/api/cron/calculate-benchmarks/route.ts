@@ -9,7 +9,11 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   // Verify this is a legitimate cron request (in production, use proper auth)
   const authHeader = request.headers.get('authorization')
-  const cronSecret = process.env.CRON_SECRET || 'dev-secret'
+  const cronSecret = process.env.CRON_SECRET
+  
+  if (!cronSecret) {
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+  }
   
   if (authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

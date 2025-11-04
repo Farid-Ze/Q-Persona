@@ -24,6 +24,8 @@ async function authenticateApiKey(request: NextRequest) {
   }
   
   try {
+    // TODO: In production, hash API keys using bcrypt before storage
+    // and compare hashed values here instead of plain text
     const response = await fetch(
       `${supabaseUrl}/rest/v1/workspace_api_keys?key_hash=eq.${apiKey}&is_active=eq.true`,
       {

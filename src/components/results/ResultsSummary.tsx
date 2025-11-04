@@ -18,7 +18,6 @@ interface ResultsSummaryProps {
   benchmarkComparison?: {
     percentile: number
     sampleSize: number
-    category: string
   }
 }
 
@@ -220,8 +219,8 @@ export function ResultsSummary({
                 </p>
                 <p className="text-sm text-gray-700 mb-2">
                   This places you at the <span className="font-bold text-blue-700">{benchmarkComparison.percentile}th percentile</span> compared to{' '}
-                  <span className="font-semibold">{benchmarkComparison.sampleSize.toLocaleString()}</span> other responses using{' '}
-                  '{benchmarkComparison.category.replace(/_/g, ' ')}' templates.
+                  <span className="font-semibold">{benchmarkComparison.sampleSize.toLocaleString()}</span> other responses{' '}
+                  {benchmarkCategory && `using '${benchmarkCategory.replace(/_/g, ' ')}' templates`}.
                 </p>
                 <div className="flex items-center gap-2 text-xs text-gray-600 mt-3">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">

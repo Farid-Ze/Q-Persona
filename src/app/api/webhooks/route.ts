@@ -62,9 +62,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
-    if (!body.name || !body.target_url) {
+    if (!body.name || !body.target_url || !body.workspace_id) {
       return NextResponse.json(
-        { error: 'Bad request', message: 'name and target_url are required' },
+        { error: 'Bad request', message: 'name, target_url, and workspace_id are required' },
         { status: 400 }
       )
     }
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
         'Prefer': 'return=representation',
       },
       body: JSON.stringify({
-        workspace_id: body.workspace_id || 'default-workspace',
+        workspace_id: body.workspace_id,
         user_id: user.id,
         name: body.name,
         target_url: body.target_url,

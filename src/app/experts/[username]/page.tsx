@@ -18,7 +18,16 @@ export default async function ExpertProfilePage({
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
   
   if (!supabaseUrl || !serviceKey) {
-    return <div>Database not configured</div>
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 font-semibold">Database Configuration Error</p>
+          <p className="text-sm text-gray-600 mt-2">
+            Missing environment variables: {!supabaseUrl && 'NEXT_PUBLIC_SUPABASE_URL'} {!serviceKey && 'SUPABASE_SERVICE_KEY'}
+          </p>
+        </div>
+      </div>
+    )
   }
   
   try {
