@@ -1,589 +1,642 @@
 # Q-Persona Security Whitepaper
 
-**Version 1.0**  
-**Last Updated: November 2024**  
-**Classification: Public**
+**Version**: 1.0  
+**Last Updated**: November 2025  
+**Classification**: Public
+
+---
 
 ## Executive Summary
 
-Q-Persona is an enterprise-grade questionnaire and persona management platform designed with security and compliance at its core. This whitepaper outlines our comprehensive security architecture, data protection measures, and compliance capabilities that enable organizations in regulated industries to deploy our platform with confidence.
+Q-Persona is an enterprise-grade questionnaire and persona management platform built with security and compliance as foundational requirements. This whitepaper provides a comprehensive overview of our security architecture, data protection measures, and compliance capabilities.
 
-**Key Security Highlights:**
-- Complete audit trail for all user actions
-- Enterprise SSO with SAML 2.0 and OAuth 2.0
-- Multi-factor authentication (MFA) support
-- Role-based access control (RBAC)
-- AES-256 encryption at rest, TLS 1.3 in transit
+**Key Security Features**:
+- Complete audit logging for all system actions
+- Role-Based Access Control (RBAC)
+- Single Sign-On (SSO) integration
+- Multi-Factor Authentication (MFA)
+- Data encryption at rest and in transit
 - Rate limiting and DDoS protection
-- GDPR compliant, HIPAA-ready
+- Enterprise-grade infrastructure
 
-## 1. Architecture Overview
+---
 
-### 1.1 System Architecture
+## 1. System Architecture
 
-Q-Persona employs a modern, serverless architecture built on battle-tested enterprise technologies:
+### 1.1 High-Level Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Client Layer (Browser)                   │
-│                  Next.js 16 + React 19                      │
-└────────────────────┬────────────────────────────────────────┘
-                     │ HTTPS/TLS 1.3
-┌────────────────────▼────────────────────────────────────────┐
-│                  Edge Network Layer                         │
-│              Vercel Edge + Cloudflare CDN                   │
-│         DDoS Protection + WAF + Rate Limiting               │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-┌────────────────────▼────────────────────────────────────────┐
-│                Application Layer                            │
-│           Next.js Server Components + API Routes            │
-│              Server Actions (Type-Safe)                     │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-┌────────────────────▼────────────────────────────────────────┐
-│              Authentication Layer                           │
-│         Supabase Auth + SSO (SAML/OAuth)                   │
-│              JWT + Session Management                       │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-┌────────────────────▼────────────────────────────────────────┐
-│                  Data Layer                                 │
-│           PostgreSQL (Supabase)                            │
-│         AES-256 Encryption at Rest                         │
-│         Row-Level Security (RLS)                           │
+│                     Client Layer                             │
+│  (Web Browser - Next.js 16 + React 19 + TypeScript)        │
+└──────────────────────┬──────────────────────────────────────┘
+                       │ HTTPS/TLS 1.3
+┌──────────────────────▼──────────────────────────────────────┐
+│                Application Layer                             │
+│  • Next.js Server Actions (Type-safe mutations)             │
+│  • RESTful API (CRUD operations)                            │
+│  • Authentication Middleware                                │
+│  • Rate Limiting & Quota Enforcement                        │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────┐
+│              Backend-as-a-Service Layer                      │
+│                    (Supabase)                               │
+│  • PostgreSQL Database (Encrypted at Rest)                  │
+│  • Authentication Service (SSO, MFA)                        │
+│  • Row-Level Security (RLS) Policies                        │
+│  • Real-time Subscriptions                                 │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────┐
+│                 Infrastructure Layer                         │
+│  • Cloud Provider (AWS/GCP via Supabase)                    │
+│  • CDN (Global Content Delivery)                            │
+│  • Backup & Disaster Recovery                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 1.2 Technology Stack
+### 1.2 Data Flow Architecture
 
-**Frontend:**
-- Next.js 16 with App Router
-- React 19 with TypeScript 5.9
-- Tailwind CSS for UI
-- PostHog for analytics
-
-**Backend:**
-- Supabase Backend-as-a-Service
-- PostgreSQL 15+ database
-- Server Actions for mutations
-- RESTful API endpoints
-
-**Infrastructure:**
-- Hosting: Vercel Edge Network
-- CDN: Cloudflare (170 Tbps DDoS protection)
-- Database: Supabase (AWS multi-region)
-- Monitoring: PostHog + Supabase Dashboard
-
-## 2. Data Flow and Processing
-
-### 2.1 Request Flow
-
-1. **Client Request** → User initiates action via browser
-2. **Edge Processing** → Request hits Vercel Edge (geographically closest)
-3. **Authentication** → JWT token validation + session check
-4. **Authorization** → RBAC enforcement + workspace isolation
-5. **Rate Limiting** → Workspace-based quota enforcement
-6. **Business Logic** → Server Actions or API routes process request
-7. **Database Access** → PostgreSQL with RLS policies
-8. **Audit Logging** → Asynchronous event logging
-9. **Response** → Encrypted response sent to client
-
-### 2.2 Data Storage
-
-**User Data:**
-- Personally Identifiable Information (PII) encrypted at rest
-- Database-level encryption with AES-256
-- Application-level encryption for sensitive fields
-- Automatic backups every 24 hours (7-day retention)
-
-**Audit Logs:**
-- Immutable event log (append-only)
-- Stored separately from application data
-- 30-day retention (Business tier)
-- Unlimited retention (Enterprise tier)
-- Exportable in CSV, JSON, PDF formats
-
-**Response Data:**
-- Survey responses encrypted in transit and at rest
-- Workspace-isolated data access
-- Soft-delete with 30-day recovery window
-- GDPR right-to-be-forgotten support
-
-## 3. Security Controls
-
-### 3.1 Authentication
-
-**Supported Methods:**
-- Email/Password with bcrypt hashing (work factor: 12)
-- Magic link (passwordless)
-- Social OAuth (Google, GitHub)
-- Enterprise SSO (SAML 2.0, OAuth 2.0)
-
-**Session Management:**
-- JWT access tokens (15-minute expiry)
-- Refresh tokens (7-day expiry, rotated on use)
-- Secure, httpOnly cookies
-- Device fingerprinting
-- Session revocation on logout
-
-**Enterprise SSO:**
-- SAML 2.0 protocol support
-- OAuth 2.0 / OpenID Connect
-- Just-in-Time (JIT) user provisioning
-- Automatic attribute mapping
-- Support for Okta, Azure AD, Google Workspace, OneLogin
-
-### 3.2 Multi-Factor Authentication (MFA)
-
-**Available Methods:**
-- Time-based One-Time Password (TOTP) - RFC 6238
-- SMS verification codes
-- Authenticator apps (Google Authenticator, Authy, 1Password)
-
-**Enforcement:**
-- Optional for Free/Pro tiers
-- Recommended for Business tier
-- Mandatory option for Enterprise tier
-- Per-workspace MFA policies
-- Recovery codes for account access
-
-### 3.3 Authorization
-
-**Role-Based Access Control (RBAC):**
-
-| Role | Permissions |
-|------|-------------|
-| **Admin** | Full workspace access, user management, billing, audit logs |
-| **Editor** | Create/edit questionnaires, view responses, export data |
-| **Viewer** | Read-only access to questionnaires and responses |
-
-**Workspace Isolation:**
-- Multi-tenant architecture with strict data separation
-- Row-Level Security (RLS) enforced at database level
-- No cross-workspace data leakage
-- Workspace-scoped API keys
-
-**API Access:**
-- API key authentication for programmatic access
-- Scoped permissions per API key
-- Rate limiting per API key
-- Audit logging for all API calls
-
-### 3.4 Data Encryption
-
-**In Transit:**
-- TLS 1.3 for all connections
-- HSTS enabled (Strict-Transport-Security)
-- Perfect Forward Secrecy (PFS)
-- Certificate pinning for API clients
-
-**At Rest:**
-- Database: AES-256 encryption
-- File uploads: Server-side encryption
-- Backups: Encrypted before storage
-- Encryption key management via AWS KMS
-
-### 3.5 Network Security
-
-**DDoS Protection:**
-- Cloudflare's 170 Tbps mitigation capacity
-- Automatic attack detection and response
-- Edge-level request filtering
-- Geographic traffic analysis
-
-**Web Application Firewall (WAF):**
-- OWASP Top 10 protection
-- SQL injection prevention
-- Cross-site scripting (XSS) blocking
-- Custom rule sets for enterprise customers
-
-**Rate Limiting:**
-- Workspace-based quotas
-- IP-based rate limits for anonymous access
-- Exponential backoff for failed authentication
-- API endpoint-specific limits
-
-**Abuse Prevention:**
-- Automated bot detection
-- CAPTCHA for suspicious activity
-- Login attempt throttling
-- Suspicious IP blocking
-
-## 4. Audit Trail and Monitoring
-
-### 4.1 Audit Logging
-
-**What We Log:**
-Every action in the system generates an immutable audit event:
-
-```json
-{
-  "timestamp": "2024-11-04T14:23:41.123Z",
-  "event_id": "evt_7x9k2m4p",
-  "actor": {
-    "user_id": "usr_abc123",
-    "email": "sarah.tan@enterprise.com",
-    "role": "editor"
-  },
-  "action": "questionnaire.viewed",
-  "resource": {
-    "type": "questionnaire",
-    "id": "qst_xyz789",
-    "name": "Customer Satisfaction Q4 2024"
-  },
-  "metadata": {
-    "ip_address": "203.0.113.42",
-    "user_agent": "Mozilla/5.0...",
-    "workspace_id": "wks_marketing",
-    "session_id": "ses_def456"
-  },
-  "result": "success"
-}
+```
+User Request
+    │
+    ├──> Authentication Check (Supabase Auth)
+    │        └──> SSO/MFA Verification
+    │
+    ├──> Authorization Check (RBAC)
+    │        └──> Role & Permission Validation
+    │
+    ├──> Rate Limit Check
+    │        └──> Usage Quota Validation
+    │
+    ├──> Application Logic
+    │        └──> Business Rules & Validation
+    │
+    ├──> Database Operation (PostgreSQL)
+    │        └──> Row-Level Security Policies
+    │
+    └──> Audit Log Creation
+             └──> Action, User, Timestamp, IP recorded
 ```
 
-**Event Categories:**
-- Authentication (login, logout, MFA, SSO)
-- Authorization (permission grants/denials)
-- Data access (view, create, update, delete)
-- Configuration changes (settings, integrations)
-- User management (invite, remove, role changes)
-- Billing events (subscription changes)
-- API calls (all programmatic access)
+### 1.3 Network Topology
 
-**Audit Log Features:**
-- Immutable (cannot be modified or deleted)
-- Real-time event streaming
-- Advanced filtering and search
-- Export capabilities (CSV, JSON, PDF)
-- Retention: 30 days (Business), Unlimited (Enterprise)
-- Compliance reporting templates
+- **Edge Layer**: CDN for static assets and global distribution
+- **Application Layer**: Serverless functions (Vercel/AWS Lambda)
+- **Database Layer**: Managed PostgreSQL (Supabase/AWS RDS)
+- **Security Layer**: WAF, DDoS protection, SSL/TLS termination
 
-### 4.2 Monitoring and Alerting
+---
 
-**System Monitoring:**
-- 24/7 uptime monitoring
-- Performance metrics (p50, p95, p99 latency)
-- Error rate tracking
-- Database query performance
-- API endpoint health checks
+## 2. Security Measures
 
-**Security Monitoring:**
+### 2.1 Data Encryption
+
+#### Encryption at Rest
+- **Database**: AES-256 encryption for all data at rest
+- **Backups**: Encrypted using the same standards as production data
+- **Files**: All uploaded files encrypted in storage
+
+#### Encryption in Transit
+- **TLS 1.3**: All communications use latest TLS protocol
+- **HSTS**: HTTP Strict Transport Security enforced
+- **Certificate Management**: Automated certificate renewal
+- **Cipher Suites**: Only strong ciphers allowed (no deprecated algorithms)
+
+### 2.2 Authentication & Authorization
+
+#### Authentication Options
+1. **Email/Password**
+   - Bcrypt hashing with salt (cost factor 12)
+   - Password complexity requirements
+   - Account lockout after failed attempts
+
+2. **Single Sign-On (SSO)**
+   - SAML 2.0 support
+   - OAuth 2.0 / OpenID Connect
+   - Support for major providers: Okta, Azure AD, Google Workspace
+   - Just-in-Time (JIT) user provisioning
+
+3. **Multi-Factor Authentication (MFA)**
+   - Time-based One-Time Passwords (TOTP)
+   - SMS-based verification
+   - Authenticator app support (Google Authenticator, Authy)
+   - Backup codes for account recovery
+
+#### Authorization (RBAC)
+- **Roles**: Admin, Editor, Viewer, Custom Roles
+- **Permissions**: Granular control over resources
+- **Inheritance**: Role hierarchy support
+- **Least Privilege**: Default deny policy
+
+**Role Matrix**:
+
+| Feature | Admin | Editor | Viewer |
+|---------|-------|--------|--------|
+| Create Questionnaires | ✅ | ✅ | ❌ |
+| Edit Questionnaires | ✅ | ✅ | ❌ |
+| View Responses | ✅ | ✅ | ✅ |
+| Delete Data | ✅ | ❌ | ❌ |
+| Manage Users | ✅ | ❌ | ❌ |
+| View Audit Logs | ✅ | ✅ | ❌ |
+| Export Data | ✅ | ✅ | ✅ |
+
+### 2.3 Audit Logging
+
+**Complete Activity Tracking**:
+- **What**: Action type (create, read, update, delete)
+- **Who**: User ID and email
+- **When**: Timestamp (UTC, millisecond precision)
+- **Where**: IP address and geolocation
+- **How**: Request method and user agent
+- **Result**: Success or failure with error details
+
+**Audit Log Retention**:
+- **Free/Pro**: 30 days
+- **Business**: 180 days
+- **Enterprise**: Unlimited (configurable)
+
+**Audit Log Capabilities**:
+- Real-time logging
+- Advanced filtering (by user, action, date range, IP)
+- Export to CSV/JSON
+- Integration with SIEM systems
+- Tamper-proof storage
+
+**Logged Actions**:
+- User authentication (login, logout, failed attempts)
+- Resource access (view, create, edit, delete)
+- Permission changes
+- Configuration changes
+- Data exports
+- API calls
+- Failed security events
+
+### 2.4 Access Control
+
+#### Network Security
+- **IP Allowlisting**: Restrict access by IP address (Enterprise)
+- **VPN Access**: Support for VPN-only access
+- **Geographic Restrictions**: Block access from specific countries
+
+#### Session Management
+- **Session Timeout**: Configurable inactivity timeout
+- **Concurrent Sessions**: Limit simultaneous logins
+- **Session Invalidation**: Force logout across all devices
+- **Secure Cookies**: HttpOnly, Secure, SameSite flags
+
+#### API Security
+- **API Keys**: Secure token-based authentication
+- **Rate Limiting**: Prevent abuse and DDoS
+- **Request Validation**: Input sanitization and validation
+- **CORS**: Strict Cross-Origin Resource Sharing policies
+
+---
+
+## 3. Compliance Features
+
+### 3.1 GDPR Compliance
+
+**Data Subject Rights**:
+- ✅ **Right to Access**: Export all personal data
+- ✅ **Right to Erasure**: Complete data deletion
+- ✅ **Right to Rectification**: Update personal information
+- ✅ **Right to Portability**: Data export in standard formats
+- ✅ **Right to Object**: Opt-out of data processing
+- ✅ **Right to Restriction**: Limit data processing
+
+**GDPR Controls**:
+- **Consent Management**: Track and manage user consent
+- **Data Minimization**: Collect only necessary data
+- **Purpose Limitation**: Use data only for stated purposes
+- **Storage Limitation**: Automatic data retention policies
+- **Privacy by Design**: Privacy built into architecture
+- **Data Protection Officer**: Designated DPO contact
+
+**Data Processing**:
+- **Data Processing Agreement (DPA)**: Available for all customers
+- **Sub-processors**: Documented and GDPR-compliant
+- **Data Transfers**: Standard Contractual Clauses (SCCs)
+- **Breach Notification**: 72-hour breach notification process
+
+### 3.2 HIPAA Readiness
+
+**Technical Safeguards**:
+- ✅ Access Control
+- ✅ Audit Controls
+- ✅ Integrity Controls
+- ✅ Transmission Security
+- ✅ Encryption at rest and in transit
+
+**Administrative Safeguards**:
+- Security management process
+- Workforce security
+- Information access management
+- Security awareness training
+- Contingency planning
+
+**Physical Safeguards**:
+- Facility access controls (via cloud provider)
+- Workstation security
+- Device and media controls
+
+**HIPAA Compliance Notes**:
+- Business Associate Agreement (BAA) available
+- PHI encryption standards met
+- Audit logging for all PHI access
+- Secure messaging and data sharing
+- Breach notification procedures
+
+*Note: Q-Persona provides HIPAA-ready infrastructure. Customers are responsible for implementing proper use policies and procedures.*
+
+### 3.3 SOC 2 Roadmap
+
+**Current Status**: Preparing for SOC 2 Type I audit
+
+**Security Controls (in place)**:
+- ✅ Access controls
+- ✅ Change management
+- ✅ System operations
+- ✅ Risk mitigation
+- ✅ Incident response
+
+**Availability Controls**:
+- ✅ 99.5% uptime SLA (Enterprise)
+- ✅ Load balancing
+- ✅ Disaster recovery plan
+- ✅ Regular backups
+
+**Timeline**:
+- Q1 2026: SOC 2 Type I audit
+- Q3 2026: SOC 2 Type II audit (6-month monitoring)
+
+### 3.4 Data Residency
+
+**Available Regions**:
+- United States (US)
+- European Union (EU)
+- Asia Pacific (APAC)
+- Custom regions available for Enterprise
+
+**Data Sovereignty**:
+- Data stored in customer-specified region
+- No cross-border data transfers (optional)
+- Compliance with local data protection laws
+
+---
+
+## 4. Operational Security
+
+### 4.1 Rate Limiting
+
+**Protection Against**:
+- Brute force attacks
+- API abuse
+- DDoS attacks
+- Resource exhaustion
+
+**Rate Limits by Tier**:
+
+| Tier | API Requests | Questionnaire Creates | Responses |
+|------|--------------|----------------------|-----------|
+| Free | 100/hour | 3 total | 100/month |
+| Pro | 1,000/hour | Unlimited | 1,000/month |
+| Business | 5,000/hour | Unlimited | 10,000/month |
+| Enterprise | Custom | Unlimited | Unlimited |
+
+**Rate Limit Headers**:
+```
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 999
+X-RateLimit-Reset: 1635724800
+```
+
+### 4.2 DDoS Protection
+
+**Mitigation Strategies**:
+- CDN-level DDoS protection
+- Web Application Firewall (WAF)
+- Traffic analysis and anomaly detection
+- Automatic scaling during attacks
+- Blacklist/whitelist management
+
+### 4.3 Incident Response
+
+**Incident Response Plan**:
+
+1. **Detection**: Automated monitoring and alerts
+2. **Containment**: Isolate affected systems
+3. **Analysis**: Determine scope and impact
+4. **Eradication**: Remove threat and vulnerabilities
+5. **Recovery**: Restore normal operations
+6. **Post-Incident**: Document lessons learned
+
+**Response Times**:
+- **Critical**: 1 hour response, 4 hour resolution target
+- **High**: 4 hour response, 24 hour resolution target
+- **Medium**: 24 hour response, 72 hour resolution target
+- **Low**: 72 hour response, 1 week resolution target
+
+**Communication**:
+- Status page for service updates
+- Email notifications to affected customers
+- Detailed incident reports
+- Regular security advisories
+
+### 4.4 Disaster Recovery
+
+**Backup Strategy**:
+- **Frequency**: Continuous backups
+- **Retention**: 30 days for all tiers, unlimited for Enterprise
+- **Testing**: Monthly backup restoration tests
+- **Geographic Redundancy**: Multi-region backups
+
+**Recovery Time Objectives**:
+- **RTO** (Recovery Time Objective): 4 hours
+- **RPO** (Recovery Point Objective): 1 hour
+
+**Business Continuity**:
+- Hot standby systems
+- Automated failover
+- Data replication across availability zones
+- Documented recovery procedures
+
+---
+
+## 5. Development Security
+
+### 5.1 Secure Development Lifecycle
+
+**Code Security**:
+- Static code analysis (automated)
+- Dependency vulnerability scanning
+- Code review requirements
+- Security testing in CI/CD pipeline
+
+**Version Control**:
+- GitHub with protected branches
+- Required pull request reviews
+- Automated security checks
+- No secrets in code
+
+**Testing**:
+- Unit tests for critical functions
+- Integration tests for APIs
+- Security testing (OWASP Top 10)
+- Penetration testing (annual)
+
+### 5.2 Third-Party Security
+
+**Vendor Management**:
+- Security assessment for all vendors
+- Regular vendor security reviews
+- Contractual security requirements
+- Incident notification requirements
+
+**Dependencies**:
+- Automated dependency updates
+- Vulnerability scanning (GitHub Dependabot)
+- Only trusted, well-maintained packages
+- License compliance checking
+
+**Key Third-Party Providers**:
+- **Supabase**: SOC 2 Type II certified
+- **Vercel**: SOC 2 Type II certified
+- **Stripe**: PCI DSS Level 1 certified
+- **PostHog**: GDPR compliant
+
+---
+
+## 6. Infrastructure Security
+
+### 6.1 Cloud Security
+
+**Infrastructure Provider**: Supabase (built on AWS/GCP)
+
+**Security Certifications**:
+- SOC 2 Type II
+- ISO 27001
+- PCI DSS (for payment data)
+- GDPR compliant
+
+**Security Features**:
+- Dedicated database per customer (Enterprise)
+- Network isolation
+- Firewall rules
+- DDoS protection
+- Physical security (datacenter)
+
+### 6.2 Monitoring & Logging
+
+**System Monitoring**:
+- Real-time performance monitoring
+- Uptime monitoring (99.9%+ availability)
+- Error tracking and alerting
+- Resource utilization tracking
+
+**Security Monitoring**:
 - Failed login attempts
 - Unusual access patterns
-- Large data exports
-- Configuration changes
-- API key usage anomalies
+- API abuse detection
+- Security event alerting
+
+**Log Management**:
+- Centralized logging
+- Log retention policies
+- Secure log storage
+- Log analysis and correlation
+
+---
+
+## 7. Privacy & Data Protection
 
-**Incident Response:**
-- Detection: <15 minutes
-- Initial assessment: <1 hour
-- Containment: <4 hours
-- Customer notification: <24 hours (for security incidents)
-
-## 5. Compliance and Certifications
-
-### 5.1 GDPR (General Data Protection Regulation)
-
-**Current Status: ✅ Compliant**
-
-**Key Requirements Met:**
-- ✅ Lawful basis for processing (consent, contract, legitimate interest)
-- ✅ Data subject rights (access, rectification, erasure, portability)
-- ✅ Privacy by design and default
-- ✅ Data protection impact assessments (DPIA)
-- ✅ Data processing agreements (DPA) available
-- ✅ EU representative appointed
-- ✅ Data breach notification procedures (<72 hours)
-- ✅ Cookie consent management
-- ✅ Cross-border data transfer safeguards
-
-**User Rights:**
-- Right to access: Self-service data export
-- Right to rectification: Profile editing capabilities
-- Right to erasure: Account deletion with data purge
-- Right to data portability: Export in JSON/CSV format
-- Right to object: Opt-out of non-essential processing
-
-### 5.2 HIPAA (Health Insurance Portability and Accountability Act)
-
-**Current Status: 🟡 HIPAA-Ready**
-
-**Readiness:**
-- ✅ Administrative safeguards (access controls, training)
-- ✅ Physical safeguards (data center security via AWS)
-- ✅ Technical safeguards (encryption, audit logs, MFA)
-- ✅ Business Associate Agreement (BAA) available for Enterprise customers
-- ⏳ Third-party HIPAA compliance audit (scheduled Q1 2025)
-
-**Note:** Healthcare customers must sign BAA and complete risk assessment before storing Protected Health Information (PHI).
-
-### 5.3 SOC 2 Type II
-
-**Current Status: ⏳ In Progress (Target: Q2 2025)**
-
-**Five Trust Service Criteria:**
-- ✅ Security: Controls to protect against unauthorized access
-- ✅ Availability: System uptime and disaster recovery
-- ✅ Processing Integrity: Quality and timely processing
-- ✅ Confidentiality: Protection of sensitive information
-- ⏳ Privacy: Collection, use, retention, disclosure of personal information
-
-**Progress:**
-- Controls designed and implemented
-- 90-day observation period: In progress
-- Third-party auditor: Engaged
-- Expected completion: Q2 2025
-
-### 5.4 ISO 27001
-
-**Current Status: 📅 Roadmap (Target: Q4 2025)**
-
-**Preparation Status:**
-- Information Security Management System (ISMS) framework established
-- Risk assessment methodology defined
-- Security policies documented
-- Internal audits scheduled
-- Certification audit: Planned Q4 2025
-
-### 5.5 Additional Compliance
-
-**Indonesia Personal Data Protection (PDP) Law:**
-- ✅ Compliant with Law No. 27/2022
-- ✅ Data localization options available
-- ✅ Local representative appointed
-
-**Other Frameworks:**
-- NIST Cybersecurity Framework alignment
-- CIS Controls implementation
-- OWASP security best practices
-
-## 6. Data Residency and Sovereignty
-
-### 6.1 Current Regions
-
-**Primary:**
-- AWS Asia Pacific (Singapore) - ap-southeast-1
-- AWS Asia Pacific (Tokyo) - ap-northeast-1
-
-**Additional Regions (Enterprise):**
-- AWS US East (N. Virginia) - us-east-1
-- AWS Europe (Frankfurt) - eu-central-1
-- Custom regions available on request
-
-### 6.2 Data Localization
-
-**Enterprise customers can specify:**
-- Primary data storage region
-- Backup storage region
-- Processing restrictions (EU-only, APAC-only)
-- Cross-border transfer controls
-
-**Compliance:**
-- Data residency requirements met
-- GDPR adequate protection mechanisms
-- Schrems II compliant transfer safeguards
-
-## 7. Disaster Recovery and Business Continuity
-
-### 7.1 Backup Strategy
-
-**Database Backups:**
-- Frequency: Every 24 hours
-- Retention: 7 days (standard), 30 days (enterprise)
-- Point-in-time recovery: Up to 7 days
-- Geographic redundancy: Multi-region replication
-- Backup encryption: AES-256
-
-**Application State:**
-- Infrastructure as Code (IaC) in version control
-- Automated deployment pipelines
-- Environment recreation in <1 hour
-
-### 7.2 Disaster Recovery
-
-**Recovery Objectives:**
-- Recovery Time Objective (RTO): 4 hours
-- Recovery Point Objective (RPO): 24 hours
-- Data loss tolerance: <1 day of data
-
-**Disaster Scenarios:**
-- Regional outage: Automatic failover to secondary region
-- Database corruption: Restore from latest backup
-- Application failure: Rollback to previous stable version
-- Complete infrastructure loss: Rebuild from IaC within 4 hours
-
-### 7.3 High Availability
-
-**System Design:**
-- Multi-region deployment for Enterprise tier
-- Auto-scaling based on load
-- Database read replicas for performance
-- CDN for static asset delivery
-- Health checks and automatic failover
-
-**Uptime SLA:**
-- Free/Pro: Best effort (no SLA)
-- Business: 99.0% uptime
-- Enterprise: 99.5% uptime with credits
-
-**Historical Uptime:**
-- Last 12 months: 99.7%
-- Longest downtime: 47 minutes (scheduled maintenance)
-- Unplanned downtime: <2 hours/year
-
-## 8. Incident Response
-
-### 8.1 Security Incident Response Plan
-
-**Phase 1: Detection & Analysis**
-- Automated security monitoring alerts
-- Manual security report triage
-- Incident severity classification
-- Incident response team activation
-
-**Phase 2: Containment**
-- Isolate affected systems
-- Block malicious actors
-- Preserve evidence for investigation
-- Assess blast radius
-
-**Phase 3: Eradication**
-- Remove threat from environment
-- Patch vulnerabilities
-- Reset compromised credentials
-- Deploy security updates
-
-**Phase 4: Recovery**
-- Restore affected systems
-- Verify system integrity
-- Resume normal operations
-- Enhanced monitoring period
-
-**Phase 5: Post-Incident**
-- Root cause analysis
-- Lessons learned documentation
-- Control improvements
-- Customer communication
-
-### 8.2 Communication
-
-**Customer Notification:**
-- Security incidents: Within 24 hours
-- Data breaches: Within 72 hours (GDPR requirement)
-- Major outages: Real-time status page updates
-- Planned maintenance: 7 days advance notice
-
-**Channels:**
-- Email to workspace admins
-- In-app notifications
-- Public status page: status.q-persona.com
-- Enterprise: Dedicated Slack channel
-
-### 8.3 Vulnerability Management
-
-**Vulnerability Disclosure Program:**
-- Responsible disclosure policy published
-- Security researchers encouraged to report
-- Bug bounty program (planned Q2 2025)
-- 90-day coordinated disclosure timeline
-
-**Patch Management:**
-- Critical vulnerabilities: <24 hours
-- High severity: <7 days
-- Medium severity: <30 days
-- Low severity: Next release cycle
-
-**Security Updates:**
-- Dependency scanning: Automated daily
-- CVE monitoring: Real-time alerts
-- Security advisories: Evaluated within 24 hours
-
-## 9. Third-Party Security
-
-### 9.1 Vendor Risk Management
-
-**Key Service Providers:**
-- Vercel (Hosting) - SOC 2 Type II certified
-- Supabase (Database) - SOC 2 Type II in progress
-- Cloudflare (CDN/Security) - ISO 27001, SOC 2 Type II
-- Stripe (Payments) - PCI DSS Level 1, SOC 2 Type II
-
-**Vendor Assessment:**
-- Security questionnaires completed
-- Annual security reviews
-- Contract security requirements
-- Data processing agreements signed
-
-### 9.2 Subprocessor List
-
-**Current Subprocessors:**
-1. Vercel Inc. (Infrastructure) - United States
-2. Supabase Inc. (Database) - United States/Singapore
-3. Cloudflare Inc. (CDN/Security) - Global
-4. Stripe Inc. (Payment Processing) - United States
-5. PostHog Inc. (Analytics) - United States/EU
-
-**Enterprise customers:** 30-day notice before new subprocessor additions.
-
-## 10. Security Best Practices for Customers
-
-### 10.1 Account Security
-
-**Recommendations:**
-- Enable MFA for all users
-- Use strong, unique passwords (>12 characters)
-- Regularly review workspace members
-- Implement least-privilege access
-- Use SSO with identity provider
-
-### 10.2 Data Protection
-
-**Best Practices:**
-- Classify sensitive questionnaires
-- Use workspace isolation for departments
-- Regularly export audit logs
-- Set appropriate response retention
-- Train team on data handling
-
-### 10.3 Integration Security
-
-**API Key Management:**
-- Rotate API keys every 90 days
-- Use separate keys for dev/staging/production
-- Never commit keys to version control
-- Revoke unused keys immediately
-- Monitor API usage patterns
+### 7.1 Data Collection
+
+**Personal Data Collected**:
+- User account information (name, email)
+- Usage data (questionnaire responses)
+- Technical data (IP address, browser)
+- Payment information (processed by Stripe, not stored)
+
+**Data Minimization**:
+- Only collect necessary data
+- No tracking beyond essential analytics
+- Option to disable analytics (Enterprise)
+
+### 7.2 Data Retention
+
+**Default Retention**:
+- Active accounts: Retained indefinitely
+- Deleted accounts: Purged within 30 days
+- Audit logs: Per subscription tier (30 days to unlimited)
+- Backups: 30 days
+
+**Custom Retention** (Enterprise):
+- Configure retention periods
+- Automatic data deletion
+- Legal hold capabilities
+- Data archival options
+
+### 7.3 Data Sharing
+
+**We DO NOT**:
+- ❌ Sell customer data
+- ❌ Share data with third parties for marketing
+- ❌ Use customer data for training AI models
+- ❌ Mine customer data for insights
+
+**We DO**:
+- ✅ Share data only with customer consent
+- ✅ Use sub-processors for service delivery (documented)
+- ✅ Comply with legal requests (with notification)
+- ✅ Provide data export capabilities
+
+---
+
+## 8. Security Contact & Reporting
+
+### 8.1 Responsible Disclosure
+
+**Security Vulnerability Reporting**:
+- Email: security@q-persona.com
+- Response time: Within 24 hours
+- Bounty program: Coming Q2 2026
+
+**What to Report**:
+- Authentication bypasses
+- Data exposure vulnerabilities
+- Injection attacks
+- Privilege escalation
+- Any security concerns
+
+### 8.2 Security Updates
+
+**Communication Channels**:
+- Security advisories via email
+- Status page: status.q-persona.com
+- Blog: blog.q-persona.com/security
+- Twitter: @QPersonaSec
+
+**Update Frequency**:
+- Critical patches: Immediate
+- Security updates: Weekly
+- Feature releases: Monthly
+- Major versions: Quarterly
+
+---
+
+## 9. Enterprise Support
+
+### 9.1 Service Level Agreement
+
+**Uptime Guarantee** (Enterprise Tier):
+- **SLA**: 99.5% uptime
+- **Measurement**: Monthly calendar basis
+- **Downtime Credits**: Prorated refund for SLA violations
+
+| Monthly Uptime | Service Credit |
+|----------------|----------------|
+| < 99.5% | 10% |
+| < 99.0% | 25% |
+| < 95.0% | 50% |
+
+**Excluded Downtime**:
+- Scheduled maintenance (with 7-day notice)
+- Customer misconfigurations
+- Force majeure events
+- Third-party service failures
+
+### 9.2 Security Support
+
+**Enterprise Security Features**:
+- Dedicated security contact
+- Priority security patching
+- Custom security assessments
+- Quarterly security reviews
+- Incident response collaboration
+
+**Priority Support**:
+- 24/7 critical issue support
+- 1-hour response time (critical)
+- Dedicated Slack channel
+- Regular check-in calls
+
+---
+
+## 10. Compliance Documentation
+
+### 10.1 Available Documents
+
+**For Customers**:
+- ✅ This Security Whitepaper
+- ✅ Privacy Policy
+- ✅ Terms of Service
+- ✅ Data Processing Agreement (DPA)
+- ✅ Business Associate Agreement (BAA)
+- ✅ Sub-processor List
+
+**For Auditors**:
+- ✅ SOC 2 Report (upon availability)
+- ✅ Penetration Test Results
+- ✅ Security Questionnaires
+- ✅ Compliance Certifications
+
+### 10.2 Security Questionnaires
+
+We provide completed questionnaires for:
+- CAIQ (Consensus Assessments Initiative Questionnaire)
+- SIG (Standard Information Gathering)
+- VSA (Vendor Security Alliance)
+- Custom security assessments
+
+Request via: enterprise@q-persona.com
+
+---
 
 ## 11. Conclusion
 
-Q-Persona is built on a foundation of security, compliance, and trust. Our comprehensive security architecture, transparent practices, and commitment to continuous improvement make us the ideal survey platform for enterprises in regulated industries.
+Q-Persona is built from the ground up with enterprise security and compliance requirements in mind. Our comprehensive security architecture, robust audit logging, and compliance-ready features make us the ideal choice for regulated industries and security-conscious organizations.
 
-**Contact Information:**
-- Security inquiries: security@q-persona.com
-- Report vulnerability: security@q-persona.com
-- Enterprise sales: sales@q-persona.com
-- Support: support@q-persona.com
+**Why Choose Q-Persona for Enterprise**:
+- ✅ Complete audit trail for compliance
+- ✅ Enterprise authentication (SSO, MFA)
+- ✅ Role-based access control
+- ✅ GDPR, HIPAA-ready infrastructure
+- ✅ 99.5% uptime SLA
+- ✅ Dedicated enterprise support
+- ✅ Continuous security improvements
 
-**Resources:**
-- Trust Center: q-persona.com/security
-- Status Page: status.q-persona.com
-- Documentation: docs.q-persona.com
-- Privacy Policy: q-persona.com/privacy
-- Terms of Service: q-persona.com/terms
+For more information about our enterprise offerings, contact our sales team at enterprise@q-persona.com or schedule a demo at https://q-persona.com/enterprise.
 
 ---
 
-**Document Version History:**
+## Appendix A: Security Glossary
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | Nov 2024 | Security Team | Initial release |
+- **Audit Log**: Record of system activities for security and compliance
+- **Encryption**: Process of encoding data to prevent unauthorized access
+- **RBAC**: Role-Based Access Control for permission management
+- **SSO**: Single Sign-On for centralized authentication
+- **MFA**: Multi-Factor Authentication for enhanced security
+- **TLS**: Transport Layer Security for encrypted communications
+- **GDPR**: General Data Protection Regulation (EU)
+- **HIPAA**: Health Insurance Portability and Accountability Act (US)
+- **SOC 2**: Service Organization Control 2 audit
 
-**Next Review:** February 2025
+## Appendix B: References
 
-**Classification:** Public
+- OWASP Top 10: https://owasp.org/www-project-top-ten/
+- NIST Cybersecurity Framework: https://www.nist.gov/cyberframework
+- CIS Controls: https://www.cisecurity.org/controls/
+- ISO 27001: https://www.iso.org/isoiec-27001-information-security.html
 
 ---
 
-*This whitepaper is provided for informational purposes and may be shared with customers, prospects, and auditors.*
+**Document Control**:
+- Version: 1.0
+- Last Updated: November 2025
+- Next Review: February 2026
+- Classification: Public
+- Owner: Security Team
+
+**Contact**: security@q-persona.com
