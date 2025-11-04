@@ -268,8 +268,8 @@ User Request
 - ✅ Regular backups
 
 **Timeline**:
-- Q1 2025: SOC 2 Type I audit
-- Q3 2025: SOC 2 Type II audit (6-month monitoring)
+- Q1 2026: SOC 2 Type I audit
+- Q3 2026: SOC 2 Type II audit (6-month monitoring)
 
 ### 3.4 Data Residency
 
