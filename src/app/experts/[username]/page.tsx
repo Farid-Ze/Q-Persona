@@ -5,6 +5,7 @@
  */
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
 export default async function ExpertProfilePage({
@@ -127,9 +128,11 @@ export default async function ExpertProfilePage({
             {/* Avatar */}
             <div className="flex-shrink-0">
               {expert.avatar_url ? (
-                <img
+                <Image
                   src={expert.avatar_url}
                   alt={expert.display_name}
+                  width={96}
+                  height={96}
                   className="h-24 w-24 rounded-full object-cover"
                 />
               ) : (

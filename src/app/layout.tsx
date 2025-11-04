@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider'
+import { ThemeScript } from '@/components/theme/ThemeScript'
 
 export const metadata: Metadata = {
   title: 'Q-Persona - Lean Architecture',
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
+        <ThemeScript />
         <AnalyticsProvider>
           {children}
         </AnalyticsProvider>

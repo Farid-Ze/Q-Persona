@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation'
 import { getUser } from '@/app/actions/auth'
-import { signOut } from '@/app/actions/auth'
 import Link from 'next/link'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { DashboardShell } from '@/components/layouts/DashboardShell'
+import { Badge } from '@/components/ui/badge'
 
 export default async function DashboardPage() {
   const { user } = await getUser()
@@ -11,92 +13,142 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 justify-between">
-            <div className="flex">
-              <div className="flex flex-shrink-0 items-center">
-                <h1 className="text-xl font-bold text-gray-900">Q-Persona</h1>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-700">
-                {user.email}
-              </span>
-              <form action={signOut}>
-                <button
-                  type="submit"
-                  className="rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-                >
-                  Sign out
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <DashboardShell userEmail={user.email}>
+      <div className="py-2">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-          <p className="mt-1 text-sm text-gray-600">
+          <h2 className="text-2xl font-bold">Dashboard</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Manage your questionnaires and personas
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            href="/dashboard/personas"
-            className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"
-          >
-            <h3 className="text-lg font-semibold text-gray-900">Personas</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Create and manage user personas for your questionnaires
-            </p>
+        {/* KPI cards */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Total Revenue</CardTitle>
+              <CardDescription>Last 6 months</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">$1,250.00</div>
+              <p className="text-xs text-muted-foreground mt-1">+12.5% vs last period</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>New Customers</CardTitle>
+              <CardDescription>Acquisition needs attention</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">1,234</div>
+              <p className="text-xs text-muted-foreground mt-1">-20% vs last period</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Active Accounts</CardTitle>
+              <CardDescription>Engagement exceed targets</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">45,678</div>
+              <p className="text-xs text-muted-foreground mt-1">+12.5% vs last period</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Growth Rate</CardTitle>
+              <CardDescription>Meets growth projections</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">4.5%</div>
+              <p className="text-xs text-muted-foreground mt-1">+4.5% vs last period</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Chart placeholder */}
+        <Card className="mt-6">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Total Visitors</CardTitle>
+                <CardDescription>Total for the last 3 months</CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Badge variant="outline">Last 3 months</Badge>
+                <Badge variant="outline">Last 30 days</Badge>
+                <Badge variant="outline">Last 7 days</Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="h-48 rounded-md bg-gradient-to-b from-muted/60 to-muted border" />
+          </CardContent>
+        </Card>
+
+        {/* Quick links */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-6">
+          <Link href="/dashboard/personas" className="block">
+            <Card className="transition hover:shadow-md">
+              <CardHeader>
+                <CardTitle>Personas</CardTitle>
+                <CardDescription>
+                  Create and manage user personas for your questionnaires
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </Link>
 
-          <Link
-            href="/dashboard/templates"
-            className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"
-          >
-            <h3 className="text-lg font-semibold text-gray-900">Templates</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Design reusable questionnaire templates
-            </p>
+          <Link href="/dashboard/templates" className="block">
+            <Card className="transition hover:shadow-md">
+              <CardHeader>
+                <CardTitle>Templates</CardTitle>
+                <CardDescription>
+                  Design reusable questionnaire templates
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </Link>
 
-          <Link
-            href="/dashboard/questionnaires"
-            className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"
-          >
-            <h3 className="text-lg font-semibold text-gray-900">Questionnaires</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Create and deploy questionnaires to collect responses
-            </p>
+          <Link href="/dashboard/questionnaires" className="block">
+            <Card className="transition hover:shadow-md">
+              <CardHeader>
+                <CardTitle>Questionnaires</CardTitle>
+                <CardDescription>
+                  Create and deploy questionnaires to collect responses
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </Link>
 
-          <Link
-            href="/dashboard/respondents"
-            className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"
-          >
-            <h3 className="text-lg font-semibold text-gray-900">Respondents</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              View and manage survey respondents
-            </p>
+          <Link href="/dashboard/respondents" className="block">
+            <Card className="transition hover:shadow-md">
+              <CardHeader>
+                <CardTitle>Respondents</CardTitle>
+                <CardDescription>
+                  View and manage survey respondents
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </Link>
 
-          <Link
-            href="/dashboard/answers"
-            className="block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:border-blue-500 hover:shadow-md transition"
-          >
-            <h3 className="text-lg font-semibold text-gray-900">Answers</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Analyze collected responses and insights
-            </p>
+          <Link href="/dashboard/answers" className="block">
+            <Card className="transition hover:shadow-md">
+              <CardHeader>
+                <CardTitle>Answers</CardTitle>
+                <CardDescription>
+                  Analyze collected responses and insights
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </Link>
         </div>
-      </main>
-    </div>
+
+
+      </div>
+    </DashboardShell>
   )
 }

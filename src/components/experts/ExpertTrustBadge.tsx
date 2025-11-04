@@ -7,6 +7,7 @@
  */
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Expert } from '@/types'
 
 interface ExpertTrustBadgeProps {
@@ -66,9 +67,11 @@ export function ExpertTrustBadge({
 
             <div className="space-y-4">
               {expert.photo_url && (
-                <img
+                <Image
                   src={expert.photo_url}
                   alt={expert.name}
+                  width={96}
+                  height={96}
                   className="w-24 h-24 rounded-full mx-auto object-cover"
                 />
               )}

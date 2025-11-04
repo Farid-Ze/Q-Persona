@@ -8,6 +8,7 @@
  */
 
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 
 export default async function PortfolioPage({
   params,
@@ -65,9 +66,11 @@ export default async function PortfolioPage({
         {/* Header */}
         <div className="text-center mb-12">
           {portfolio.user_photo && (
-            <img
+            <Image
               src={portfolio.user_photo}
               alt={portfolio.user_name}
+              width={128}
+              height={128}
               className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-white shadow-lg"
             />
           )}
