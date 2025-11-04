@@ -2,12 +2,15 @@
 
 **FOR IMMEDIATE RELEASE**
 
+**Updated: November 2024 - Enhanced Security & Compliance Documentation**
+
 ---
 
 ## Q-Persona Launches Enterprise Tier for Regulated Industries  
 ### New Platform Features Complete Audit Trail, SSO, and MFA to Help Banks, Healthcare, and Government Pass Compliance Audits
+### Comprehensive Security Whitepaper and Compliance Datasheet Now Available
 
-**Jakarta, Indonesia – [Date]** – Q-Persona, Indonesia's leading survey platform, today announced the launch of its Enterprise tier, purpose-built for regulated industries requiring complete compliance and security controls.
+**Jakarta, Indonesia – [Date]** – Q-Persona, Indonesia's leading survey platform, today announced the launch of its Enterprise tier, purpose-built for regulated industries requiring complete compliance and security controls. The company also released comprehensive security and compliance documentation to support enterprise IT security reviews.
 
 The new Enterprise offering includes features previously unavailable in the Indonesian survey market: complete audit trails with unlimited retention, Single Sign-On (SSO) via SAML 2.0, Multi-Factor Authentication (MFA), and a 99.5% uptime SLA—all critical requirements for banks, healthcare organizations, and government agencies.
 
@@ -32,6 +35,26 @@ TOTP authenticator apps and SMS verification prevent 99.9% of account takeovers.
 
 **4. Enterprise-Grade Infrastructure**  
 99.5% uptime SLA, dedicated success manager, priority support, and custom contract terms. Built on Supabase (SOC 2 Type II certified) with data residency options in Singapore, EU, and US regions.
+
+### Comprehensive Security & Compliance Documentation
+
+To support enterprise IT security reviews, Q-Persona has published:
+
+**Security Whitepaper** - Complete technical documentation covering:
+- Multi-layer security architecture and data flow diagrams
+- Encryption standards (AES-256 at rest, TLS 1.3 in transit)
+- Authentication and authorization mechanisms
+- Incident response and disaster recovery procedures
+- Third-party security certifications
+
+**Compliance Datasheet** - Detailed compliance status including:
+- GDPR: Fully compliant with DPA available
+- HIPAA: Ready with BAA for enterprise customers
+- SOC 2 Type II: In progress (target Q2 2025)
+- ISO 27001: Roadmap (target Q4 2025)
+- Indonesia PDP Law (No. 27/2022): Fully compliant
+
+Both documents are publicly available at q-persona.com/security
 
 ### Early Customer Results
 
