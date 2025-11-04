@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider'
 
 export const metadata: Metadata = {
   title: 'Q-Persona - Lean Architecture',
@@ -13,7 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <AnalyticsProvider>
+          {children}
+        </AnalyticsProvider>
+      </body>
     </html>
   )
 }

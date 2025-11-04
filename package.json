@@ -15,9 +15,11 @@
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.78.0",
     "next": "^14.0.0",
+    "posthog-js": "^1.96.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "recharts": "^3.3.0"
+    "recharts": "^3.3.0",
+    "stripe": "^14.10.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

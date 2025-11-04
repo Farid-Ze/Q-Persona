@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { trackUserSignedUp } from '@/lib/analytics/server'
 
 /**
  * Server Actions for Authentication
@@ -16,7 +17,7 @@ export async function signUp(formData: FormData) {
   const password = formData.get('password') as string
   const name = formData.get('name') as string
   
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -30,8 +31,14 @@ export async function signUp(formData: FormData) {
     redirect('/auth/signup?error=' + encodeURIComponent(error.message))
   }
   
+  // Track user signup event
+  if (data.user) {
+    await trackUserSignedUp(data.user.id, email, name)
+  }
+  
   revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  // Redirect to onboarding instead of dashboard
+  redirect('/onboarding')
 }
 
 export async function signIn(formData: FormData) {

@@ -15,15 +15,24 @@ CREATE TABLE users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Persona table
+-- Persona table (predefined personas like 'Mahasiswa', 'Startup', etc.)
 CREATE TABLE personas (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     attributes JSONB DEFAULT '{}',
+    is_system BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- User-Persona junction table (many-to-many relationship)
+CREATE TABLE user_personas (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    persona_id UUID NOT NULL REFERENCES personas(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, persona_id)
 );
 
 -- Templates table
@@ -70,13 +79,44 @@ CREATE TABLE answers (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Subscriptions table for Stripe integration
+CREATE TABLE subscriptions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    stripe_customer_id VARCHAR(255) UNIQUE,
+    stripe_subscription_id VARCHAR(255) UNIQUE,
+    stripe_price_id VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'inactive' CHECK (status IN ('active', 'inactive', 'canceled', 'past_due', 'trialing')),
+    plan_type VARCHAR(50) DEFAULT 'free' CHECK (plan_type IN ('free', 'pro', 'business')),
+    current_period_start TIMESTAMP WITH TIME ZONE,
+    current_period_end TIMESTAMP WITH TIME ZONE,
+    cancel_at_period_end BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Analytics events table for tracking user behavior
+CREATE TABLE analytics_events (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    event_name VARCHAR(255) NOT NULL,
+    event_properties JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Indexes for better query performance
-CREATE INDEX idx_personas_user_id ON personas(user_id);
+CREATE INDEX idx_user_personas_user_id ON user_personas(user_id);
+CREATE INDEX idx_user_personas_persona_id ON user_personas(persona_id);
 CREATE INDEX idx_templates_persona_id ON templates(persona_id);
 CREATE INDEX idx_questionnaires_template_id ON questionnaires(template_id);
 CREATE INDEX idx_questionnaires_status ON questionnaires(status);
 CREATE INDEX idx_respondents_questionnaire_id ON respondents(questionnaire_id);
 CREATE INDEX idx_answers_respondent_id ON answers(respondent_id);
+CREATE INDEX idx_subscriptions_user_id ON subscriptions(user_id);
+CREATE INDEX idx_subscriptions_stripe_customer_id ON subscriptions(stripe_customer_id);
+CREATE INDEX idx_analytics_events_user_id ON analytics_events(user_id);
+CREATE INDEX idx_analytics_events_event_name ON analytics_events(event_name);
+CREATE INDEX idx_analytics_events_created_at ON analytics_events(created_at);
 
 -- Updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -99,3 +139,13 @@ CREATE TRIGGER update_templates_updated_at BEFORE UPDATE ON templates
 
 CREATE TRIGGER update_questionnaires_updated_at BEFORE UPDATE ON questionnaires
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_subscriptions_updated_at BEFORE UPDATE ON subscriptions
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Insert default system personas for persona-based onboarding
+INSERT INTO personas (name, description, attributes, is_system) VALUES
+('Mahasiswa', 'Mahasiswa atau pelajar yang membutuhkan tools untuk tugas akademis', '{"target": "students", "features": ["basic_forms", "simple_analytics"]}', true),
+('Startup', 'Startup atau tim kecil yang butuh validasi produk dan riset pasar', '{"target": "startups", "features": ["advanced_forms", "team_collaboration", "data_export"]}', true),
+('Peneliti', 'Akademisi dan peneliti yang melakukan riset dan survei', '{"target": "researchers", "features": ["complex_forms", "advanced_analytics", "data_export"]}', true),
+('Bisnis', 'Perusahaan yang memerlukan solusi survey enterprise', '{"target": "enterprise", "features": ["all_features", "priority_support", "custom_branding"]}', true);
