@@ -1,7 +1,7 @@
 # Q-Persona Security Whitepaper
 
 **Version**: 1.0  
-**Last Updated**: November 2024  
+**Last Updated**: November 2025  
 **Classification**: Public
 
 ---
@@ -501,7 +501,7 @@ X-RateLimit-Reset: 1635724800
 **Security Vulnerability Reporting**:
 - Email: security@q-persona.com
 - Response time: Within 24 hours
-- Bounty program: Coming Q2 2025
+- Bounty program: Coming Q2 2026
 
 **What to Report**:
 - Authentication bypasses
@@ -634,8 +634,8 @@ For more information about our enterprise offerings, contact our sales team at e
 
 **Document Control**:
 - Version: 1.0
-- Last Updated: November 2024
-- Next Review: February 2025
+- Last Updated: November 2025
+- Next Review: February 2026
 - Classification: Public
 - Owner: Security Team
 
