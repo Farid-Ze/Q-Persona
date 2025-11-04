@@ -1,10 +1,12 @@
 /**
  * Enterprise Landing Page
- * Week 1 Day 8-10: Website Updates
+ * Week 1 Day 8-10: Website Updates + Week 2 Enhancements
  * Positions Q-Persona as enterprise-grade platform with complete audit trail
+ * Enhanced with ROI Calculator and improved features
  */
 
 import Link from 'next/link'
+import ROICalculator from '@/components/ROICalculator'
 
 export default function EnterprisePage() {
   return (
@@ -238,9 +240,53 @@ export default function EnterprisePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <Link href="#calculator" className="text-blue-600 hover:text-blue-700 font-medium">
+            <a href="#calculator" className="text-blue-600 hover:text-blue-700 font-medium">
               Not sure which plan? Try our ROI calculator →
-            </Link>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* ROI Calculator */}
+      <ROICalculator />
+
+      {/* Trust & Compliance Section */}
+      <div className="py-16 bg-gray-50 border-y border-gray-200">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Built for Compliance & Security
+            </h2>
+            <p className="text-lg text-gray-600">
+              Comprehensive documentation and certifications to pass your IT security review
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <ComplianceCard
+              icon="📋"
+              title="Security Whitepaper"
+              description="Complete security architecture, data flow, and encryption details"
+              link="/docs/enterprise/security-whitepaper"
+            />
+            <ComplianceCard
+              icon="✅"
+              title="Compliance Datasheet"
+              description="GDPR, HIPAA, SOC 2, and regional compliance status"
+              link="/docs/enterprise/compliance-datasheet"
+            />
+            <ComplianceCard
+              icon="🔒"
+              title="Trust Center"
+              description="Real-time security practices, certifications, and incident response"
+              link="/security"
+            />
+            <ComplianceCard
+              icon="📊"
+              title="Audit Support"
+              description="Documentation packages and technical support for your auditors"
+              link="#demo"
+            />
           </div>
         </div>
       </div>
@@ -396,5 +442,27 @@ function PricingTier({ name, price, period, features, cta, ctaLink, highlighted,
         {cta}
       </Link>
     </div>
+  )
+}
+
+function ComplianceCard({ icon, title, description, link }: {
+  icon: string
+  title: string
+  description: string
+  link: string
+}) {
+  return (
+    <Link href={link} className="block group">
+      <div className="rounded-lg border border-gray-200 bg-white p-6 hover:shadow-lg transition h-full">
+        <div className="text-4xl mb-4">{icon}</div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600">
+          {title}
+        </h3>
+        <p className="text-sm text-gray-600">{description}</p>
+        <div className="mt-4 text-sm font-medium text-blue-600 group-hover:text-blue-700">
+          Learn more →
+        </div>
+      </div>
+    </Link>
   )
 }

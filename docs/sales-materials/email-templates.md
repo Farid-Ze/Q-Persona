@@ -1,5 +1,8 @@
 # Enterprise Sales Email Templates
 
+**Updated: November 2024**  
+**Version 2.0 - Enhanced with Compliance Focus**
+
 ## Template 1: Cold Outreach (IT/Compliance Officer)
 
 **Subject:** Survey compliance question for [Company Name]
@@ -16,6 +19,9 @@ We just built a solution specifically for [banking/healthcare/government] with:
 - Complete audit logs (who, what, when, IP address)
 - Role-based access (admin/editor/viewer)
 - Data retention controls
+- Full GDPR compliance with DPA available
+
+Our Security Whitepaper and Compliance Datasheet are available at: q-persona.com/security
 
 Would you be open to a 15-minute demo to see if this solves your compliance challenges?
 
@@ -69,7 +75,8 @@ Thank you for taking the time to meet today. I enjoyed learning about [Company N
 As promised, here are the resources we discussed:
 
 **📄 Documentation:**
-- Security whitepaper: [link]
+- Security Whitepaper: q-persona.com/docs/enterprise/security-whitepaper
+- Compliance Datasheet: q-persona.com/docs/enterprise/compliance-datasheet
 - SAML SSO configuration guide: [link]
 - Audit log export instructions: [link]
 
@@ -79,6 +86,9 @@ Based on our conversation, I recommend:
 1. **This week:** Share security docs with your IT/compliance team
 2. **Next week:** 30-day Business tier trial (no credit card required)
 3. **Week 3:** Technical deep-dive with your IT team (if needed)
+
+**💰 ROI Calculator:**
+Try our enterprise ROI calculator to see potential savings: q-persona.com/enterprise#calculator
 
 I'll follow up on [Day] to answer any questions that come up.
 
@@ -483,3 +493,210 @@ Best regards,
 ---
 
 *These templates should be customized for each prospect based on your discovery conversation and their specific needs.*
+
+---
+
+## NEW Templates (November 2024 Update)
+
+### Template 11: Security Whitepaper Introduction
+
+**Subject:** Security documentation for [Company Name] evaluation
+
+**Body:**
+
+Hi [First Name],
+
+I understand you're evaluating survey platforms for [Company Name] and security/compliance is a key requirement.
+
+We've published comprehensive security and compliance documentation that addresses the most common questions from IT security teams:
+
+**📋 Security Whitepaper** (q-persona.com/docs/enterprise/security-whitepaper)
+- Complete architecture diagrams
+- Data flow and encryption details
+- Multi-layer security controls
+- Incident response procedures
+
+**✅ Compliance Datasheet** (q-persona.com/docs/enterprise/compliance-datasheet)
+- GDPR compliance (fully compliant)
+- HIPAA readiness (BAA available)
+- SOC 2 Type II (in progress, Q2 2025)
+- ISO 27001 roadmap
+- Regional compliance (Indonesia PDP Law)
+
+**Key Differentiators:**
+- Complete audit trail (immutable, exportable)
+- Enterprise SSO (SAML 2.0, OAuth 2.0)
+- Multi-factor authentication
+- Data encryption (AES-256 at rest, TLS 1.3 in transit)
+
+Would you like to schedule a 30-minute technical deep-dive with our security team to review these documents and answer any questions?
+
+Best regards,  
+[Your Name]  
+Enterprise Security Specialist, Q-Persona
+
+---
+
+### Template 12: Compliance Audit Season Outreach
+
+**Subject:** Preparing for Q1 compliance audits?
+
+**Body:**
+
+[First Name],
+
+Q1 audit season is approaching, and I wanted to reach out because many [banking/healthcare/government] organizations we work with face the same challenge:
+
+**The Problem:**
+Survey tools like Google Forms and SurveyMonkey don't provide the audit trail required for OJK/BI/GDPR compliance audits.
+
+**The Impact:**
+- Failed audits → Rp 50M-5B in fines
+- Manual log reconstruction → Weeks of work
+- Blocked tools → Lost productivity
+
+**The Solution:**
+Q-Persona provides a complete audit trail that tracks every action:
+- Who accessed data (user ID, email, role)
+- What action was taken (view, create, edit, delete, export)
+- When it happened (timestamp to the millisecond)
+- Where from (IP address, location)
+- Full export in CSV/JSON/PDF for auditors
+
+**ROI Example:**
+One bank we work with saved Rp 200M/year by avoiding failed audits and reducing audit prep time from 2-3 weeks to 15 minutes.
+
+Calculate your potential savings: q-persona.com/enterprise#calculator
+
+Can we schedule a 15-minute call to show you the audit log in action before your next audit?
+
+Best regards,  
+[Your Name]
+
+---
+
+### Template 13: ROI Calculator Follow-Up
+
+**Subject:** Your ROI calculation: [X]% return with Q-Persona
+
+**Body:**
+
+Hi [First Name],
+
+I noticed you tried our Enterprise ROI Calculator. Based on the information you provided:
+
+**Your Results:**
+- Annual Investment: Rp [X]M
+- Total Savings: Rp [X]M
+- Net Savings: Rp [X]M
+- **ROI: [X]%**
+
+**Savings Breakdown:**
+- Compliance risk reduction: Rp [X]M
+- Avoided audit fines: Rp [X]M
+- Tool cost savings: Rp [X]M
+- Reduced manual work: Rp [X]M
+
+**Next Steps:**
+1. Review our Security Whitepaper and Compliance Datasheet
+2. Schedule a 30-minute demo to see the platform in action
+3. Start a 30-day free trial of Business tier (no credit card required)
+
+The average enterprise customer sees ROI in less than 1 month by avoiding just one failed audit.
+
+When would be a good time for a demo?
+
+Best regards,  
+[Your Name]  
+Schedule here: [Calendly link]
+
+---
+
+### Template 14: IT Security Team Introduction
+
+**Subject:** Technical documentation for IT review - Q-Persona
+
+**Body:**
+
+Hi [IT Security Team Contact],
+
+[First Name from Business Team] mentioned you're reviewing Q-Persona from a security perspective. I wanted to provide you with the technical documentation you'll need:
+
+**Security Documentation:**
+- 🔒 Security Whitepaper: [link]
+- ✅ Compliance Datasheet: [link]
+- 📊 Architecture Diagrams: [link]
+- 🔐 Penetration Test Summary: [link] (under NDA)
+
+**Quick Security Overview:**
+- **Encryption:** AES-256 at rest, TLS 1.3 in transit
+- **Authentication:** SSO (SAML 2.0, OAuth 2.0), MFA (TOTP, SMS)
+- **Authorization:** RBAC with workspace isolation
+- **Audit Logging:** Complete immutable audit trail
+- **Infrastructure:** Vercel Edge + AWS (SOC 2, ISO 27001 certified)
+- **Compliance:** GDPR compliant, HIPAA-ready, SOC 2 in progress
+
+**Common Questions We Address:**
+1. Data residency and localization options
+2. Encryption key management (AWS KMS)
+3. SSO configuration (10-minute setup)
+4. Audit log retention and export
+5. Incident response procedures
+6. Third-party security certifications
+
+Would you like to schedule a 30-minute technical deep-dive to review these docs and answer your questions?
+
+I'm also happy to facilitate a direct conversation between your team and our security engineers.
+
+Best regards,  
+[Your Name]  
+Technical Sales Engineer, Q-Persona  
+[Email] | [Phone]
+
+---
+
+### Template 15: Indonesia PDP Law Compliance
+
+**Subject:** Indonesia PDP Law compliance for survey tools
+
+**Body:**
+
+Hi [First Name],
+
+With Indonesia's Personal Data Protection Law (No. 27/2022) now in effect, organizations face strict requirements for processing personal data - including survey responses.
+
+**Key Requirements:**
+- Lawful basis for data processing
+- Data subject consent mechanisms
+- Breach notification (3x24 hours)
+- Cross-border transfer safeguards
+- Data localization options
+- Local representative appointment
+
+**How Q-Persona Ensures Compliance:**
+✅ **Data Localization:** Primary storage in AWS Singapore/Tokyo (APAC region)  
+✅ **Consent Management:** Built-in consent tracking and management  
+✅ **Breach Notification:** Automated alert system (< 24 hours)  
+✅ **Data Subject Rights:** Self-service access, rectification, deletion  
+✅ **Local Representative:** Appointed and registered  
+✅ **Cross-Border Controls:** Configurable regional restrictions  
+
+**Compliance Documentation:**
+Our Compliance Datasheet covers PDP Law requirements in detail: q-persona.com/docs/enterprise/compliance-datasheet
+
+**Penalties for Non-Compliance:**
+- Administrative fines up to Rp 5B
+- Compensation claims from data subjects
+- Reputational damage
+
+Is [Company Name] currently compliant with PDP Law for your survey data? We can help.
+
+Schedule a compliance review call: [link]
+
+Best regards,  
+[Your Name]  
+Compliance Specialist, Q-Persona
+
+---
+
+*Templates updated November 2024 to include new security and compliance documentation*
