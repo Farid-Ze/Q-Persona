@@ -8,6 +8,33 @@ import Stripe from 'stripe'
  * Listens to Stripe events for subscription management
  */
 
+/**
+ * Helper function to extract user_id from Stripe event
+ */
+async function getUserIdFromEvent(
+  subscription: Stripe.Subscription
+): Promise<string | null> {
+  // Try to get from subscription metadata
+  if (subscription.metadata?.user_id) {
+    return subscription.metadata.user_id
+  }
+  
+  // Fallback to customer metadata
+  try {
+    const customer = await stripe.customers.retrieve(
+      subscription.customer as string
+    )
+    
+    if (!customer.deleted && customer.metadata?.user_id) {
+      return customer.metadata.user_id
+    }
+  } catch (error) {
+    console.error('Error retrieving customer:', error)
+  }
+  
+  return null
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.text()
   const signature = req.headers.get('stripe-signature')
@@ -74,52 +101,34 @@ export async function POST(req: NextRequest) {
       
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription
-        const userId = subscription.metadata?.user_id
+        const userId = await getUserIdFromEvent(subscription)
         
         if (!userId) {
-          // Try to get user_id from customer metadata
-          const customer = await stripe.customers.retrieve(
-            subscription.customer as string
-          )
-          
-          if (customer.deleted || !customer.metadata?.user_id) {
-            console.error('No user_id found for subscription update')
-            break
-          }
-          
-          await updateSubscriptionStatus(customer.metadata.user_id, {
-            stripe_subscription_id: subscription.id,
-            stripe_price_id: subscription.items.data[0].price.id,
-            status: subscription.status,
-            current_period_start: subscription.current_period_start,
-            current_period_end: subscription.current_period_end,
-            cancel_at_period_end: subscription.cancel_at_period_end,
-          })
-        } else {
-          await updateSubscriptionStatus(userId, {
-            stripe_subscription_id: subscription.id,
-            stripe_price_id: subscription.items.data[0].price.id,
-            status: subscription.status,
-            current_period_start: subscription.current_period_start,
-            current_period_end: subscription.current_period_end,
-            cancel_at_period_end: subscription.cancel_at_period_end,
-          })
+          console.error('No user_id found for subscription update')
+          break
         }
+        
+        await updateSubscriptionStatus(userId, {
+          stripe_subscription_id: subscription.id,
+          stripe_price_id: subscription.items.data[0].price.id,
+          status: subscription.status,
+          current_period_start: subscription.current_period_start,
+          current_period_end: subscription.current_period_end,
+          cancel_at_period_end: subscription.cancel_at_period_end,
+        })
         break
       }
       
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
-        const customer = await stripe.customers.retrieve(
-          subscription.customer as string
-        )
+        const userId = await getUserIdFromEvent(subscription)
         
-        if (customer.deleted || !customer.metadata?.user_id) {
+        if (!userId) {
           console.error('No user_id found for subscription deletion')
           break
         }
         
-        await updateSubscriptionStatus(customer.metadata.user_id, {
+        await updateSubscriptionStatus(userId, {
           stripe_subscription_id: subscription.id,
           stripe_price_id: subscription.items.data[0].price.id,
           status: 'canceled',

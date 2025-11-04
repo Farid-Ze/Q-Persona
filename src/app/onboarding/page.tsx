@@ -47,6 +47,7 @@ export default function OnboardingPage() {
 
   async function handleComplete() {
     if (selectedPersonas.size === 0) {
+      // TODO: Replace with proper toast notification component
       alert('Silakan pilih minimal satu persona')
       return
     }
@@ -87,10 +88,12 @@ export default function OnboardingPage() {
         // Redirect to dashboard
         router.push('/dashboard')
       } else {
+        // TODO: Replace with proper error UI component
         alert('Terjadi kesalahan: ' + data.error)
       }
     } catch (error) {
       console.error('Error saving personas:', error)
+      // TODO: Replace with proper error UI component
       alert('Terjadi kesalahan saat menyimpan persona')
     } finally {
       setSaving(false)

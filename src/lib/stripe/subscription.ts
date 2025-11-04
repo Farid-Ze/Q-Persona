@@ -167,6 +167,8 @@ export async function updateSubscriptionStatus(
   
   // Track subscription event
   if (mappedStatus === 'active') {
-    await trackSubscriptionStarted(userId, planType, 0) // Amount should come from Stripe
+    // TODO: Get actual amount from Stripe subscription or invoice
+    // For now, we track the event without the amount
+    await trackSubscriptionStarted(userId, planType, 0)
   }
 }
