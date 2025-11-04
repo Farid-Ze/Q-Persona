@@ -5,6 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logApiRequest, incrementApiKeyUsage } from '@/lib/api/logging'
 
 // Simple API key authentication
 async function authenticateApiKey(request: NextRequest) {
@@ -69,6 +70,7 @@ async function authenticateApiKey(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const start = Date.now()
   // Authenticate request
   const apiKey = await authenticateApiKey(request)
 
@@ -121,7 +123,7 @@ export async function GET(request: NextRequest) {
 
     const questionnaires = await response.json()
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       data: questionnaires,
       meta: {
         limit,
@@ -129,16 +131,24 @@ export async function GET(request: NextRequest) {
         count: questionnaires.length,
       },
     })
+    await Promise.all([
+      incrementApiKeyUsage(apiKey.id),
+      logApiRequest({ apiKey, request, status: 200, latencyMs: Date.now() - start })
+    ])
+    return res
   } catch (error) {
     console.error('Error fetching questionnaires:', error)
-    return NextResponse.json(
+    const res = NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     )
+    await logApiRequest({ apiKey, request, status: 500, latencyMs: Date.now() - start })
+    return res
   }
 }
 
 export async function POST(request: NextRequest) {
+  const start = Date.now()
   // Authenticate request
   const apiKey = await authenticateApiKey(request)
 
@@ -205,14 +215,21 @@ export async function POST(request: NextRequest) {
 
     const questionnaire = await response.json()
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       data: questionnaire[0],
     }, { status: 201 })
+    await Promise.all([
+      incrementApiKeyUsage(apiKey.id),
+      logApiRequest({ apiKey, request, status: 201, latencyMs: Date.now() - start, metadata: { template_id: body.template_id } })
+    ])
+    return res
   } catch (error) {
     console.error('Error creating questionnaire:', error)
-    return NextResponse.json(
+    const res = NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     )
+    await logApiRequest({ apiKey, request, status: 500, latencyMs: Date.now() - start })
+    return res
   }
 }

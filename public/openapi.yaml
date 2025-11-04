@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Q-Persona Public API
+  version: '1.0.0'
+  description: Minimal spec documenting current v1 endpoints.
+servers:
+  - url: /
+paths:
+  /api/v1/questionnaires:
+    get:
+      summary: List questionnaires
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [draft, active, closed]
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create questionnaire
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [template_id, title]
+              properties:
+                template_id:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Created
+  /api/v1/responses:
+    get:
+      summary: List responses for a questionnaire
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: questionnaire_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: offset
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Submit a response
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [questionnaire_id, answers]
+              properties:
+                questionnaire_id:
+                  type: string
+                  format: uuid
+                email:
+                  type: string
+                name:
+                  type: string
+                answers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      question_id:
+                        type: string
+                        format: uuid
+                      value:
+                        oneOf:
+                          - type: number
+                          - type: string
+                          - type: object
+      responses:
+        '201':
+          description: Created
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key

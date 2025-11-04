@@ -5,6 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logApiRequest, incrementApiKeyUsage } from '@/lib/api/logging'
 
 // Simple API key authentication (shared logic - in production, extract to middleware)
 async function authenticateApiKey(request: NextRequest) {
@@ -68,6 +69,7 @@ async function authenticateApiKey(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const start = Date.now()
   const apiKey = await authenticateApiKey(request)
 
   if (!apiKey) {
@@ -149,7 +151,7 @@ export async function GET(request: NextRequest) {
       })
     )
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       data: responsesWithAnswers,
       meta: {
         questionnaire_id: questionnaireId,
@@ -158,13 +160,22 @@ export async function GET(request: NextRequest) {
         count: responsesWithAnswers.length,
       },
     })
+    // logging (best-effort)
+    await Promise.all([
+      incrementApiKeyUsage(apiKey.id),
+      logApiRequest({ apiKey, request, status: 200, latencyMs: Date.now() - start })
+    ])
+    return res
   } catch (error) {
     console.error('Error fetching responses:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const res = NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    await logApiRequest({ apiKey, request, status: 500, latencyMs: Date.now() - start })
+    return res
   }
 }
 
 export async function POST(request: NextRequest) {
+  const start = Date.now()
   const apiKey = await authenticateApiKey(request)
 
   if (!apiKey) {
@@ -254,15 +265,22 @@ export async function POST(request: NextRequest) {
       completed_at: new Date().toISOString(),
     })
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       data: {
         respondent_id: respondentId,
         message: 'Response submitted successfully',
       },
     }, { status: 201 })
+    await Promise.all([
+      incrementApiKeyUsage(apiKey.id),
+      logApiRequest({ apiKey, request, status: 201, latencyMs: Date.now() - start, metadata: { questionnaire_id: body.questionnaire_id } })
+    ])
+    return res
   } catch (error) {
     console.error('Error creating response:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const res = NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    await logApiRequest({ apiKey, request, status: 500, latencyMs: Date.now() - start })
+    return res
   }
 }
 
