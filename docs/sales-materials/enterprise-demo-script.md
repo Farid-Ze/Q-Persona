@@ -152,29 +152,41 @@ This is our **Role-Based Access Control** in action."
 
 Here's where you manage your team. I've set up a few sample users to show different roles:
 
-1. **Admin** (like me)
+1. **Admin** (like me) - Role Code: `admin`
    - Full system access
    - Can manage users and settings
    - Can view all audit logs
+   - Can perform all workspace operations including billing
+   - Permission level: 3 (highest)
 
-2. **Editor** 
-   - Can create and edit questionnaires
+2. **Editor** - Role Code: `editor`
+   - Can create and edit questionnaires and templates
    - Can view responses
    - Cannot delete data or manage users
+   - Cannot access workspace billing
+   - Permission level: 2
 
-3. **Viewer**
+3. **Viewer** - Role Code: `viewer`
    - Read-only access
    - Can view responses and reports
    - Cannot make changes
+   - Cannot create or modify content
+   - Permission level: 1 (lowest)
 
 [Show each user's permissions]
 
-For regulated industries, this separation of duties is critical. You might have:
-- **HR team** creating employee surveys (Editor role)
-- **Legal team** reviewing for compliance (Viewer role)
-- **IT security** monitoring the system (Admin role)
+Our system uses standardized **Action Permission Codes** for fine-grained control. For example:
+- `questionnaires:create` requires `editor` role or higher
+- `questionnaires:delete` requires `admin` role only
+- `workspace:billing` requires `admin` role only
+- `templates:read` requires `viewer` role or higher
 
-And here's the key: **every action is logged**, which brings us to our most important feature..."
+For regulated industries, this separation of duties is critical. You might have:
+- **HR team** creating employee surveys (Editor role - can use `questionnaires:create`)
+- **Legal team** reviewing for compliance (Viewer role - limited to `questionnaires:read`)
+- **IT security** monitoring the system (Admin role - full access including `workspace:update`)
+
+And here's the key: **every action is logged with the specific permission code used**, which brings us to our most important feature..."
 
 **Show**:
 - User list

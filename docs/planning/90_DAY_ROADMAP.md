@@ -423,8 +423,10 @@ headaches during compliance reviews.
 
 We just built a solution specifically for [Industry] with:
 - Complete audit logs (who, what, when, IP address)
-- Role-based access (admin/editor/viewer)
+- Role-based access control with three levels: admin, editor, viewer
+- Fine-grained permissions using action codes (e.g., `questionnaires:delete`, `workspace:billing`)
 - Data retention controls
+- Workspace isolation for multi-tenant security
 
 Would you be open to a 15-minute demo to see if this solves 
 your compliance challenges?
